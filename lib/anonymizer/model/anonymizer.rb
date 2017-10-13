@@ -1,0 +1,95 @@
+# Anonymizer to anonymize world
+class Anonymizer
+  attr_accessor :config
+
+  def initialize(project_name, config = nil)
+    unless project_name && project_name.is_a?(String)
+      raise 'Invalid project name'
+    end
+    @project_name = project_name
+
+    if config.nil?
+      project_file_path = project_file_path project_file_name project_name
+      raise 'Project not exists' unless project_file_path
+      config = read_config project_file_path
+    end
+
+    @config = prepare_config config
+  end
+
+  def work(database)
+    database.anonymize
+  end
+
+  private
+
+  def prepare_config(config)
+    if config['type'] == 'extended'
+      project_file_path = project_file_path project_file_name config['basic_type']
+      basic_config = read_config project_file_path
+      config = basic_config.deep_merge config
+    end
+
+    validate_config config
+
+    config['database'] = { 'name' => @project_name }
+
+    config
+  end
+
+  def validate_config(config)
+    if !config.key?('dump_server') || config['dump_server'].empty?
+      raise 'In project config file dump_server is not valid'
+    end
+
+    validate_dump_server config['dump_server']
+
+    config['tables'].each do |_table_name, columns|
+      columns.each do |column_name, info|
+        validate_column(column_name, info)
+      end
+    end
+  end
+
+  def validate_dump_server(dump_server)
+    %w(host user port path).each do |variable|
+      unless dump_server.key?(variable)
+        raise "In project config file dump_server #{variable} is not valid"
+      end
+    end
+  end
+
+  def validate_column(_column_name, info)
+    raise 'In project config file founded column without defined action' unless info['action']
+  end
+
+  def read_config(project_file_path)
+    JSON.parse File.read project_file_path
+  end
+
+  def project_file_name(project_name)
+    project_name + '.json'
+  end
+
+  def project_file_path(project_file_name)
+    if File.exist?(projects_dir + '/' + project_file_name)
+      project_file = projects_dir + '/' + project_file_name
+    elsif File.exist?(basic_projects_dir + '/' + project_file_name)
+      project_file = basic_projects_dir + '/' + project_file_name
+    end
+
+    project_file
+  end
+
+  def root_dir
+    @root_dir ||= File.dirname File.expand_path '..', __FILE__
+  end
+
+  def projects_dir
+    @projects_dir ||= File.dirname(File.expand_path('..', root_dir)) + '/config/project'
+  end
+
+  def basic_projects_dir
+    @basic_projects_dir ||= root_dir + '/project/basic'
+  end
+end

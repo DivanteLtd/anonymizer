@@ -1,0 +1,23 @@
+{
+    "type": "basic",
+    "tables": {
+        "users": {
+            "email": {
+                "type": "email",
+                "action": "update"
+            },
+            "name": {
+                "type": "login",
+                "action": "update"
+            },
+            "firstname": {
+                "type": "firstname",
+                "action": "update"
+            },
+            "lastname": {
+                "type": "lastname",
+                "action": "update"
+            }
+        }
+    }
+}

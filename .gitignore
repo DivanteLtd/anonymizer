@@ -1,0 +1,6 @@
+vendor
+coverage
+
+web/data/*
+
+log/*.log

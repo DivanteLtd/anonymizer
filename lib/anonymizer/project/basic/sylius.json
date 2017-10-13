@@ -1,0 +1,100 @@
+{
+    "type": "basic",
+    "tables": {
+        "sylius_address": {
+            "postcode": {
+                "type": "postcode",
+                "action": "update"
+            },
+            "last_name": {
+                "type": "lastname",
+                "action": "update"
+            },
+            "street": {
+                "type": "street",
+                "action": "update"
+            },
+            "city": {
+                "type": "city",
+                "action": "update"
+            },
+            "first_name": {
+                "type": "firstname",
+                "action": "update"
+            },
+            "phone_number": {
+                "type": "telephone",
+                "action": "update"
+            },
+            "company": {
+                "type": "company",
+                "action": "update"
+            }
+        },
+        "sylius_payment": {
+        	"details": {
+                "type": "json",
+                "action": "update"
+            }
+        },
+        "sylius_order": {
+            "email": {
+                "type": "email",
+                "action": "update"
+            }
+        },
+        "sylius_user": {
+            "username": {
+                "type": "email",
+                "action": "update"
+            },
+            "username_canonical": {
+                "type": "email",
+                "action": "update"
+            },
+            "email": {
+                "type": "email",
+                "action": "update"
+            },
+            "email_canonical": {
+                "type": "email",
+                "action": "update"
+            },
+            "salt": {
+                "type": "quote",
+                "action": "update"
+            },
+            "password": {
+                "type": "quote",
+                "action": "update"
+            },
+            "first_name": {
+                "type": "firstname",
+                "action": "update"
+            },
+            "last_name": {
+                "type": "lastname",
+                "action": "update"
+            },
+            "confirmation_token": {
+                "type": "quote",
+                "action": "update"
+            }
+        },
+        "ext_log_entries": {
+            "only_truncate": {
+                "action": "truncate"
+            }
+        },
+        "sylius_credit_card": {
+            "only_truncate": {
+                "action": "truncate"
+            }
+        },
+        "sylius_payment_security_token": {
+            "only_truncate": {
+                "action": "truncate"
+            }
+        }
+    }
+}

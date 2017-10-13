@@ -1,0 +1,333 @@
+{
+    "type": "basic",
+    "tables": {
+        "admin_passwords": {
+            "only_truncate": {
+                "action": "truncate"
+            }
+        },
+        "admin_user": {
+            "only_truncate": {
+                "action": "truncate"
+            }
+        },
+        "customer_entity": {
+            "email": {
+                "type": "email",
+                "action": "update"
+            },
+            "firstname": {
+                "type": "firstname",
+                "action": "update"
+            },
+            "lastname": {
+                "type": "lastname",
+                "action": "update"
+            },
+            "taxvat": {
+                "type": "vat_id",
+                "action": "update"
+            }
+        },
+        "customer_address_entity": {
+            "city": {
+                "type": "city",
+                "action": "update"
+            },
+            "company": {
+                "type": "company",
+                "action": "update"
+            },
+            "fax": {
+                "type": "telephone",
+                "action": "update"
+            },
+            "firstname": {
+                "type": "firstname",
+                "action": "update"
+            },
+            "lastname": {
+                "type": "lastname",
+                "action": "update"
+            },
+            "postcode": {
+                "type": "postcode",
+                "action": "update"
+            },
+            "street": {
+                "type": "street",
+                "action": "update"
+            },
+            "telephone": {
+                "type": "telephone",
+                "action": "update"
+            },
+            "vat_id": {
+                "type": "vat_id",
+                "action": "update"
+            }
+        },
+        "newsletter_subscriber": {
+            "subscriber_email": {
+                "type": "email",
+                "action": "update"
+            }
+        },
+        "sales_creditmemo_grid" : {
+            "billing_name" : {
+                "type": "fullname",
+                "action": "update"
+            }
+        },
+        "sales_invoice_grid" : {
+            "billing_name" : {
+                "type": "fullname",
+                "action": "update"
+            }
+        },
+        "sales_order": {
+            "customer_email": {
+                "type": "email",
+                "action": "update"
+            },
+            "customer_lastname": {
+                "type": "lastname",
+                "action": "update"
+            },
+            "customer_firstname": {
+                "type": "firstname",
+                "action": "update"
+            },
+            "remote_ip": {
+                "type": "ip",
+                "action": "update"
+            },
+            "customer_note": {
+                "type": "quote",
+                "action": "update"
+            },
+            "customer_taxvat": {
+                "type": "vat_id",
+                "action": "update"
+            }
+        },
+        "sales_order_address": {
+            "postcode": {
+                "type": "postcode",
+                "action": "update"
+            },
+            "lastname": {
+                "type": "lastname",
+                "action": "update"
+            },
+            "street": {
+                "type": "street",
+                "action": "update"
+            },
+            "city": {
+                "type": "city",
+                "action": "update"
+            },
+            "email": {
+                "type": "email",
+                "action": "update"
+            },
+            "telephone": {
+                "type": "telephone",
+                "action": "update"
+            },
+            "firstname": {
+                "type": "firstname",
+                "action": "update"
+            },
+            "company": {
+                "type": "company",
+                "action": "update"
+            },
+            "vat_id": {
+                "type": "vat_id",
+                "action": "update"
+            }
+        },
+        "sales_order_grid" : {
+            "billing_name" : {
+                "type": "fullname",
+                "action": "update"
+            },
+             "shipping_name" : {
+                "type": "fullname",
+                "action": "update"
+            }
+        },
+        "quote": {
+            "customer_email": {
+                "type": "email",
+                "action": "update"
+            },
+            "customer_lastname": {
+                "type": "lastname",
+                "action": "update"
+            },
+            "customer_firstname": {
+                "type": "firstname",
+                "action": "update"
+            },
+            "remote_ip": {
+                "type": "ip",
+                "action": "update"
+            }
+        },
+        "quote_address": {
+            "postcode": {
+                "type": "postcode",
+                "action": "update"
+            },
+            "lastname": {
+                "type": "lastname",
+                "action": "update"
+            },
+            "street": {
+                "type": "street",
+                "action": "update"
+            },
+            "city": {
+                "type": "city",
+                "action": "update"
+            },
+            "email": {
+                "type": "email",
+                "action": "update"
+            },
+            "telephone": {
+                "type": "telephone",
+                "action": "update"
+            },
+            "firstname": {
+                "type": "firstname",
+                "action": "update"
+            },
+            "company": {
+                "type": "company",
+                "action": "update"
+            },
+            "vat_id": {
+                "type": "vat_id",
+                "action": "update"
+            }
+        },
+        "quote_payment": {
+            "cc_owner": {
+                "type": "company",
+                "action": "update"
+            }
+        },
+        "customer_log": {
+            "only_truncate": {
+                "action": "truncate"
+            }
+        },
+        "sendfriend_log": {
+            "only_truncate": {
+                "action": "truncate"
+            }
+        },
+        "report_event": {
+            "only_truncate": {
+                "action": "truncate"
+            }
+        },
+        "customer_entity_varchar": {
+            "value": {
+                "action": "eav_update",
+                "attributes": [
+                    {
+                        "code": "firstname",
+                        "type": "firstname",
+                        "entity_type": "customer"
+                    },
+                    {
+                        "code": "lastname",
+                        "type": "lastname",
+                        "entity_type": "customer"
+                    },
+                    {
+                        "code": "taxvat",
+                        "type": "vat_id",
+                        "entity_type": "customer"
+                    }
+                ]
+
+            }
+        },
+        "customer_address_entity_varchar": {
+            "value": {
+                "action": "eav_update",
+                "attributes": [
+                    {
+                        "code": "firstname",
+                        "type": "firstname",
+                        "entity_type": "customer_address"
+                    },
+                    {
+                        "code": "lastname",
+                        "type": "lastname",
+                        "entity_type": "customer_address"
+                    },
+                    {
+                        "code": "telephone",
+                        "type": "telephone",
+                        "entity_type": "customer_address"
+                    },
+                    {
+                        "code": "vat_id",
+                        "type": "vat_id",
+                        "entity_type": "customer_address"
+                    },
+                    {
+                        "code": "postcode",
+                        "type": "postcode",
+                        "entity_type": "customer_address"
+                    },
+                    {
+                        "code": "company",
+                        "type": "company",
+                        "entity_type": "customer_address"
+                    },
+                    {
+                        "code": "city",
+                        "type": "city",
+                        "entity_type": "customer_address"
+                    },
+                    {
+                        "code": "firstname",
+                        "type": "firstname",
+                        "entity_type": "customer"
+                    },
+                    {
+                        "code": "lastname",
+                        "type": "lastname",
+                        "entity_type": "customer"
+                    },
+                    {
+                        "code": "taxvat",
+                        "type": "vat_id",
+                        "entity_type": "customer"
+                    }
+                ]
+
+            }
+        },
+        "customer_address_entity_text": {
+            "value": {
+                "action": "eav_update",
+                "attributes": [
+                    {
+                        "code": "street",
+                        "type": "street",
+                        "entity_type": "customer_address"
+                    }
+                ]
+            }
+        }
+    }
+}

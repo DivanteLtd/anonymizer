@@ -1,0 +1,9 @@
+# Helper for json
+module JSONHelper
+  def self.valid_json?(json)
+    JSON.parse(json)
+    true
+  rescue
+    false
+  end
+end

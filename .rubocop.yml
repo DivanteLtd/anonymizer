@@ -1,0 +1,7 @@
+AllCops:
+  TargetRubyVersion: 2.1
+  Exclude:
+    - 'vendor/**/*'
+
+Metrics/LineLength:
+  Max: 120
