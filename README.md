@@ -202,6 +202,11 @@ Anonymizer can work with Magento EAV model. In example below customer attribute 
     }
 ```
 
+### How to run anonymization
+```
+RUBY_ENV=production bundle exec rake project:anonymize[example]
+```
+
 ## Developing
 
 ## Contributing
