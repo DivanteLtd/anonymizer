@@ -8,7 +8,7 @@ Anonymizer is universal tool to create anonymized DB for projects.
 - ruby >= 2.1
 - mysql >= 5.6
 
-## Supported framework
+## Supported frameworks
 - Magento 1.9.x / 2.x
 - Pimcore 4 / 5
 - Sylius  1.0.0-beta.2
