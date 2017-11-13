@@ -5,7 +5,7 @@ Anonymizer is universal tool to create anonymized DB for projects.
 
 Why is so important to work with anonymized dababase? In development process you never should us production database, it is risky and against the law. Working with production database is risky because by some mistake you can make available your clients data to the whole world. In our wourl general data are one of most valuable thing and EU try to protect citizens general data by General Data Protection Regulation (GDPR).
 
-## How anontmizer work?
+## How anontmizer works?
 Anonymizer replace all data in database by anonymized random data. Most important feature of Anonymizer is data format. All data are symilar to original data used by real users. Example belove shows anonymized data in Magento 1 sales_flat_quote_address table.
 
 ![Anonymized data example](https://user-images.githubusercontent.com/17312052/32728212-be7e07bc-c87f-11e7-9c83-5e6018819f50.png)
