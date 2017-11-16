@@ -5,6 +5,8 @@ Anonymizer is a universal tool to create anonymized DBs for projects.
 
 Why is it so important to work with anonymized databases? In the development process, you should never use your production database - it is risky and against the law. Working with a production database in development is risky, because by some mistake, you can might make your clients data available to the whole world. In our world, general data is one of most valuable things and EU tries to protect citizens' general data via the General Data Protection Regulation (GDPR).
 
+Some more quick wins for GDPR? Take a look at our [recent blog post](https://www.linkedin.com/pulse/gdpr-quick-wins-software-developers-teams-piotr-karwatka/?published=t).
+
 ## How does Anonymizer work?
 Anonymizer replaces all data in your database by anonymized random data. The most important feature of Anonymizer is data formatting. All generated data is similar to the original data used by real users. The example below shows anonymized data in a Magento 1 sales_flat_quote_address table.
 
@@ -59,7 +61,7 @@ The anonymized dump is given the same name as the original database dump file. I
 ### Database dump location
 Anonymizer can work with both locally and remotely stored database dumps. Database dumps from remote servers are downloaded by rsync.
 
-#### Working with local database dupm
+#### Working with local database dump
 In the example below, the database dump file is in the `/path/to/databse/dump/` directory.
 
 ```
@@ -71,7 +73,7 @@ In the example below, the database dump file is in the `/path/to/databse/dump/` 
 }
 ```
 
-#### Working with local database dupm
+#### Working with local database dump
 In the example below, the database dump file is stored on a remote server with an IP address of `1.2.3.4` and ssh port of `5022`. The ssh user's name is `anonymizer`, the directory on remote host with the database dump is `/path/to/databse/dump/`.  In this case, let's assume that we need to add `--rsync-path=\"sudo rsync\"` option to our rsync dump download command.
 
 ```
