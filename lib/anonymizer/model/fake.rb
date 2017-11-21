@@ -37,7 +37,7 @@ class Fake
       firstname: firstname,
       lastname: lastname,
       email: add_uniq_to_email(Faker::Internet.email("#{firstname} #{lastname}")),
-      login: add_uniq_to_end_of(Faker::Internet.user_name("#{firstname} #{lastname}", %w(. _ -))),
+      login: add_uniq_to_end_of(Faker::Internet.user_name("#{firstname} #{lastname}", %w[. _ -])),
       telephone: Faker::PhoneNumber.phone_number,
       company: Faker::Company.name,
       street: Faker::Address.street_name,
@@ -91,6 +91,6 @@ class Fake
   end
 
   def self.district_number
-    %w(01 03 47 49 91 93 95 97).sample
+    %w[01 03 47 49 91 93 95 97].sample
   end
 end

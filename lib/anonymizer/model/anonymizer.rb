@@ -52,7 +52,7 @@ class Anonymizer
   end
 
   def validate_dump_server(dump_server)
-    %w(host user port path).each do |variable|
+    %w[host user port path].each do |variable|
       unless dump_server.key?(variable)
         raise "In project config file dump_server #{variable} is not valid"
       end
