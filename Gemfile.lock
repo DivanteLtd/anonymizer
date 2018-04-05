@@ -11,7 +11,7 @@ GEM
   specs:
     airbrussh (1.1.1)
       sshkit (>= 1.6.1, != 1.7.0)
-    ast (2.3.0)
+    ast (2.4.0)
     capistrano (3.7.1)
       airbrussh (>= 1.0.0)
       capistrano-harrow
@@ -33,13 +33,12 @@ GEM
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (3.2.0)
-    parallel (1.12.0)
-    parser (2.4.0.2)
-      ast (~> 2.3)
+    parallel (1.12.1)
+    parser (2.5.0.5)
+      ast (~> 2.4.0)
     powerpack (0.1.1)
-    rainbow (2.2.2)
-      rake
-    rake (12.0.0)
+    rainbow (3.0.0)
+    rake (12.3.1)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
@@ -53,11 +52,11 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
-    rubocop (0.51.0)
+    rubocop (0.54.0)
       parallel (~> 1.10)
-      parser (>= 2.3.3.1, < 3.0)
+      parser (>= 2.5)
       powerpack (~> 0.1)
-      rainbow (>= 2.2.2, < 3.0)
+      rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-progressbar (1.9.0)
@@ -89,4 +88,4 @@ DEPENDENCIES
   simplecov
 
 BUNDLED WITH
-   1.13.6
+   1.16.1

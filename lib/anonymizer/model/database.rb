@@ -44,7 +44,6 @@ class Database
 
     querys
   end
-  # rubocop:enable Metrics/MethodLength
 
   def anonymize_column_query(table_name, column_name, column_type)
     query = "UPDATE #{table_name} SET #{column_name} = ("
@@ -79,7 +78,6 @@ class Database
 
     query
   end
-  # rubocop:enable Metrics/MethodLength
 
   def truncate_column_query(table_name)
     querys = []

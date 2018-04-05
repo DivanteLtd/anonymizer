@@ -9,8 +9,8 @@ class Fake
 
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
-  def self.create_fake_user_table(db)
-    db.create_table :fake_user do
+  def self.create_fake_user_table(database)
+    database.create_table :fake_user do
       primary_key :id
       String :firstname
       String :lastname

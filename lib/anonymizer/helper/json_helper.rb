@@ -3,7 +3,7 @@ module JSONHelper
   def self.valid_json?(json)
     JSON.parse(json)
     true
-  rescue
+  rescue StandardError
     false
   end
 end

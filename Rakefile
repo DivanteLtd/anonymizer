@@ -6,6 +6,7 @@ task :default do
   puts ''
 end
 
+# rubocop:disable Metrics/BlockLength
 namespace 'project' do
   task :anonymize, [:project_name] do |_t, args|
     project_name = args[:project_name]
@@ -117,6 +118,7 @@ namespace 'project' do
     )
   end
 end
+# rubocop:enable Metrics/BlockLength
 
 namespace 'config' do
   task :validate_all_projects do |_t|

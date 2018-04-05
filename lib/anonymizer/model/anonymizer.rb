@@ -3,9 +3,7 @@ class Anonymizer
   attr_accessor :config
 
   def initialize(project_name, config = nil)
-    unless project_name && project_name.is_a?(String)
-      raise 'Invalid project name'
-    end
+    raise 'Invalid project name' unless project_name && project_name.is_a?(String)
     @project_name = project_name
 
     if config.nil?
@@ -53,9 +51,7 @@ class Anonymizer
 
   def validate_dump_server(dump_server)
     %w[host user port path].each do |variable|
-      unless dump_server.key?(variable)
-        raise "In project config file dump_server #{variable} is not valid"
-      end
+      raise "In project config file dump_server #{variable} is not valid" unless dump_server.key?(variable)
     end
   end
 
@@ -82,7 +78,7 @@ class Anonymizer
   end
 
   def root_dir
-    @root_dir ||= File.dirname File.expand_path '..', __FILE__
+    @root_dir ||= File.dirname File.expand_path __dir__
   end
 
   def projects_dir
