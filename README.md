@@ -212,8 +212,13 @@ Anonymizer can also work with Magento's EAV model. In the example below, the cus
 ```
 
 ### How to run the anonymization process
+
+#### Configuration file for environment
+
+Before you run anonymizer you should add configuration file. Copy sample config file from `config/env/sample.yml` to `config/env/<env_name>.yml`
+
 ```
-RUBY_ENV=production bundle exec rake project:anonymize[example]
+RUBY_ENV=<env_name> bundle exec rake project:anonymize[example]
 ```
 
 ## Development
