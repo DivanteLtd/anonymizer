@@ -1,0 +1,18 @@
+logger:
+  enabled: true
+dump_server:
+  host: example.com
+  user: anonymizer
+  port: 22
+  passphrase:
+  path: /path/to/dumps/directory
+database:
+  user: anonymizer
+  host: mysql
+  pass: 
+web_data_path: ./web/data
+tmp_path: /tmp
+cap:
+  ssh_options:
+    keys: 
+      - /path/to/private/ssh/key/for/deployment

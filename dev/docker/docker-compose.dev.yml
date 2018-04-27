@@ -1,0 +1,25 @@
+version: '3'
+services:
+  ruby:
+    image: ruby:2.1
+    volumes:
+      - "../../:/usr/src/anonymizer"
+    depends_on:
+      - mysql
+    command: ['bash', '-c', 'sleep 3600']
+  mysql:
+    image: mysql:5.7
+    ports:
+      - 3306
+    environment:
+      MYSQL_DATABASE: anonymizer
+      MYSQL_USER: anonymizer
+      MYSQL_PASSWORD: anonymizer
+      MYSQL_ROOT_PASSWORD: anonymizer
+  postfix:
+    image: catatnight/postfix
+    ports:
+      - 25
+    environment:
+      maildomain: divante.pl
+      smtp_user: anonymizer:password
