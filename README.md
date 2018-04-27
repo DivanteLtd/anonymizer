@@ -169,6 +169,37 @@ Anonymizer can also work with Magento's EAV model. In the example below, the cus
 }
 ```
 
+#### How to work with JSON data
+Anonymizer can now update values of JSON encoded data. In below example we anonymize json stored in `additional_data` column.
+You should familiarize with MySQL JSON path expressions.
+```
+{ "id": 123, "user": { "first_name": "John", "last_name": "Smith", "phone": "123-456-789" }, (...) }
+```
+
+```
+"tables":{
+    "subscriptions":{
+        "additional_data":{
+            "action":"json_update",
+            "fields":[
+                {
+                    "path":"$.user.first_name",
+                    "type":"firstname"
+                },
+                {
+                    "path":"$.user.last_name",
+                    "type":"lastname"
+                },
+                {
+                    "path":"$.user.phone",
+                    "type":"telephone"
+                }
+            ]
+        }
+    }
+}
+```
+
 ### Example configuration file 
 ```
 {
@@ -206,6 +237,29 @@ Anonymizer can also work with Magento's EAV model. In the example below, the cus
                         "entity_type": "customer"
                     }
                 ]
+            }
+        },
+        "subscriptions":{
+            "additional_data":{
+                "action":"json_update",
+                "fields":[
+                    {
+                        "path":"$.user.first_name",
+                        "type":"firstname"
+                    },
+                    {
+                        "path":"$.user.last_name",
+                        "type":"lastname"
+                    },
+                    {
+                        "path":"$.user.phone",
+                        "type":"telephone"
+                    }
+                ]
+            },
+            "comment": {
+                "type": "quote",
+                "action": "update"
             }
         }
     }

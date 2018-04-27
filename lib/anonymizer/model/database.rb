@@ -37,6 +37,10 @@ class Database
         info['attributes'].each do |attribute|
           querys.push anonymize_eav_query(table_name, column_name, attribute)
         end
+      elsif info['action'] == 'json_update'
+        info['fields'].each do |field|
+          querys.push anonymize_json_query(table_name, column_name, field)
+        end
       else
         querys.push anonymize_column_query(table_name, column_name, info['type'])
       end
@@ -75,6 +79,16 @@ class Database
                 'entity_type_id ' \
                   'FROM eav_entity_type ' \
                   "WHERE entity_type_code = '#{attribute['entity_type']}'))"
+
+    query
+  end
+
+  def anonymize_json_query(table_name, column_name, field)
+    query = "UPDATE #{table_name} " \
+     'SET ' \
+      "#{column_name} = JSON_REPLACE( #{column_name}, " \
+        "\"#{field['path']}\"" \
+        ", (SELECT fake_user.#{field['type']} FROM fake_user ORDER BY RAND() LIMIT 1) )"
 
     query
   end
