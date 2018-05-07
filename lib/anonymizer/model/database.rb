@@ -33,6 +33,11 @@ class Database
       if info['action'] == 'truncate'
         querys = truncate_column_query(table_name)
         break
+      elsif info['action'] == 'empty'
+        # querys.push empty_column_query(table_name, column_name)
+        querys.push set_static_value_query(table_name, column_name, '')
+      elsif info['action'] == 'set_static'
+        querys.push set_static_value_query(table_name, column_name, info['value'])
       elsif info['action'] == 'eav_update'
         info['attributes'].each do |attribute|
           querys.push anonymize_eav_query(table_name, column_name, attribute)
@@ -109,6 +114,12 @@ class Database
     querys.push 'SET FOREIGN_KEY_CHECKS = 1;'
 
     querys
+  end
+
+  def set_static_value_query(table_name, column_name, value)
+    query = "UPDATE #{table_name} SET #{column_name} = '#{value}'"
+
+    query
   end
 
   def insert_fake_data

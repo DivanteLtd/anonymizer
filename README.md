@@ -150,6 +150,31 @@ In the example below, the data in the `log_customer` table will be truncated.
 }
 ```
 
+#### How to empty only selected columns in a table?
+In the example below we will empty data in column with configuration values, keeping other columns intact.
+```
+"tables": {
+    "some_configuration_table": {
+        "config_value": {
+            "action": "empty"
+        }
+    }
+}
+```
+
+#### How to set static value to a column?
+In below example value `PLN` will be assigned to column `base_currency` for all users.
+```
+"tables": {
+    "users": {
+        "base_currency": {
+            "action": "set_static",
+            "value": "PLN"
+        }
+    }
+}
+```
+
 #### How to use Anonymizer with Magento EAV?
 Anonymizer can also work with Magento's EAV model. In the example below, the customer attribute `about_me` in the  `customer_entity_text` table will be replaced with a random phrase.
 ```
