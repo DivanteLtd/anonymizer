@@ -87,8 +87,16 @@ class Database
     query = "UPDATE #{table_name} " \
      'SET ' \
       "#{column_name} = JSON_REPLACE( #{column_name}, " \
-        "\"#{field['path']}\"" \
-        ", (SELECT fake_user.#{field['type']} FROM fake_user ORDER BY RAND() LIMIT 1) )"
+        "\"#{field['path']}\", ("
+
+    if field['type'] == 'id'
+      query << 'SELECT FLOOR((NOW() + RAND()) * (RAND() * 119))) '
+    else
+      query << prepare_select_for_query(field['type'])
+      query << 'FROM fake_user ORDER BY RAND() LIMIT 1) '
+    end
+
+    query << ")"
 
     query
   end
