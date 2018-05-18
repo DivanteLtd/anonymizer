@@ -73,7 +73,7 @@ In the example below, the database dump file is in the `/path/to/databse/dump/` 
 }
 ```
 
-#### Working with local database dump
+#### Working with remote database dump
 In the example below, the database dump file is stored on a remote server with an IP address of `1.2.3.4` and ssh port of `5022`. The ssh user's name is `anonymizer`, the directory on remote host with the database dump is `/path/to/databse/dump/`.  In this case, let's assume that we need to add `--rsync-path=\"sudo rsync\"` option to our rsync dump download command.
 
 ```
