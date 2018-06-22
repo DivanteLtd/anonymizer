@@ -7,27 +7,18 @@ RSpec.describe Anonymizer, '#anonymizer' do
     expect(Object.const_defined?('Anonymizer')).to be true
   end
 
-  context 'check if anonymizer is ready to work' do
+  context 'fake project error handling' do
     before do
       @database = double('Database')
 
       @empty_project_name = nil
-      @real_project_name = 'magento_1_9_sample'
       @fake_project_name = 'fake_project_name'
-
-      @real_project_file_path = "./config/project/#{@real_project_name}.json"
     end
 
     it 'should check if config file for project name exists' do
       expect { Anonymizer.new }.to raise_error(ArgumentError)
       expect { Anonymizer.new @empty_project_name }.to raise_error(RuntimeError, 'Invalid project name')
       expect { Anonymizer.new @fake_project_name }.to raise_error(RuntimeError, 'Project not exists')
-      expect { Anonymizer.new @real_project_name }.not_to raise_error
-    end
-
-    it 'should has valid config' do
-      anonymizer = Anonymizer.new @real_project_name
-      expect(anonymizer.config['database']['name']).to eq(@real_project_name)
     end
   end
 
@@ -48,9 +39,9 @@ RSpec.describe Anonymizer, '#anonymizer' do
           "basic_type": "magento_1_9",
           "random_string": "' + @random_string + '",
           "dump_server": {
-            "host": "test-lin-4.divante.pl",
+            "host": "test.divante.pl",
             "user": "mkoszutowski",
-            "port": "60022",
+            "port": "22",
             "passphrase": "",
             "path": "/home/users/mkoszutowski",
             "rsync_options": ""
