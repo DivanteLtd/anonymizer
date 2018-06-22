@@ -3,5 +3,6 @@ rvm:
   2.1
 
 script:
+  - cp config/env/sample.yml config/env/development.yml
   - bundle exec rubocop
   - bundle exec rspec spec/unit
