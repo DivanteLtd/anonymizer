@@ -6,6 +6,49 @@ RSpec.describe '#import database' do
   context 'copy dump' do
     before do
       @project_name = 'magento_1_9_sample'
+      @project_file_path = ROOT_DIR + '/config/project/' + @project_name + '.json'
+      @random_string = '2949d3e2173b25a55968f45518e4779d'
+      @table_name = 'sales_flat_order_address'
+      @column_name = 'postcode'
+      @column_type = 'firstname'
+      @new_table_name = 'some_new_table'
+      @new_column_name = 'some_column'
+      @new_column_type = 'firstname'
+      @default_action = 'update'
+      config = JSON.parse(
+        '{
+          "type": "extended",
+          "basic_type": "magento_1_9",
+          "random_string": "' + @random_string + '",
+          "dump_server": {
+            "host": "",
+            "user": "",
+            "port": "",
+            "passphrase": "",
+            "path": "/home/users/mkoszutowski",
+            "rsync_options": ""
+          },
+          "tables": {
+            "' + @table_name + '": {
+              "' + @column_name + '": {
+                "type": "' + @column_type + '",
+                "action": "' + @default_action + '"
+              }
+            },
+            "' + @new_table_name + '": {
+              "' + @new_column_name + '": {
+                "type": "' + @new_column_type + '",
+                "action": "' + @default_action + '"
+              }
+            }
+          }
+        }'
+      )
+
+      File.open(@project_file_path, 'w') do |f|
+        f.write(config.to_json)
+      end
+
       @anonymizer = Anonymizer.new @project_name
     end
 
@@ -53,6 +96,10 @@ RSpec.describe '#import database' do
       )
 
       expect(File.exist?("/tmp/#{@project_name}.sql.gz")).to be true
+    end
+
+    after do
+      FileUtils.rm_f(@project_file_path)
     end
   end
 end

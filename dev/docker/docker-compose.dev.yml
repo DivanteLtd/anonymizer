@@ -2,6 +2,9 @@ version: '3'
 services:
   ruby:
     image: ruby:2.1
+    build:
+      context: ../../
+      dockerfile: dev/docker/anonymizer/Dockerfile
     volumes:
       - "../../:/usr/src/anonymizer"
     depends_on:
