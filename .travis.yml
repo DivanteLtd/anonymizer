@@ -23,6 +23,7 @@ script:
   - cp config/env/sample.yml config/env/development.yml
   - pwd
   - ls -al
+  - ls -al config
   - ls -al config/project
   - bundle exec rubocop
   - bundle exec rspec spec/unit
