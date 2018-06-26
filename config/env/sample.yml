@@ -8,8 +8,8 @@ dump_server:
   path: /path/to/dumps/directory
 database:
   user: root
-  host: mysql
-  pass: anonymizer
+  host: 127.0.0.1
+  pass: 
 web_data_path: ./web/data
 tmp_path: /tmp
 cap:
