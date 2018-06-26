@@ -18,10 +18,9 @@ sudo: required
 
 before_install:
   - sudo mysql -e 'CREATE DATABASE anonymizer;'
-  - sudo service mysql restart
 
 script:
   - cp config/env/sample.yml config/env/development.yml
   - bundle exec rubocop
   - bundle exec rspec spec/unit
-  - bundle exec rspec spec/system
+  # - bundle exec rspec spec/system
