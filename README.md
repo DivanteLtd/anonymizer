@@ -150,6 +150,31 @@ In the example below, the data in the `log_customer` table will be truncated.
 }
 ```
 
+#### How to empty only selected columns in a table?
+In the example below we will empty data in column with configuration values, keeping other columns intact.
+```
+"tables": {
+    "some_configuration_table": {
+        "config_value": {
+            "action": "empty"
+        }
+    }
+}
+```
+
+#### How to set static value to a column?
+In below example value `PLN` will be assigned to column `base_currency` for all users.
+```
+"tables": {
+    "users": {
+        "base_currency": {
+            "action": "set_static",
+            "value": "PLN"
+        }
+    }
+}
+```
+
 #### How to use Anonymizer with Magento EAV?
 Anonymizer can also work with Magento's EAV model. In the example below, the customer attribute `about_me` in the  `customer_entity_text` table will be replaced with a random phrase.
 ```
@@ -162,6 +187,37 @@ Anonymizer can also work with Magento's EAV model. In the example below, the cus
                     "code": "about_me",
                     "type": "quote",
                     "entity_type": "customer"
+                }
+            ]
+        }
+    }
+}
+```
+
+#### How to work with JSON data
+Anonymizer can now update values of JSON encoded data. In below example we anonymize json stored in `additional_data` column.
+You should familiarize with MySQL JSON path expressions.
+```
+{ "id": 123, "user": { "first_name": "John", "last_name": "Smith", "phone": "123-456-789" }, (...) }
+```
+
+```
+"tables":{
+    "subscriptions":{
+        "additional_data":{
+            "action":"json_update",
+            "fields":[
+                {
+                    "path":"$.user.first_name",
+                    "type":"firstname"
+                },
+                {
+                    "path":"$.user.last_name",
+                    "type":"lastname"
+                },
+                {
+                    "path":"$.user.phone",
+                    "type":"telephone"
                 }
             ]
         }
@@ -206,6 +262,29 @@ Anonymizer can also work with Magento's EAV model. In the example below, the cus
                         "entity_type": "customer"
                     }
                 ]
+            }
+        },
+        "subscriptions":{
+            "additional_data":{
+                "action":"json_update",
+                "fields":[
+                    {
+                        "path":"$.user.first_name",
+                        "type":"firstname"
+                    },
+                    {
+                        "path":"$.user.last_name",
+                        "type":"lastname"
+                    },
+                    {
+                        "path":"$.user.phone",
+                        "type":"telephone"
+                    }
+                ]
+            },
+            "comment": {
+                "type": "quote",
+                "action": "update"
             }
         }
     }

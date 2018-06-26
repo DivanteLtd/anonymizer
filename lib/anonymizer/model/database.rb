@@ -33,9 +33,18 @@ class Database
       if info['action'] == 'truncate'
         querys = truncate_column_query(table_name)
         break
+      elsif info['action'] == 'empty'
+        # querys.push empty_column_query(table_name, column_name)
+        querys.push set_static_value_query(table_name, column_name, '')
+      elsif info['action'] == 'set_static'
+        querys.push set_static_value_query(table_name, column_name, info['value'])
       elsif info['action'] == 'eav_update'
         info['attributes'].each do |attribute|
           querys.push anonymize_eav_query(table_name, column_name, attribute)
+        end
+      elsif info['action'] == 'json_update'
+        info['fields'].each do |field|
+          querys.push anonymize_json_query(table_name, column_name, field)
         end
       else
         querys.push anonymize_column_query(table_name, column_name, info['type'])
@@ -79,6 +88,24 @@ class Database
     query
   end
 
+  def anonymize_json_query(table_name, column_name, field)
+    query = "UPDATE #{table_name} " \
+     'SET ' \
+      "#{column_name} = JSON_REPLACE( #{column_name}, " \
+        "\"#{field['path']}\", ("
+
+    if field['type'] == 'id'
+      query << 'SELECT FLOOR((NOW() + RAND()) * (RAND() * 119))) '
+    else
+      query << prepare_select_for_query(field['type'])
+      query << 'FROM fake_user ORDER BY RAND() LIMIT 1) '
+    end
+
+    query << ")"
+
+    query
+  end
+
   def truncate_column_query(table_name)
     querys = []
 
@@ -87,6 +114,12 @@ class Database
     querys.push 'SET FOREIGN_KEY_CHECKS = 1;'
 
     querys
+  end
+
+  def set_static_value_query(table_name, column_name, value)
+    query = "UPDATE #{table_name} SET #{column_name} = '#{value}'"
+
+    query
   end
 
   def insert_fake_data
