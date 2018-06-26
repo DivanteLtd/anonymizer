@@ -4,9 +4,39 @@ require 'net/scp'
 
 RSpec.describe '#anonymize magento 1.9 sample' do
   context 'all' do
-    before do
+    before(:context) do
       @project_name = 'magento_1_9_sample'
-      @random_string = 'a6938c1e1408837ad0d5030510c2f6a8'
+      @project_file_path = ROOT_DIR + '/config/project/' + @project_name + '.json'
+      @random_string = '2949d3e2173b25a55968f45518e4779d'
+      @default_action = 'update'
+
+      open('/tmp/' + @project_name + '.sql.gz', 'wb') do |f|
+        f << open('https://github.com/DivanteLtd/anonymizer/files/2135881/' + @project_name + '.sql.gz').read
+      end
+
+      config = JSON.parse(
+        '{
+          "type": "extended",
+          "basic_type": "magento_1_9",
+          "random_string": "' + @random_string + '",
+          "dump_server": {
+            "host": "",
+            "user": "",
+            "port": "",
+            "passphrase": "",
+            "path": "/tmp",
+            "rsync_options": ""
+          },
+          "tables": {}
+        }'
+      )
+
+      File.open(@project_file_path, 'w') do |f|
+        f.write(config.to_json)
+      end
+    end
+
+    before do
       @tmp_dir = '/tmp'
       @database = {
         host: CONFIG['database']['host'],
@@ -87,6 +117,11 @@ RSpec.describe '#anonymize magento 1.9 sample' do
       system(
         "rm -rf #{ROOT_DIR}/#{CONFIG['web_data_path']}/#{@project_name}_#{@random_string}.sql.gz"
       )
+    end
+
+    after(:context) do
+      FileUtils.rm_f(@project_file_path)
+      FileUtils.rm_f('/tmp/' + @project_name + '.sql.gz')
     end
   end
 end

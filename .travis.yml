@@ -6,3 +6,4 @@ script:
   - cp config/env/sample.yml config/env/development.yml
   - bundle exec rubocop
   - bundle exec rspec spec/unit
+  - bundle exec rspec spec/system
