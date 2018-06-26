@@ -7,9 +7,9 @@ dump_server:
   passphrase:
   path: /path/to/dumps/directory
 database:
-  user: anonymizer
+  user: root
   host: mysql
-  pass: 
+  pass: anonymizer
 web_data_path: ./web/data
 tmp_path: /tmp
 cap:
