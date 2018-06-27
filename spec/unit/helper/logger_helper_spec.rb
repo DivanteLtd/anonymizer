@@ -1,4 +1,6 @@
 require 'spec_helper'
+
+require './init.rb'
 require './lib/anonymizer/helper/logger_helper.rb'
 
 RSpec.describe '#logger_helper' do

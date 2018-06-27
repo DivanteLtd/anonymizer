@@ -1,5 +1,5 @@
 require 'spec_helper'
-require './init.rb'
+
 require './lib/anonymizer/model/database.rb'
 
 RSpec.describe Database, '#database' do
@@ -83,13 +83,6 @@ RSpec.describe Database, '#database' do
           "ORDER BY RAND() LIMIT 1) WHERE #{@table_name}.#{@column_name} IS NOT NULL"
         ]
       )
-
-      expect(db.anonymize_column_query(@table_name, @column_name, @column_type).is_a?(String)).to be true
-      expect(db.anonymize_column_query(@table_name, @column_name, @column_type)).to eq(
-        "UPDATE #{@table_name} SET #{@column_name} = (" \
-        "SELECT REPLACE(fake_user.email, '$uniq$', CONCAT('+', UUID_SHORT())) FROM fake_user " \
-        "ORDER BY RAND() LIMIT 1) WHERE #{@table_name}.#{@column_name} IS NOT NULL"
-      )
     end
   end
 
@@ -137,13 +130,6 @@ RSpec.describe Database, '#database' do
           "SET #{@column_name} = (SELECT fake_user.#{@column_type} FROM fake_user ORDER BY RAND() LIMIT 1) " \
           "WHERE #{@table_name}.#{@column_name} IS NOT NULL"
         ]
-      )
-
-      expect(db.anonymize_column_query(@table_name, @column_name, @column_type).is_a?(String)).to be true
-      expect(db.anonymize_column_query(@table_name, @column_name, @column_type)).to eq(
-        "UPDATE #{@table_name} " \
-        "SET #{@column_name} = (SELECT fake_user.#{@column_type} FROM fake_user ORDER BY RAND() LIMIT 1) " \
-        "WHERE #{@table_name}.#{@column_name} IS NOT NULL"
       )
     end
   end
@@ -193,13 +179,6 @@ RSpec.describe Database, '#database' do
           "WHERE #{@table_name}.#{@column_name} IS NOT NULL"
         ]
       )
-
-      expect(db.anonymize_column_query(@table_name, @column_name, @column_type).is_a?(String)).to be true
-      expect(db.anonymize_column_query(@table_name, @column_name, @column_type)).to eq(
-        "UPDATE #{@table_name} SET #{@column_name} = (" \
-        "SELECT CONCAT_WS(' ', fake_user.firstname, fake_user.lastname) FROM fake_user ORDER BY RAND() LIMIT 1) " \
-        "WHERE #{@table_name}.#{@column_name} IS NOT NULL"
-      )
     end
   end
 
@@ -247,13 +226,6 @@ RSpec.describe Database, '#database' do
           "SET #{@column_name} = (SELECT fake_user.#{@column_type} FROM fake_user ORDER BY RAND() LIMIT 1) " \
           "WHERE #{@table_name}.#{@column_name} IS NOT NULL"
         ]
-      )
-
-      expect(db.anonymize_column_query(@table_name, @column_name, @column_type).is_a?(String)).to be true
-      expect(db.anonymize_column_query(@table_name, @column_name, @column_type)).to eq(
-        "UPDATE #{@table_name} " \
-        "SET #{@column_name} = (SELECT fake_user.#{@column_type} FROM fake_user ORDER BY RAND() LIMIT 1) " \
-        "WHERE #{@table_name}.#{@column_name} IS NOT NULL"
       )
     end
   end
@@ -303,13 +275,6 @@ RSpec.describe Database, '#database' do
           "ORDER BY RAND() LIMIT 1) WHERE #{@table_name}.#{@column_name} IS NOT NULL"
         ]
       )
-
-      expect(db.anonymize_column_query(@table_name, @column_name, @column_type).is_a?(String)).to be true
-      expect(db.anonymize_column_query(@table_name, @column_name, @column_type)).to eq(
-        "UPDATE #{@table_name} SET #{@column_name} = (" \
-        "SELECT REPLACE(fake_user.#{@column_type}, '$uniq$', CONCAT('+', UUID_SHORT())) FROM fake_user " \
-        "ORDER BY RAND() LIMIT 1) WHERE #{@table_name}.#{@column_name} IS NOT NULL"
-      )
     end
   end
 
@@ -357,13 +322,6 @@ RSpec.describe Database, '#database' do
           "SET #{@column_name} = (SELECT FLOOR((NOW() + RAND()) * (RAND() * 119))) "\
           "WHERE #{@table_name}.#{@column_name} IS NOT NULL"
         ]
-      )
-
-      expect(db.anonymize_column_query(@table_name, @column_name, @column_type).is_a?(String)).to be true
-      expect(db.anonymize_column_query(@table_name, @column_name, @column_type)).to eq(
-        "UPDATE #{@table_name} " \
-        "SET #{@column_name} = (SELECT FLOOR((NOW() + RAND()) * (RAND() * 119))) "\
-        "WHERE #{@table_name}.#{@column_name} IS NOT NULL"
       )
     end
   end
@@ -431,16 +389,7 @@ RSpec.describe Database, '#database' do
       expect(db.column_query(@table_name, @config['tables'][@table_name])).to eq(
         [
           'SET FOREIGN_KEY_CHECKS = 0;',
-          "TRUNCATE #{@table_name}",
-          'SET FOREIGN_KEY_CHECKS = 1;'
-        ]
-      )
-
-      expect(db.truncate_column_query(@table_name).is_a?(Array)).to be true
-      expect(db.truncate_column_query(@table_name)).to eq(
-        [
-          'SET FOREIGN_KEY_CHECKS = 0;',
-          "TRUNCATE #{@table_name}",
+          "TRUNCATE #{@table_name};",
           'SET FOREIGN_KEY_CHECKS = 1;'
         ]
       )
@@ -516,7 +465,7 @@ RSpec.describe Database, '#database' do
                       'FROM ' \
                         'eav_entity_type ' \
                       'WHERE ' \
-                        "entity_type_code = '#{@entity_type}'))",
+                        "entity_type_code = '#{@entity_type}'));",
           'UPDATE customer_address_entity_varchar ' \
           'SET ' \
             'value = (SELECT fake_user.lastname FROM fake_user ORDER BY RAND() LIMIT 1) ' \
@@ -532,41 +481,8 @@ RSpec.describe Database, '#database' do
                       'FROM ' \
                         'eav_entity_type ' \
                       'WHERE ' \
-                        "entity_type_code = 'customer_address'))"
+                        "entity_type_code = 'customer_address'));"
         ]
-      )
-
-      expect(
-        db.anonymize_eav_query(
-          @table_name,
-          @column_name,
-          @config['tables'][@table_name][@column_name]['attributes'][0]
-        ).is_a?(String)
-      ).to be true
-
-      expect(
-        db.anonymize_eav_query(
-          @table_name,
-          @column_name,
-          @config['tables'][@table_name][@column_name]['attributes'][0]
-        )
-      ).to eq(
-        "UPDATE #{@table_name} " \
-          'SET ' \
-            "#{@column_name} = (SELECT fake_user.#{@column_type} FROM fake_user ORDER BY RAND() LIMIT 1) " \
-          'WHERE ' \
-            'attribute_id = (SELECT ' \
-              'attribute_id ' \
-                'FROM ' \
-                  'eav_attribute ' \
-                'WHERE ' \
-                  "attribute_code = '#{@attr_code}' " \
-                  'AND entity_type_id = (SELECT ' \
-                    'entity_type_id ' \
-                      'FROM ' \
-                        'eav_entity_type ' \
-                      'WHERE ' \
-                        "entity_type_code = '#{@entity_type}'))"
       )
     end
   end
