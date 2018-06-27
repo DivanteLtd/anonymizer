@@ -1,6 +1,8 @@
 require 'faker'
 
 require 'spec_helper'
+
+require './lib/anonymizer/model/fake.rb'
 require './lib/anonymizer/model/fake/pesel.rb'
 
 RSpec.describe Fake::Pesel, '#pesel' do

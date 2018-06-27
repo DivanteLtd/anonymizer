@@ -1,4 +1,5 @@
 require 'spec_helper'
+
 require './lib/anonymizer/model/anonymizer.rb'
 require './lib/anonymizer/model/database.rb'
 
@@ -125,6 +126,7 @@ RSpec.describe Anonymizer, '#anonymizer' do
     #   )
     # end
 
+    # rubocop:disable Lint/AmbiguousBlockAssociation
     it 'should be a valid config for extended project' do
       allow_any_instance_of(Anonymizer).to receive(:project_file_path).and_wrap_original { |m, args|
         if args == @name + '.json'
@@ -164,5 +166,6 @@ RSpec.describe Anonymizer, '#anonymizer' do
       expect(anonymizer.config['tables'][@new_table_name][@new_column_name]['type']).to eq(@new_column_type)
       expect(anonymizer.config['tables']['sales_flat_invoice_grid']['billing_name']['type']).to eq('fullname')
     end
+    # rubocop:enable Lint/AmbiguousBlockAssociation
   end
 end

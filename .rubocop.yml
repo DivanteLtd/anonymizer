@@ -2,7 +2,11 @@ AllCops:
   TargetRubyVersion: 2.1
   Exclude:
     - 'vendor/**/*'
-    - 'spec/**/*'
 
 Metrics/LineLength:
   Max: 120
+
+Metrics/BlockLength:
+  Max: 500
+  Include:
+    - spec/**/*.rb

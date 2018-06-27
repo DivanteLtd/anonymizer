@@ -26,100 +26,20 @@ class Database
     remove_fake_data
   end
 
-  def column_query(table_name, columns) # rubocop:disable Metrics/MethodLength
+  def column_query(table_name, columns)
     querys = []
 
     columns.each do |column_name, info|
-      if info['action'] == 'truncate'
-        querys = truncate_column_query(table_name)
-        break
-      elsif info['action'] == 'empty'
-        # querys.push empty_column_query(table_name, column_name)
-        querys.push set_static_value_query(table_name, column_name, '')
-      elsif info['action'] == 'set_static'
-        querys.push set_static_value_query(table_name, column_name, info['value'])
-      elsif info['action'] == 'eav_update'
-        info['attributes'].each do |attribute|
-          querys.push anonymize_eav_query(table_name, column_name, attribute)
-        end
-      elsif info['action'] == 'json_update'
-        info['fields'].each do |field|
-          querys.push anonymize_json_query(table_name, column_name, field)
-        end
-      else
-        querys.push anonymize_column_query(table_name, column_name, info['type'])
+      Object.const_get(
+        "Database::#{translate_acton_to_class_name(info['action'])}"
+      ).query(table_name, column_name, info).each do |query|
+        querys.push query
       end
+
+      break if info['action'] == 'truncate'
     end
 
     querys
-  end
-
-  def anonymize_column_query(table_name, column_name, column_type)
-    query = "UPDATE #{table_name} SET #{column_name} = ("
-
-    if column_type == 'id'
-      query << 'SELECT FLOOR((NOW() + RAND()) * (RAND() * 119))) '
-    else
-      query << prepare_select_for_query(column_type)
-
-      query << 'FROM fake_user ORDER BY RAND() LIMIT 1) '
-    end
-
-    query << "WHERE #{table_name}.#{column_name} IS NOT NULL"
-
-    query
-  end
-
-  def anonymize_eav_query(table_name, column_name, attribute) # rubocop:disable Metrics/MethodLength
-    query = "UPDATE #{table_name} " \
-      'SET ' \
-        "#{column_name} = (SELECT fake_user.#{attribute['type']} FROM fake_user ORDER BY RAND() LIMIT 1) " \
-      'WHERE ' \
-        'attribute_id = (SELECT ' \
-          'attribute_id ' \
-            'FROM eav_attribute ' \
-            'WHERE ' \
-              "attribute_code = '#{attribute['code']}' " \
-              'AND entity_type_id = (SELECT ' \
-                'entity_type_id ' \
-                  'FROM eav_entity_type ' \
-                  "WHERE entity_type_code = '#{attribute['entity_type']}'))"
-
-    query
-  end
-
-  def anonymize_json_query(table_name, column_name, field)
-    query = "UPDATE #{table_name} " \
-     'SET ' \
-      "#{column_name} = JSON_REPLACE( #{column_name}, " \
-        "\"#{field['path']}\", ("
-
-    if field['type'] == 'id'
-      query << 'SELECT FLOOR((NOW() + RAND()) * (RAND() * 119))) '
-    else
-      query << prepare_select_for_query(field['type'])
-      query << 'FROM fake_user ORDER BY RAND() LIMIT 1) '
-    end
-
-    query << ")"
-
-    query
-  end
-
-  def truncate_column_query(table_name)
-    querys = []
-
-    querys.push 'SET FOREIGN_KEY_CHECKS = 0;'
-    querys.push "TRUNCATE #{table_name}"
-    querys.push 'SET FOREIGN_KEY_CHECKS = 1;'
-
-    querys
-  end
-
-  def set_static_value_query(table_name, column_name, value)
-    query = "UPDATE #{table_name} SET #{column_name} = '#{value}'"
-
-    query
   end
 
   def insert_fake_data
@@ -136,9 +56,26 @@ class Database
     @db.drop_table :fake_user
   end
 
-  private
+  # rubocop:disable Metrics/MethodLength
+  def translate_acton_to_class_name(action)
+    case action
+    when 'truncate'
+      class_name = 'Truncate'
+    when 'empty', 'set_static'
+      class_name = 'Static'
+    when 'eav_update'
+      class_name = 'Eav'
+    when 'json_update'
+      class_name = 'Json'
+    else
+      class_name = 'Column'
+    end
 
-  def prepare_select_for_query(type)
+    class_name
+  end
+  # rubocop:enable Metrics/MethodLength
+
+  def self.prepare_select_for_query(type)
     query = if type == 'email'
               "SELECT REPLACE(fake_user.email, '$uniq$', CONCAT('+', UUID_SHORT())) "
             elsif type == 'login'
