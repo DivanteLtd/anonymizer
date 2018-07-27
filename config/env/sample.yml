@@ -1,5 +1,15 @@
 logger:
   enabled: true
+notifier:
+  mail:
+    enabled: true
+    address: postfix
+    port: 25
+    user_name: anonymizer@example.com
+    password: password
+    enable_starttls_auto: false
+    to: somebody@example.com
+    from: anonymizer@example.com
 dump_server:
   host: example.com
   user: anonymizer

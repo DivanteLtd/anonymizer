@@ -5,6 +5,7 @@ require 'sequel'
 require 'faker'
 require 'net/scp'
 require 'shellwords'
+require 'mail'
 
 # Root directory
 ROOT_DIR = File.dirname File.expand_path __FILE__

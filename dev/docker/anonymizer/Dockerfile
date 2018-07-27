@@ -2,6 +2,8 @@ FROM ruby:2.1
 
 MAINTAINER Mateusz Koszutowski <mkoszutowski@divante.pl>
 
+WORKDIR /usr/src/anonymizer/
+
 ARG UID=1000
 ARG GID=1000
 

@@ -1,18 +1,22 @@
 require 'spec_helper'
 
 require './lib/anonymizer/model/database.rb'
+require './lib/anonymizer/model/fake.rb'
+require './lib/anonymizer/model/fake/pesel.rb'
+require './lib/anonymizer/model/database/column.rb'
+require './lib/anonymizer/model/database/eav.rb'
+require './lib/anonymizer/model/database/json.rb'
+require './lib/anonymizer/model/database/static.rb'
+require './lib/anonymizer/model/database/truncate.rb'
 
 RSpec.describe Database, '#database' do
-  it 'should exists class Database' do
-    expect(Object.const_defined?('Database')).to be true
-  end
 
-  context 'work with config' do
+  context 'work with email type' do
     before do
       stub_const('CONFIG', 'database' => { 'host' => 'zupa', 'user' => 'zupa', 'pass' => 'zupa'} )
 
       @name = 'magento_1_9'
-      @table_name = 'customer_entity'
+      @table_name = 'sales_flat_order_address'
       @column_name = 'email'
       @column_type = 'email'
       @config = JSON.parse(
@@ -33,10 +37,16 @@ RSpec.describe Database, '#database' do
       )
     end
 
-    it 'should has setable class variables config' do
+    it 'should be a sql returned by anonymize_column_query' do
       db = Database.new @config
 
-      expect(db.config['tables'][@table_name][@column_name]['type']).to eq(@column_type)
+      expect(db.column_query(@table_name, @config['tables'][@table_name])).to eq(
+        [
+          "UPDATE #{@table_name} SET #{@column_name} = (" \
+          "SELECT REPLACE(fake_user.email, '$uniq$', CONCAT('+', UUID_SHORT())) FROM fake_user " \
+          "ORDER BY RAND() LIMIT 1) WHERE #{@table_name}.#{@column_name} IS NOT NULL"
+        ]
+      )
     end
   end
 
@@ -66,15 +76,16 @@ RSpec.describe Database, '#database' do
       )
     end
 
-    it 'anonymizer should create new istance of Sequel::MySQL, insert and remove fake data' do
+    it 'should be a sql returned by anonymize_column_query' do
       db = Database.new @config
 
-      expect(db).to receive(:insert_fake_data)
-      expect(db).to receive(:remove_fake_data)
-
-      expect_any_instance_of(Sequel::MySQL::Database).to receive(:run)
-
-      db.anonymize
+      expect(db.column_query(@table_name, @config['tables'][@table_name])).to eq(
+        [
+          "UPDATE #{@table_name} " \
+          "SET #{@column_name} = (SELECT fake_user.#{@column_type} FROM fake_user ORDER BY RAND() LIMIT 1) " \
+          "WHERE #{@table_name}.#{@column_name} IS NOT NULL"
+        ]
+      )
     end
   end
 
@@ -104,15 +115,16 @@ RSpec.describe Database, '#database' do
       )
     end
 
-    it 'anonymizer should create new istance of Sequel::MySQL, insert and remove fake data' do
+    it 'should be a sql returned by anonymize_column' do
       db = Database.new @config
 
-      expect(db).to receive(:insert_fake_data)
-      expect(db).to receive(:remove_fake_data)
-
-      expect_any_instance_of(Sequel::MySQL::Database).to receive(:run)
-
-      db.anonymize
+      expect(db.column_query(@table_name, @config['tables'][@table_name])).to eq(
+        [
+          "UPDATE #{@table_name} SET #{@column_name} = (" \
+          "SELECT CONCAT_WS(' ', fake_user.firstname, fake_user.lastname) FROM fake_user ORDER BY RAND() LIMIT 1) " \
+          "WHERE #{@table_name}.#{@column_name} IS NOT NULL"
+        ]
+      )
     end
   end
 
@@ -142,15 +154,16 @@ RSpec.describe Database, '#database' do
       )
     end
 
-    it 'anonymizer should create new istance of Sequel::MySQL, insert and remove fake data' do
+    it 'should be a sql returned by anonymize_column' do
       db = Database.new @config
 
-      expect(db).to receive(:insert_fake_data)
-      expect(db).to receive(:remove_fake_data)
-
-      expect_any_instance_of(Sequel::MySQL::Database).to receive(:run)
-
-      db.anonymize
+      expect(db.column_query(@table_name, @config['tables'][@table_name])).to eq(
+        [
+          "UPDATE #{@table_name} " \
+          "SET #{@column_name} = (SELECT fake_user.#{@column_type} FROM fake_user ORDER BY RAND() LIMIT 1) " \
+          "WHERE #{@table_name}.#{@column_name} IS NOT NULL"
+        ]
+      )
     end
   end
 
@@ -180,15 +193,16 @@ RSpec.describe Database, '#database' do
       )
     end
 
-    it 'anonymizer should create new istance of Sequel::MySQL, insert and remove fake data' do
+    it 'should be a sql returned by anonymize_column' do
       db = Database.new @config
 
-      expect(db).to receive(:insert_fake_data)
-      expect(db).to receive(:remove_fake_data)
-
-      expect_any_instance_of(Sequel::MySQL::Database).to receive(:run)
-
-      db.anonymize
+      expect(db.column_query(@table_name, @config['tables'][@table_name])).to eq(
+        [
+          "UPDATE #{@table_name} SET #{@column_name} = (" \
+          "SELECT REPLACE(fake_user.#{@column_type}, '$uniq$', CONCAT('+', UUID_SHORT())) FROM fake_user " \
+          "ORDER BY RAND() LIMIT 1) WHERE #{@table_name}.#{@column_name} IS NOT NULL"
+        ]
+      )
     end
   end
 
@@ -218,15 +232,16 @@ RSpec.describe Database, '#database' do
       )
     end
 
-    it 'anonymizer should create new istance of Sequel::MySQL, insert and remove fake data' do
+    it 'should be a sql returned by anonymize_column' do
       db = Database.new @config
 
-      expect(db).to receive(:insert_fake_data)
-      expect(db).to receive(:remove_fake_data)
-
-      expect_any_instance_of(Sequel::MySQL::Database).to receive(:run)
-
-      db.anonymize
+      expect(db.column_query(@table_name, @config['tables'][@table_name])).to eq(
+        [
+          "UPDATE #{@table_name} " \
+          "SET #{@column_name} = (SELECT FLOOR((NOW() + RAND()) * (RAND() * 119))) "\
+          "WHERE #{@table_name}.#{@column_name} IS NOT NULL"
+        ]
+      )
     end
   end
 
@@ -278,15 +293,16 @@ RSpec.describe Database, '#database' do
       )
     end
 
-    it 'anonymizer should create new istance of Sequel::MySQL, insert and remove fake data' do
+    it 'should be a sql returned by anonymize_column' do
       db = Database.new @config
 
-      expect(db).to receive(:insert_fake_data)
-      expect(db).to receive(:remove_fake_data)
-
-      expect_any_instance_of(Sequel::MySQL::Database).to receive(:run).exactly(3).times
-
-      db.anonymize
+      expect(db.column_query(@table_name, @config['tables'][@table_name])).to eq(
+        [
+          'SET FOREIGN_KEY_CHECKS = 0;',
+          "TRUNCATE #{@table_name};",
+          'SET FOREIGN_KEY_CHECKS = 1;'
+        ]
+      )
     end
   end
 
@@ -330,86 +346,45 @@ RSpec.describe Database, '#database' do
       )
     end
 
-    it 'anonymizer should create new istance of Sequel::MySQL, insert and remove fake data' do
+    it 'should be a sql returned by anonymize_column' do
       db = Database.new @config
 
-      expect(db).to receive(:insert_fake_data)
-      expect(db).to receive(:remove_fake_data)
-
-      expect_any_instance_of(Sequel::MySQL::Database).to receive(:run).exactly(2).times
-
-      db.anonymize
-    end
-  end
-
-  context 'insert fake data' do
-    before do
-      stub_const('CONFIG', 'database' => { 'host' => 'zupa', 'user' => 'zupa', 'pass' => 'zupa'} )
-
-      @name = 'magento_1_9'
-      @table_name = 'sales_flat_order_address'
-      @column_name = 'firstname'
-      @column_type = 'firstname'
-      @config = JSON.parse(
-        '{
-          "type": "basic",
-          "database": {
-            "name": "' + @name + '"
-          },
-          "tables": {
-            "' + @table_name + '": {
-              "' + @column_name + '": {
-                "type": "' + @column_type + '",
-                "action": "update"
-              }
-            }
-          }
-        }'
+      expect(db.column_query(@table_name, @config['tables'][@table_name])).to eq(
+        [
+          "UPDATE #{@table_name} " \
+          'SET ' \
+            "#{@column_name} = (SELECT fake_user.#{@column_type} FROM fake_user ORDER BY RAND() LIMIT 1) " \
+          'WHERE ' \
+            'attribute_id = (SELECT ' \
+              'attribute_id ' \
+                'FROM ' \
+                  'eav_attribute ' \
+                'WHERE ' \
+                  "attribute_code = '#{@attr_code}' " \
+                  'AND entity_type_id = (SELECT ' \
+                    'entity_type_id ' \
+                      'FROM ' \
+                        'eav_entity_type ' \
+                      'WHERE ' \
+                        "entity_type_code = '#{@entity_type}'));",
+          'UPDATE customer_address_entity_varchar ' \
+          'SET ' \
+            'value = (SELECT fake_user.lastname FROM fake_user ORDER BY RAND() LIMIT 1) ' \
+          'WHERE ' \
+            'attribute_id = (SELECT ' \
+              'attribute_id ' \
+                'FROM ' \
+                  'eav_attribute ' \
+                'WHERE ' \
+                  "attribute_code = 'lastname' " \
+                  'AND entity_type_id = (SELECT ' \
+                    'entity_type_id ' \
+                      'FROM ' \
+                        'eav_entity_type ' \
+                      'WHERE ' \
+                        "entity_type_code = 'customer_address'));"
+        ]
       )
-    end
-
-    it 'should call method create_table' do
-      db = Database.new @config
-
-      expect_any_instance_of(Sequel::MySQL::Database).to receive(:create_table)
-      expect_any_instance_of(Sequel::MySQL::Dataset).to receive(:insert).exactly(100).times
-
-      db.insert_fake_data
-    end
-  end
-
-  context 'remove fake data' do
-    before do
-      stub_const('CONFIG', 'database' => { 'host' => 'zupa', 'user' => 'zupa', 'pass' => 'zupa'} )
-
-      @name = 'magento_1_9'
-      @table_name = 'sales_flat_order_address'
-      @column_name = 'firstname'
-      @column_type = 'firstname'
-      @config = JSON.parse(
-        '{
-          "type": "basic",
-          "database": {
-            "name": "' + @name + '"
-          },
-          "tables": {
-            "' + @table_name + '": {
-              "' + @column_name + '": {
-                "type": "' + @column_type + '",
-                "action": "update"
-              }
-            }
-          }
-        }'
-      )
-    end
-
-    it 'should call method drop_table' do
-      db = Database.new @config
-
-      expect_any_instance_of(Sequel::MySQL::Database).to receive(:drop_table)
-
-      db.remove_fake_data
     end
   end
 end

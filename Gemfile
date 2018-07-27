@@ -11,6 +11,8 @@ gem 'faker', git: 'https://github.com/stympy/faker', branch: 'master'
 gem 'rspec', '~> 3.0'
 gem 'simplecov', require: false
 
+gem 'mail'
+
 gem 'rake'
 
 gem 'capistrano', '~> 3.7'

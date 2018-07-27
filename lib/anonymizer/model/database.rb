@@ -1,3 +1,6 @@
+require 'sequel'
+require 'faker'
+
 # Basic class to communication with databese
 class Database
   attr_accessor :config, :name
@@ -10,20 +13,24 @@ class Database
       host: CONFIG['database']['host'],
       password: CONFIG['database']['pass']
     )
+    @notifier = Notifier.new
   end
 
   def anonymize
-    insert_fake_data
+    begin
+      insert_fake_data
 
-    @config['tables'].each do |table_name, columns|
-      querys = column_query(table_name, columns)
-
-      querys.each do |query|
-        @db.run query
+      @config['tables'].each do |table_name, columns|
+          querys = column_query(table_name, columns)
+          querys.each do |query|
+              @db.run query
+          end
       end
-    end
 
-    remove_fake_data
+      remove_fake_data
+    rescue => e
+      @notifier.send(e.to_s)
+    end
   end
 
   def column_query(table_name, columns)
