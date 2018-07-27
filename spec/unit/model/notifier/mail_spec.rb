@@ -8,7 +8,7 @@ RSpec.describe Notifier::Mail, '#notifier::mail' do
   end
 
   it 'should send email' do
-    mailer = Notifier::Mail.new
+    # mailer = Notifier::Mail.new
 
     # expect_any_instance_of(::Mail).to receive(:to)
 

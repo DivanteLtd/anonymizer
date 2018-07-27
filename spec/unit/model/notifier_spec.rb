@@ -8,7 +8,7 @@ RSpec.describe Notifier, '#notifier' do
   end
 
   it 'should send email for enabled email notification in config' do
-    stub_const('CONFIG', 'notifier' => { 'mail' => { 'enabled' => true } } )
+    stub_const('CONFIG', 'notifier' => { 'mail' => { 'enabled' => true } })
 
     notifier = Notifier.new
 
@@ -18,7 +18,7 @@ RSpec.describe Notifier, '#notifier' do
   end
 
   it 'shouldn\'t send email for disabled email notification in config' do
-    stub_const('CONFIG', 'notifier' => { 'mail' => { 'enabled' => false } } )
+    stub_const('CONFIG', 'notifier' => { 'mail' => { 'enabled' => false } })
 
     notifier = Notifier.new
 

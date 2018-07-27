@@ -10,10 +10,9 @@ require './lib/anonymizer/model/database/static.rb'
 require './lib/anonymizer/model/database/truncate.rb'
 
 RSpec.describe Database, '#database' do
-
   context 'work with email type' do
     before do
-      stub_const('CONFIG', 'database' => { 'host' => 'zupa', 'user' => 'zupa', 'pass' => 'zupa'} )
+      stub_const('CONFIG', 'database' => { 'host' => 'zupa', 'user' => 'zupa', 'pass' => 'zupa' })
 
       @name = 'magento_1_9'
       @table_name = 'sales_flat_order_address'
@@ -52,7 +51,7 @@ RSpec.describe Database, '#database' do
 
   context 'work with firstname type' do
     before do
-      stub_const('CONFIG', 'database' => { 'host' => 'zupa', 'user' => 'zupa', 'pass' => 'zupa'} )
+      stub_const('CONFIG', 'database' => { 'host' => 'zupa', 'user' => 'zupa', 'pass' => 'zupa' })
 
       @name = 'magento_1_9'
       @table_name = 'sales_flat_order_address'
@@ -91,7 +90,7 @@ RSpec.describe Database, '#database' do
 
   context 'work with fullname type' do
     before do
-      stub_const('CONFIG', 'database' => { 'host' => 'zupa', 'user' => 'zupa', 'pass' => 'zupa'} )
+      stub_const('CONFIG', 'database' => { 'host' => 'zupa', 'user' => 'zupa', 'pass' => 'zupa' })
 
       @name = 'magento_1_9'
       @table_name = 'sales_flat_order_grid'
@@ -130,7 +129,7 @@ RSpec.describe Database, '#database' do
 
   context 'work with postcode type' do
     before do
-      stub_const('CONFIG', 'database' => { 'host' => 'zupa', 'user' => 'zupa', 'pass' => 'zupa'} )
+      stub_const('CONFIG', 'database' => { 'host' => 'zupa', 'user' => 'zupa', 'pass' => 'zupa' })
 
       @name = 'magento_1_9'
       @table_name = 'sales_flat_order_address'
@@ -169,7 +168,7 @@ RSpec.describe Database, '#database' do
 
   context 'work with uniq login type' do
     before do
-      stub_const('CONFIG', 'database' => { 'host' => 'zupa', 'user' => 'zupa', 'pass' => 'zupa'} )
+      stub_const('CONFIG', 'database' => { 'host' => 'zupa', 'user' => 'zupa', 'pass' => 'zupa' })
 
       @name = 'magento_1_9'
       @table_name = 'sales_flat_order_address'
@@ -208,7 +207,7 @@ RSpec.describe Database, '#database' do
 
   context 'work with id type' do
     before do
-      stub_const('CONFIG', 'database' => { 'host' => 'zupa', 'user' => 'zupa', 'pass' => 'zupa'} )
+      stub_const('CONFIG', 'database' => { 'host' => 'zupa', 'user' => 'zupa', 'pass' => 'zupa' })
 
       @name = 'magento_1_9'
       @table_name = 'sales_flat_order_address'
@@ -247,7 +246,7 @@ RSpec.describe Database, '#database' do
 
   context 'work with column to truncate' do
     before do
-      stub_const('CONFIG', 'database' => { 'host' => 'zupa', 'user' => 'zupa', 'pass' => 'zupa'} )
+      stub_const('CONFIG', 'database' => { 'host' => 'zupa', 'user' => 'zupa', 'pass' => 'zupa' })
 
       @name = 'magento_1_9'
       @table_name = 'log_url'
@@ -308,7 +307,7 @@ RSpec.describe Database, '#database' do
 
   context 'work with magento EAV model' do
     before do
-      stub_const('CONFIG', 'database' => { 'host' => 'zupa', 'user' => 'zupa', 'pass' => 'zupa'} )
+      stub_const('CONFIG', 'database' => { 'host' => 'zupa', 'user' => 'zupa', 'pass' => 'zupa' })
 
       @name = 'magento_1_9'
       @table_name = 'customer_address_entity_varchar'

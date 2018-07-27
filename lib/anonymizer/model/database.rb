@@ -17,20 +17,18 @@ class Database
   end
 
   def anonymize
-    begin
-      insert_fake_data
+    insert_fake_data
 
-      @config['tables'].each do |table_name, columns|
-          querys = column_query(table_name, columns)
-          querys.each do |query|
-              @db.run query
-          end
+    @config['tables'].each do |table_name, columns|
+      querys = column_query(table_name, columns)
+      querys.each do |query|
+        @db.run query
       end
-
-      remove_fake_data
-    rescue => e
-      @notifier.send(e.to_s)
     end
+
+    remove_fake_data
+  rescue StandardError => e
+    @notifier.send(e.to_s)
   end
 
   def column_query(table_name, columns)
