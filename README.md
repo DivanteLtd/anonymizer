@@ -302,6 +302,23 @@ RUBY_ENV=<env_name> bundle exec rake project:anonymize[example]
 
 ## Development
 
+### Build environment
+
+Run development docker environment using the command below:
+
+```
+docker-compose -f dev/docker/docker-compose.dev.yml up
+```
+
+### How to run the tests
+
+On docker environment run the commands:
+
+```
+bundle install
+bundle exec rspec spec/
+```
+
 ## Contributing
 
 If you'd like to contribute, please fork the repository and use a feature branch. Pull requests are warmly welcome.
