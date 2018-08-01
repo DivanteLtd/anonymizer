@@ -1,6 +1,7 @@
 require 'system_spec_helper'
 
 require 'net/scp'
+require 'open-uri'
 
 RSpec.describe '#anonymize magento 2.1 sample' do
   context 'all' do

@@ -3,22 +3,22 @@ require 'system_spec_helper'
 require 'net/scp'
 require 'open-uri'
 
-RSpec.describe '#anonymize magento 1.9 sample' do
+RSpec.describe '#anonymize pimcore 5 sample' do
   context 'all' do
     before(:context) do
-      @project_name = 'magento_1_9_sample'
+      @project_name = 'pimcore_5_sample'
       @project_file_path = ROOT_DIR + '/config/project/' + @project_name + '.json'
       @random_string = '2949d3e2173b25a55968f45518e4779d'
       @default_action = 'update'
 
       open('/tmp/' + @project_name + '.sql.gz', 'wb') do |f|
-        f << open('https://github.com/DivanteLtd/anonymizer/files/2135881/' + @project_name + '.sql.gz').read
+        f << open('https://github.com/DivanteLtd/anonymizer/files/2248300/' + @project_name + '.sql.gz').read
       end
 
       config = JSON.parse(
         '{
           "type": "extended",
-          "basic_type": "magento_1_9",
+          "basic_type": "pimcore_5",
           "random_string": "' + @random_string + '",
           "dump_server": {
             "host": "",
@@ -38,6 +38,8 @@ RSpec.describe '#anonymize magento 1.9 sample' do
     end
 
     before do
+      @project_name = 'pimcore_5_sample'
+      @random_string = 'cfcd208495d565ef66e7dff9f98764da'
       @tmp_dir = '/tmp'
       @database = {
         host: CONFIG['database']['host'],
@@ -58,7 +60,7 @@ RSpec.describe '#anonymize magento 1.9 sample' do
       )
     end
 
-    it 'should anonymize magento 1.9 sample' do
+    it 'should anonymize pimcore 5 sample' do
       anonymizer = Anonymizer.new @project_name
 
       system(
