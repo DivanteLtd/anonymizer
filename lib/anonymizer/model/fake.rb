@@ -21,6 +21,7 @@ class Fake
       String :street
       String :postcode
       String :city
+      String :full_address
       String :vat_id
       String :ip
       String :quote
@@ -43,6 +44,7 @@ class Fake
       street: Faker::Address.street_name,
       postcode: Faker::Address.postcode,
       city: Faker::Address.city,
+      full_address: Faker::Address.full_address,
       vat_id: Faker::Company.swedish_organisation_number,
       ip: Faker::Internet.private_ip_v4_address,
       quote: Faker::StarWars.quote,

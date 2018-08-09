@@ -308,6 +308,18 @@
                     }
                 ]
             }
+        },
+        "sales_flat_shipment_grid": {
+            "shipping_name": {
+                "type": "fullname",
+                "action": "update"
+            }
+        },
+        "sales_flat_invoice_grid": {
+            "billing_name": {
+                "type": "fullname",
+                "action": "update"
+            }
         }
     }
 }

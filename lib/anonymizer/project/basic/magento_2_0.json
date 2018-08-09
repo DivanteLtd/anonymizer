@@ -328,6 +328,54 @@
                     }
                 ]
             }
+        },
+        "sales_shipment_grid": {
+            "customer_name": {
+                "type": "fullname",
+                "action": "update"
+            },
+            "billing_address": {
+                "type": "full_address",
+                "action": "update"
+            },
+            "shipping_address": {
+                "type": "full_address",
+                "action": "update"
+            },
+            "billing_name": {
+                "type": "fullname",
+                "action": "update"
+            },
+            "shipping_name": {
+                "type": "fullname",
+                "action": "update"
+            },
+            "customer_email": {
+                "type": "email",
+                "action": "update"
+            }
+        },
+        "sales_invoice_grid": {
+            "customer_name": {
+                "type": "fullname",
+                "action": "update"
+            },
+            "billing_address": {
+                "type": "full_address",
+                "action": "update"
+            },
+            "shipping_address": {
+                "type": "full_address",
+                "action": "update"
+            },
+            "billing_name": {
+                "type": "fullname",
+                "action": "update"
+            },
+            "customer_email": {
+                "type": "email",
+                "action": "update"
+            }
         }
     }
 }
