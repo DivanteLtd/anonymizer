@@ -24,7 +24,7 @@ module ShellHelper
   def self.dump_database(project_name, database, dir)
     random_string = "_#{database[:random_string]}" if database[:random_string]
     command = "mysqldump#{mysql_options(database)} #{project_name} | " \
-      'grep -v "SQL SECURITY DEFINER" | sed -e \'s/DEFINER[ ]*=[ ]*[^*]*\*/\*/\' | ' \
+      'grep -av "SQL SECURITY DEFINER" | sed -e \'s/DEFINER[ ]*=[ ]*[^*]*\*/\*/\' | ' \
       "gzip > #{dir}/#{project_name}#{random_string}.sql.gz"
 
     remove_white_space(command)
