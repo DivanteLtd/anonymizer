@@ -1,5 +1,9 @@
 language: ruby
 
+env:
+  global:
+    - CC_TEST_REPORTER_ID=754ef1da9d8f9c514b6f9a97c92620c9f7e3bcd5df21e5792cee16e57bcd6c4b
+
 rvm:
 - 2.2
 - 2.3
@@ -20,9 +24,15 @@ sudo: required
 
 before_install:
   - sudo mysql -e 'CREATE DATABASE anonymizer;'
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 
 script:
   - cp config/env/sample.yml config/env/development.yml
   - bundle exec rubocop
   - bundle exec rspec spec/unit
   # - bundle exec rspec spec/system
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
