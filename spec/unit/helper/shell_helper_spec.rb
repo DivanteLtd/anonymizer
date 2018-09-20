@@ -119,14 +119,14 @@ RSpec.describe '#shell_helper' do
     it 'should return command with host, user and pass' do
       expect(ShellHelper.dump_database(@project_name, @database, @dump_dir)).to eq(
         "mysqldump -h #{@host} -u #{@user} -p#{@pass} #{@project_name} | " \
-        'grep -va "SQL SECURITY DEFINER" | sed -e \'s/DEFINER[ ]*=[ ]*[^*]*\*/\*/\' | ' \
+        'grep -av "SQL SECURITY DEFINER" | sed -e \'s/DEFINER[ ]*=[ ]*[^*]*\*/\*/\' | ' \
         "gzip > #{@dump_dir}/#{@project_name}_#{@random_string}.sql.gz"
       )
 
       @database.delete(:random_string)
       expect(ShellHelper.dump_database(@project_name, @database, @dump_dir)).to eq(
         "mysqldump -h #{@host} -u #{@user} -p#{@pass} #{@project_name} | " \
-        'grep -va "SQL SECURITY DEFINER" | sed -e \'s/DEFINER[ ]*=[ ]*[^*]*\*/\*/\' | ' \
+        'grep -av "SQL SECURITY DEFINER" | sed -e \'s/DEFINER[ ]*=[ ]*[^*]*\*/\*/\' | ' \
         "gzip > #{@dump_dir}/#{@project_name}.sql.gz"
       )
     end
