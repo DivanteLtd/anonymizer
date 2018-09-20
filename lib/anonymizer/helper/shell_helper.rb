@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Helper to generate shell command used in application
 module ShellHelper
   def self.drop_database(project_name, database)

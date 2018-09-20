@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'system_spec_helper'
 
 require 'net/scp'

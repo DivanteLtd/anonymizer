@@ -14,7 +14,7 @@ Anonymizer replaces all data in your database by anonymized random data. The mos
 
 ## Requritements
 
-- ruby >= 2.1
+- ruby >= 2.2
 - mysql >= 5.6
 
 ## Supported frameworks

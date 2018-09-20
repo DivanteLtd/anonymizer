@@ -1,7 +1,7 @@
 version: '3'
 services:
   ruby:
-    image: ruby:2.1
+    image: ruby:2.2
     build:
       context: ../../
       dockerfile: dev/docker/anonymizer/Dockerfile

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Helper for json
 module LoggerHelper
   def self.file(file_name)

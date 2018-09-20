@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require './init.rb'
 
 # Load DSL and set up stages

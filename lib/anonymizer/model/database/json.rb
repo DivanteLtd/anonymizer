@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Basic class to communication with databese
 class Database
   # Class to anonymize json data type

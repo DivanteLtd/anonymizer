@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Anonymizer to anonymize world
 class Anonymizer
   attr_accessor :config

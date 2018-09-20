@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Extended native Hash
 class Hash
   def deep_merge(second)
