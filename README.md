@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/DivanteLtd/anonymizer.svg?branch=master)](https://travis-ci.org/DivanteLtd/anonymizer)
+[![Build Status](https://travis-ci.org/DivanteLtd/anonymizer.svg?branch=master)](https://travis-ci.org/DivanteLtd/anonymizer) [![Test Coverage](https://api.codeclimate.com/v1/badges/e78aef36a350af5fd33c/test_coverage)](https://codeclimate.com/github/DivanteLtd/anonymizer/test_coverage)
 
 # Anonymizer
 Anonymizer is a universal tool to create anonymized DBs for projects.
