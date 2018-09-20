@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Helper for json
 module JSONHelper
   def self.valid_json?(json)

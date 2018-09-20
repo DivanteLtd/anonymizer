@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Generator to fake data
 class Fake
   def self.user

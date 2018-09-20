@@ -1,4 +1,4 @@
-FROM ruby:2.1
+FROM ruby:2.2
 
 MAINTAINER Mateusz Koszutowski <mkoszutowski@divante.pl>
 
@@ -17,7 +17,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Create anonymizer user
-RUN groupadd -f -g ${GID} anonymizer \
-    && id -u anonymizer &> /dev/null || useradd --shell /bin/bash -u ${UID} -g ${GID} -m anonymizer
+RUN if [ ! `id -g anonymizer &> /dev/null` ]; then groupadd -f -g ${GID} anonymizer; fi \
+	&& if [ ! `id -u anonymizer &> /dev/null` ]; then useradd --shell /bin/bash -u ${UID} -g ${GID} -m anonymizer; fi
 
 USER anonymizer
