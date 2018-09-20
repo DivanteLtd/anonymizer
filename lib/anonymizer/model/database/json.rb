@@ -14,9 +14,9 @@ class Database
         "#{column_name} = JSON_REPLACE( #{column_name}, " \
           "\"#{field['path']}\", ("
 
-      query << manage_type(field['type'])
+      query += manage_type(field['type'])
 
-      query << ')'
+      query += ')'
 
       querys.push query
 
@@ -27,10 +27,10 @@ class Database
       query = ''
 
       if type == 'id'
-        query << 'SELECT FLOOR((NOW() + RAND()) * (RAND() * 119))) '
+        query += 'SELECT FLOOR((NOW() + RAND()) * (RAND() * 119))) '
       else
-        query << prepare_select_for_query(type)
-        query << 'FROM fake_user ORDER BY RAND() LIMIT 1) '
+        query += prepare_select_for_query(type)
+        query += 'FROM fake_user ORDER BY RAND() LIMIT 1) '
       end
 
       query

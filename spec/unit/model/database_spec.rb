@@ -64,13 +64,13 @@ RSpec.describe Database, '#database' do
       )
     end
 
-    it 'anonymizer should create new istance of Sequel::MySQL, insert and remove fake data' do
+    it 'anonymizer should create new istance of Sequel::Mysql22, insert and remove fake data' do
       db = Database.new @config
 
       expect(db).to receive(:insert_fake_data)
       expect(db).to receive(:remove_fake_data)
 
-      expect_any_instance_of(Sequel::MySQL::Database).to receive(:run)
+      expect_any_instance_of(Sequel::Mysql2::Database).to receive(:run)
 
       db.anonymize
     end
@@ -112,13 +112,13 @@ RSpec.describe Database, '#database' do
       )
     end
 
-    it 'anonymizer should create new istance of Sequel::MySQL, insert and remove fake data' do
+    it 'anonymizer should create new istance of Sequel::Mysql22, insert and remove fake data' do
       db = Database.new @config
 
       expect(db).to receive(:insert_fake_data)
       expect(db).to receive(:remove_fake_data)
 
-      expect_any_instance_of(Sequel::MySQL::Database).to receive(:run)
+      expect_any_instance_of(Sequel::Mysql2::Database).to receive(:run)
 
       db.anonymize
     end
@@ -160,13 +160,13 @@ RSpec.describe Database, '#database' do
       )
     end
 
-    it 'anonymizer should create new istance of Sequel::MySQL, insert and remove fake data' do
+    it 'anonymizer should create new istance of Sequel::Mysql2, insert and remove fake data' do
       db = Database.new @config
 
       expect(db).to receive(:insert_fake_data)
       expect(db).to receive(:remove_fake_data)
 
-      expect_any_instance_of(Sequel::MySQL::Database).to receive(:run)
+      expect_any_instance_of(Sequel::Mysql2::Database).to receive(:run)
 
       db.anonymize
     end
@@ -208,13 +208,13 @@ RSpec.describe Database, '#database' do
       )
     end
 
-    it 'anonymizer should create new istance of Sequel::MySQL, insert and remove fake data' do
+    it 'anonymizer should create new istance of Sequel::Mysql2, insert and remove fake data' do
       db = Database.new @config
 
       expect(db).to receive(:insert_fake_data)
       expect(db).to receive(:remove_fake_data)
 
-      expect_any_instance_of(Sequel::MySQL::Database).to receive(:run)
+      expect_any_instance_of(Sequel::Mysql2::Database).to receive(:run)
 
       db.anonymize
     end
@@ -256,13 +256,13 @@ RSpec.describe Database, '#database' do
       )
     end
 
-    it 'anonymizer should create new istance of Sequel::MySQL, insert and remove fake data' do
+    it 'anonymizer should create new istance of Sequel::Mysql2, insert and remove fake data' do
       db = Database.new @config
 
       expect(db).to receive(:insert_fake_data)
       expect(db).to receive(:remove_fake_data)
 
-      expect_any_instance_of(Sequel::MySQL::Database).to receive(:run)
+      expect_any_instance_of(Sequel::Mysql2::Database).to receive(:run)
 
       db.anonymize
     end
@@ -304,13 +304,13 @@ RSpec.describe Database, '#database' do
       )
     end
 
-    it 'anonymizer should create new istance of Sequel::MySQL, insert and remove fake data' do
+    it 'anonymizer should create new istance of Sequel::Mysql2, insert and remove fake data' do
       db = Database.new @config
 
       expect(db).to receive(:insert_fake_data)
       expect(db).to receive(:remove_fake_data)
 
-      expect_any_instance_of(Sequel::MySQL::Database).to receive(:run)
+      expect_any_instance_of(Sequel::Mysql2::Database).to receive(:run)
 
       db.anonymize
     end
@@ -374,13 +374,13 @@ RSpec.describe Database, '#database' do
       )
     end
 
-    it 'anonymizer should create new istance of Sequel::MySQL, insert and remove fake data' do
+    it 'anonymizer should create new istance of Sequel::Mysql2, insert and remove fake data' do
       db = Database.new @config
 
       expect(db).to receive(:insert_fake_data)
       expect(db).to receive(:remove_fake_data)
 
-      expect_any_instance_of(Sequel::MySQL::Database).to receive(:run).exactly(3).times
+      expect_any_instance_of(Sequel::Mysql2::Database).to receive(:run).exactly(3).times
 
       db.anonymize
     end
@@ -436,13 +436,13 @@ RSpec.describe Database, '#database' do
       )
     end
 
-    it 'anonymizer should create new istance of Sequel::MySQL, insert and remove fake data' do
+    it 'anonymizer should create new istance of Sequel::Mysql2, insert and remove fake data' do
       db = Database.new @config
 
       expect(db).to receive(:insert_fake_data)
       expect(db).to receive(:remove_fake_data)
 
-      expect_any_instance_of(Sequel::MySQL::Database).to receive(:run).exactly(2).times
+      expect_any_instance_of(Sequel::Mysql2::Database).to receive(:run).exactly(2).times
 
       db.anonymize
     end
@@ -516,8 +516,8 @@ RSpec.describe Database, '#database' do
     it 'should call method create_table' do
       db = Database.new @config
 
-      expect_any_instance_of(Sequel::MySQL::Database).to receive(:create_table)
-      expect_any_instance_of(Sequel::MySQL::Dataset).to receive(:insert).exactly(100).times
+      expect_any_instance_of(Sequel::Mysql2::Database).to receive(:create_table)
+      expect_any_instance_of(Sequel::Mysql2::Dataset).to receive(:insert).exactly(100).times
 
       db.insert_fake_data
     end
@@ -550,7 +550,7 @@ RSpec.describe Database, '#database' do
     it 'should call method drop_table' do
       db = Database.new @config
 
-      expect_any_instance_of(Sequel::MySQL::Database).to receive(:drop_table)
+      expect_any_instance_of(Sequel::Mysql2::Database).to receive(:drop_table)
 
       db.remove_fake_data
     end

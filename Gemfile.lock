@@ -29,7 +29,7 @@ GEM
     docile (1.1.5)
     i18n (0.7.0)
     json (2.0.2)
-    mysql (2.9.1)
+    mysql2 (0.5.2)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (3.2.0)
@@ -79,7 +79,7 @@ DEPENDENCIES
   capistrano-bundler (~> 1.2)
   capistrano-rvm
   faker!
-  mysql
+  mysql2
   net-scp
   rake
   rspec (~> 3.0)

@@ -6,7 +6,7 @@ ruby '>= 2.2.0'
 
 gem 'rubocop', require: false
 
-gem 'mysql'
+gem 'mysql2'
 gem 'sequel'
 
 gem 'net-scp'
