@@ -10,8 +10,8 @@ class Database
       querys = []
 
       query = "UPDATE #{table_name} SET #{column_name} = ("
-      query << manage_type(column_type)
-      query << "WHERE #{table_name}.#{column_name} IS NOT NULL"
+      query += manage_type(column_type)
+      query += "WHERE #{table_name}.#{column_name} IS NOT NULL"
 
       querys.push query
 
@@ -22,10 +22,10 @@ class Database
       query = ''
 
       if type == 'id'
-        query << 'SELECT FLOOR((NOW() + RAND()) * (RAND() * 119))) '
+        query += 'SELECT FLOOR((NOW() + RAND()) * (RAND() * 119))) '
       else
-        query << prepare_select_for_query(type)
-        query << 'FROM fake_user ORDER BY RAND() LIMIT 1) '
+        query += prepare_select_for_query(type)
+        query += 'FROM fake_user ORDER BY RAND() LIMIT 1) '
       end
 
       query
