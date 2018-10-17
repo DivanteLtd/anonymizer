@@ -79,9 +79,9 @@ class Database
 
   def self.prepare_select_for_query(type)
     query = if type == 'email'
-              "SELECT REPLACE(fake_user.email, '$uniq$', CONCAT('+', UUID_SHORT())) "
+              "SELECT REPLACE(fake_user.email, '$uniq$', CONCAT('+', UUID())) "
             elsif type == 'login'
-              "SELECT REPLACE(fake_user.login, '$uniq$', CONCAT('+', UUID_SHORT())) "
+              "SELECT REPLACE(fake_user.login, '$uniq$', CONCAT('+', SUBSTRING(UUID(), 0, 50))) "
             elsif type == 'fullname'
               "SELECT CONCAT_WS(' ', fake_user.firstname, fake_user.lastname) "
             else

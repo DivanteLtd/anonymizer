@@ -97,11 +97,20 @@ RSpec.describe '#work with dump' do
   context 'check if can create anonymized dump' do
     before do
       @project_name = 'magento_1_9'
+      @tmp_dir = '/tmp'
       @database = {
         host: CONFIG['database']['host'],
         user: CONFIG['database']['user'],
         pass: CONFIG['database']['pass'],
         random_string: @random_string
+      }
+      @web_server = {
+        host: '',
+        user: '',
+        port: '',
+        passphrase: '',
+        path: '/tmp',
+        rsync_options: ''
       }
     end
 
@@ -116,7 +125,15 @@ RSpec.describe '#work with dump' do
         ShellHelper.dump_database(
           @project_name,
           @database,
-          ROOT_DIR + '/' + CONFIG['web_data_path']
+          @tmp_dir
+        )
+      )
+      system(
+        ShellHelper.upload_to_web(
+          @project_name,
+          @database,
+          @web_server,
+          @tmp_dir
         )
       )
       expect($CHILD_STATUS.exitstatus).to be 0
@@ -129,12 +146,23 @@ RSpec.describe '#work with dump' do
           @database
         )
       )
-    end
-  end
 
-  context 'check if web data directory' do
-    it 'should exists' do
-      expect(File.exist?(ROOT_DIR + '/' + CONFIG['web_data_path'])).to be true
+      system(
+        ShellHelper.remove_dump(
+          @project_name,
+          CONFIG['tmp_path']
+        )
+      )
+
+      system(
+        ShellHelper.remove_anonymized_dump(
+          @project_name,
+          @random_string,
+          CONFIG['tmp_path']
+        )
+      )
+
+      expect($CHILD_STATUS.exitstatus).to be 0
     end
   end
 end

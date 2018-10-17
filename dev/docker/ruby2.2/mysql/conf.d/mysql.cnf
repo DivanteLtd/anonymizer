@@ -1,3 +1,2 @@
 [mysqld]
-show_compatibility_56 = ON
 performance_schema

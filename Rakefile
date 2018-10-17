@@ -8,6 +8,7 @@ task :default do
   puts ''
 end
 namespace 'project' do
+  desc 'Anonymize project'
   task :anonymize, [:project_name] do |_t, args|
     project_name = args[:project_name]
 
@@ -18,6 +19,7 @@ namespace 'project' do
     Rake.application.invoke_task("project:restore_database[#{project_name}]")
     Rake.application.invoke_task("project:anonymize_database[#{project_name}]")
     Rake.application.invoke_task("project:dump_database[#{project_name}]")
+    Rake.application.invoke_task("project:upload_to_web[#{project_name}]")
     Rake.application.invoke_task("project:remove_database[#{project_name}]")
     Rake.application.invoke_task("project:remove_dump_from_tmp[#{project_name}]")
   end
@@ -67,7 +69,7 @@ namespace 'project' do
       ShellHelper.dump_database(
         project_name,
         database,
-        ROOT_DIR + '/' + CONFIG['web_data_path']
+        CONFIG['tmp_path']
       )
     )
   end
@@ -107,8 +109,35 @@ namespace 'project' do
     )
   end
 
+  task :upload_to_web, [:project_name] do |_t, args|
+    project_name = args[:project_name]
+    anonymizer = Anonymizer.new project_name
+    database = {
+      host: CONFIG['database']['host'],
+      user: CONFIG['database']['user'],
+      pass: CONFIG['database']['pass'],
+      random_string: anonymizer.config['random_string']
+    }
+
+    system(
+      ShellHelper.upload_to_web(
+        project_name,
+        database,
+        {
+          host: anonymizer.config['web_server']['host'],
+          port: anonymizer.config['web_server']['port'],
+          user: anonymizer.config['web_server']['user'],
+          path: anonymizer.config['web_server']['path']
+        },
+        CONFIG['tmp_path'],
+        anonymizer.config['web_server']['rsync_options']
+      )
+    )
+  end
+
   task :remove_dump_from_tmp, [:project_name] do |_t, args|
     project_name = args[:project_name]
+    anonymizer = Anonymizer.new project_name
 
     system(
       ShellHelper.remove_dump(
@@ -116,10 +145,19 @@ namespace 'project' do
         CONFIG['tmp_path']
       )
     )
+
+    system(
+      ShellHelper.remove_anonymized_dump(
+        project_name,
+        anonymizer.config['random_string'],
+        CONFIG['tmp_path']
+      )
+    )
   end
 end
 
 namespace 'config' do
+  desc 'Validate all projects configuration file'
   task :validate_all_projects do |_t|
     projects = Dir[ROOT_DIR + '/config/project/*']
 
@@ -133,6 +171,7 @@ namespace 'config' do
     end
   end
 
+  desc 'Validate single project configuration file'
   task :validate_project, [:project_name] do |_t, args|
     project_name = args[:project_name]
 

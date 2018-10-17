@@ -23,11 +23,20 @@ module ShellHelper
     remove_white_space(command)
   end
 
-  def self.dump_database(project_name, database, dir)
+  def self.dump_database(project_name, database, tmp_dir)
     random_string = "_#{database[:random_string]}" if database[:random_string]
     command = "mysqldump#{mysql_options(database)} #{project_name} | " \
       'grep -av "SQL SECURITY DEFINER" | sed -e \'s/DEFINER[ ]*=[ ]*[^*]*\*/\*/\' | ' \
-      "gzip > #{dir}/#{project_name}#{random_string}.sql.gz"
+      "gzip > #{tmp_dir}/#{project_name}#{random_string}.sql.gz"
+
+    remove_white_space(command)
+  end
+
+  def self.upload_to_web(project_name, database, web_server, tmp_dir, options = '')
+    random_string = "_#{database[:random_string]}" if database[:random_string]
+    command = "rsync -a #{ssh_option(web_server[:port])} #{options} " \
+      "#{tmp_dir}/#{project_name}#{random_string}.sql.gz " \
+      "#{host_and_user(web_server[:host], web_server[:user])}#{web_server[:path]}/"
 
     remove_white_space(command)
   end
@@ -48,6 +57,13 @@ module ShellHelper
 
   def self.remove_dump(project_name, tmp_dir)
     command = "rm -rf #{tmp_dir}/#{project_name}.sql.gz"
+
+    remove_white_space(command)
+  end
+
+  def self.remove_anonymized_dump(project_name, random_string, tmp_dir)
+    random_string = "_#{random_string}" if random_string
+    command = "rm -rf #{tmp_dir}/#{project_name}#{random_string}.sql.gz"
 
     remove_white_space(command)
   end

@@ -14,7 +14,7 @@ RSpec.describe '#anonymize pimcore 5 sample' do
       @default_action = 'update'
 
       open('/tmp/' + @project_name + '.sql.gz', 'wb') do |f|
-        f << open('https://github.com/DivanteLtd/anonymizer/files/2248300/' + @project_name + '.sql.gz').read
+        f << open('https://github.com/DivanteLtd/anonymizer/files/2487807/' + @project_name + '.sql.gz').read
       end
 
       config = JSON.parse(
@@ -58,7 +58,7 @@ RSpec.describe '#anonymize pimcore 5 sample' do
       )
 
       system(
-        "rm -rf #{ROOT_DIR}/#{CONFIG['web_data_path']}/#{@project_name}_#{@random_string}.sql.gz"
+        "rm -rf #{@tmp}/#{@project_name}_#{@random_string}.sql.gz"
       )
     end
 
@@ -88,6 +88,7 @@ RSpec.describe '#anonymize pimcore 5 sample' do
           @database
         )
       )
+
       system(
         ShellHelper.restore_database(
           @project_name,
@@ -104,11 +105,11 @@ RSpec.describe '#anonymize pimcore 5 sample' do
         ShellHelper.dump_database(
           @project_name,
           @database,
-          ROOT_DIR + '/' + CONFIG['web_data_path']
+          @tmp_dir
         )
       )
       expect($CHILD_STATUS.exitstatus).to be 0
-      expect(File.exist?("#{ROOT_DIR}/#{CONFIG['web_data_path']}/#{@project_name}_#{@random_string}.sql.gz")).to be true
+      expect(File.exist?("#{@tmp_dir}/#{@project_name}_#{@random_string}.sql.gz")).to be true
     end
 
     after do
@@ -120,7 +121,7 @@ RSpec.describe '#anonymize pimcore 5 sample' do
       )
 
       system(
-        "rm -rf #{ROOT_DIR}/#{CONFIG['web_data_path']}/#{@project_name}_#{@random_string}.sql.gz"
+        "rm -rf #{@tmp_dir}/#{@project_name}_#{@random_string}.sql.gz"
       )
     end
 
