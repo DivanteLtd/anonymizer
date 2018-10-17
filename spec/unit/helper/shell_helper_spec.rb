@@ -108,7 +108,7 @@ RSpec.describe '#shell_helper' do
   context 'check shell command to dump database' do
     before do
       @project_name = 'magento_1_9'
-      @dump_dir = './web/data'
+      @tmp_dir = '/tmp'
       @host = 'localhost'
       @user = 'someuser'
       @pass = '!@#$%^&*FFFazad12345'
@@ -117,17 +117,17 @@ RSpec.describe '#shell_helper' do
     end
 
     it 'should return command with host, user and pass' do
-      expect(ShellHelper.dump_database(@project_name, @database, @dump_dir)).to eq(
+      expect(ShellHelper.dump_database(@project_name, @database, @tmp_dir)).to eq(
         "mysqldump -h #{@host} -u #{@user} -p#{@pass} #{@project_name} | " \
         'grep -av "SQL SECURITY DEFINER" | sed -e \'s/DEFINER[ ]*=[ ]*[^*]*\*/\*/\' | ' \
-        "gzip > #{@dump_dir}/#{@project_name}_#{@random_string}.sql.gz"
+        "gzip > #{@tmp_dir}/#{@project_name}_#{@random_string}.sql.gz"
       )
 
       @database.delete(:random_string)
-      expect(ShellHelper.dump_database(@project_name, @database, @dump_dir)).to eq(
+      expect(ShellHelper.dump_database(@project_name, @database, @tmp_dir)).to eq(
         "mysqldump -h #{@host} -u #{@user} -p#{@pass} #{@project_name} | " \
         'grep -av "SQL SECURITY DEFINER" | sed -e \'s/DEFINER[ ]*=[ ]*[^*]*\*/\*/\' | ' \
-        "gzip > #{@dump_dir}/#{@project_name}.sql.gz"
+        "gzip > #{@tmp_dir}/#{@project_name}.sql.gz"
       )
     end
   end
@@ -195,6 +195,74 @@ RSpec.describe '#shell_helper' do
     end
   end
 
+  context 'check shell command to put database dump to remote system' do
+    before do
+      @web_data_path = '/var/www/data'
+      @tmp_dir = '/tmp'
+      @project_name = 'magento_1_9'
+      @random_string = '2949d3e2173b25a55968f45518e4779d'
+      @host = 'localhost'
+      @port = '60022'
+      @user = 'anonymizer'
+      @database = { host: @host, user: @user, pass: @pass, random_string: @random_string }
+      @web_server = {
+        host: @host,
+        port: @port,
+        user: @user,
+        path: @web_data_path
+      }
+    end
+
+    it 'should return rsync command between local dirs' do
+      web_server = {
+        host: '',
+        port: '',
+        user: '',
+        path: @web_data_path
+      }
+
+      expect(
+        ShellHelper.upload_to_web(
+          @project_name,
+          @database,
+          web_server,
+          @tmp_dir
+        )
+      ).to eq(
+        "rsync -a #{@tmp_dir}/#{@project_name}_#{@random_string}.sql.gz #{@web_data_path}/"
+      )
+    end
+
+    it 'should return rsync command with host and user and ssh port' do
+      expect(
+        ShellHelper.upload_to_web(
+          @project_name,
+          @database,
+          @web_server,
+          @tmp_dir
+        )
+      ).to eq(
+        "rsync -a -e \"ssh -p #{@port} -o 'StrictHostKeyChecking no'\" "\
+        "#{@tmp_dir}/#{@project_name}_#{@random_string}.sql.gz #{@user}@#{@host}:#{@web_data_path}/"
+      )
+    end
+
+    it 'should return rsync command with host and user and ssh port and rsync option' do
+      expect(
+        ShellHelper.upload_to_web(
+          @project_name,
+          @database,
+          @web_server,
+          @tmp_dir,
+          '--rsync-path="sudo rsync"'
+        )
+      ).to eq(
+        "rsync -a -e \"ssh -p #{@port} -o 'StrictHostKeyChecking no'\" --rsync-path=\"sudo rsync\" " \
+        "#{@tmp_dir}/#{@project_name}_#{@random_string}.sql.gz #{@user}@#{@host}:#{@web_data_path}/"
+      )
+    end
+  end
+
   context 'remove database dump from temp director' do
     before do
       @tmp_dir = '/tmp'
@@ -209,6 +277,26 @@ RSpec.describe '#shell_helper' do
         )
       ).to eq(
         "rm -rf #{@tmp_dir}/#{@project_name}.sql.gz"
+      )
+    end
+  end
+
+  context 'remove anonymized database dump from temp director' do
+    before do
+      @tmp_dir = '/tmp'
+      @project_name = 'magento_1_9'
+      @random_string = '2949d3e2173b25a55968f45518e4779d'
+    end
+
+    it 'should return valid rm command' do
+      expect(
+        ShellHelper.remove_anonymized_dump(
+          @project_name,
+          @random_string,
+          @tmp_dir
+        )
+      ).to eq(
+        "rm -rf #{@tmp_dir}/#{@project_name}_#{@random_string}.sql.gz"
       )
     end
   end

@@ -81,7 +81,7 @@ RSpec.describe Database, '#database' do
       expect(db.column_query(@table_name, @config['tables'][@table_name])).to eq(
         [
           "UPDATE #{@table_name} SET #{@column_name} = (" \
-          "SELECT REPLACE(fake_user.email, '$uniq$', CONCAT('+', UUID_SHORT())) FROM fake_user " \
+          "SELECT REPLACE(fake_user.email, '$uniq$', CONCAT('+', UUID())) FROM fake_user " \
           "ORDER BY RAND() LIMIT 1) WHERE #{@table_name}.#{@column_name} IS NOT NULL"
         ]
       )
@@ -273,7 +273,7 @@ RSpec.describe Database, '#database' do
       expect(db.column_query(@table_name, @config['tables'][@table_name])).to eq(
         [
           "UPDATE #{@table_name} SET #{@column_name} = (" \
-          "SELECT REPLACE(fake_user.#{@column_type}, '$uniq$', CONCAT('+', UUID_SHORT())) FROM fake_user " \
+          "SELECT REPLACE(fake_user.#{@column_type}, '$uniq$', CONCAT('+', SUBSTRING(UUID(), 0, 50))) FROM fake_user " \
           "ORDER BY RAND() LIMIT 1) WHERE #{@table_name}.#{@column_name} IS NOT NULL"
         ]
       )
