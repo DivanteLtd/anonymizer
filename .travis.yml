@@ -18,7 +18,7 @@ before_install:
   - sudo service mysql stop
   - docker --version
   - docker-compose --version
-  - docker-compose dev/travis/docker-compose.mysql.yml up -d
+  - docker-compose -f dev/travis/docker-compose.mysql.yml up -d
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
