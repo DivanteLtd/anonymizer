@@ -9,7 +9,7 @@ dump_server:
 database:
   user: root
   host: 127.0.0.1
-  pass: 
+  pass: anonymizer
 tmp_path: /tmp
 cap:
   ssh_options:

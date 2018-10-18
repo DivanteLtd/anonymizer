@@ -10,20 +10,15 @@ rvm:
 - 2.4
 
 services:
-  - mysql
-
-addons:
-  apt:
-    sources:
-      - mysql-5.7-trusty
-    packages:
-      - mysql-server
-      - mysql-client
+  - docker
 
 sudo: required
 
 before_install:
-  - sudo mysql -e 'CREATE DATABASE anonymizer;'
+  - sudo service mysql stop
+  - docker --version
+  - docker-compose --version
+  - docker-compose dev/travis/docker-compose.mysql.yml up -d
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
@@ -31,8 +26,7 @@ before_install:
 script:
   - cp config/env/sample.yml config/env/development.yml
   - bundle exec rubocop
-  - bundle exec rspec spec/unit
-  - bundle exec rspec spec/system
+  - bundle exec rspec spec
 
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
