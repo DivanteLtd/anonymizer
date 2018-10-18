@@ -19,8 +19,6 @@ services:
       MYSQL_USER: anonymizer
       MYSQL_PASSWORD: anonymizer
       MYSQL_ROOT_PASSWORD: anonymizer
-    volumes:
-      - "./mysql/conf.d:/etc/mysql/conf.d"
     command: --default-authentication-plugin=mysql_native_password
   postfix:
     image: catatnight/postfix
