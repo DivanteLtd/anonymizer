@@ -2,13 +2,22 @@
     "type": "basic",
     "tables": {
         "users": {
-            "email": {
-                "type": "email",
-                "action": "update"
-            },
             "name": {
                 "type": "login",
-                "action": "update"
+                "action": "update",
+                "where": [
+                    {
+                        "column": "name",
+                        "operator": "!=",
+                        "value": "system"    
+                    },
+                    {
+                        "logical_operator": "AND",
+                        "column": "type",
+                        "operator": "=",
+                        "value": "user"    
+                    }
+                ]
             },
             "firstname": {
                 "type": "firstname",
@@ -16,6 +25,10 @@
             },
             "lastname": {
                 "type": "lastname",
+                "action": "update"
+            },
+            "email": {
+                "type": "email",
                 "action": "update"
             }
         }
