@@ -13,6 +13,18 @@ class Database
       query += manage_type(column_type)
       query += "WHERE #{table_name}.#{column_name} IS NOT NULL"
 
+      if (info.key?('where'))
+        info['where'].each do |where_info|
+          if where_info == info['where'].first
+            query << " AND"
+          elsif
+            query << " #{where_info['logical_operator']}"
+          end
+          
+          query << " #{table_name}.#{where_info['column']} #{where_info['operator']} '#{where_info['value']}'"
+        end
+      end
+
       querys.push query
 
       querys
