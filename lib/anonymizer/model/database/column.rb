@@ -12,18 +12,7 @@ class Database
       query = "UPDATE #{table_name} SET #{column_name} = ("
       query += manage_type(column_type)
       query += "WHERE #{table_name}.#{column_name} IS NOT NULL"
-
-      if (info.key?('where'))
-        info['where'].each do |where_info|
-          if where_info == info['where'].first
-            query << " AND"
-          elsif
-            query << " #{where_info['logical_operator']}"
-          end
-          
-          query << " #{table_name}.#{where_info['column']} #{where_info['operator']} '#{where_info['value']}'"
-        end
-      end
+      query += fill_where_clause(info, table_name)
 
       querys.push query
 
@@ -38,6 +27,19 @@ class Database
       else
         query += prepare_select_for_query(type)
         query += 'FROM fake_user ORDER BY RAND() LIMIT 1) '
+      end
+
+      query
+    end
+
+    def self.fill_where_clause(info, table_name)
+      query = ''
+
+      if info.key?('where')
+        info['where'].each do |where_info|
+          query += " #{where_info['logical_operator']} "
+          query += "#{table_name}.#{where_info['column']} #{where_info['operator']} '#{where_info['value']}'"
+        end
       end
 
       query
