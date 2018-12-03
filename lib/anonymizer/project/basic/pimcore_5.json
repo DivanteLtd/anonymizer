@@ -7,6 +7,7 @@
                 "action": "update",
                 "where": [
                     {
+                        "logical_operator": "AND",
                         "column": "name",
                         "operator": "!=",
                         "value": "system"    
