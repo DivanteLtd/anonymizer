@@ -18,6 +18,12 @@ RUN apt-get update \
 
 # Create anonymizer user
 RUN if [ ! `id -g anonymizer &> /dev/null` ]; then groupadd -f -g ${GID} anonymizer; fi \
-	&& if [ ! `id -u anonymizer &> /dev/null` ]; then useradd --shell /bin/bash -u ${UID} -g ${GID} -m anonymizer; fi
+    && if [ ! `id -u anonymizer &> /dev/null` ]; then useradd --shell /bin/bash -u ${UID} -g ${GID} -m anonymizer; fi
+
+COPY . .
+
+RUN chown -R anonymizer:anonymizer .
 
 USER anonymizer
+
+RUN bundle install

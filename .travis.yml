@@ -3,6 +3,7 @@ language: ruby
 env:
   global:
     - CC_TEST_REPORTER_ID=754ef1da9d8f9c514b6f9a97c92620c9f7e3bcd5df21e5792cee16e57bcd6c4b
+    - COMMIT=${TRAVIS_COMMIT::8}
 
 rvm:
 - 2.2
@@ -24,9 +25,13 @@ before_install:
   - ./cc-test-reporter before-build
 
 script:
+  - RUBY_VERSION=$(ruby -v | awk '{print $2}' | sed "s/-.*//" | grep -o "^[^\.]*\.\?[^\.]*")
   - cp config/env/sample.yml config/env/development.yml
   - bundle exec rubocop
   - bundle exec rspec spec
+  - docker build -t divante/anonymizer:${RUBY_VERSION}_${COMMIT} -f dev/docker/ruby$RUBY_VERSION/anonymizer/Dockerfile .
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+  - docker push divante/anonymizer:${RUBY_VERSION}_${COMMIT};
 
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
