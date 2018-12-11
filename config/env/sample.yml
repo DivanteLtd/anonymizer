@@ -6,6 +6,7 @@ dump_server:
   port: 22
   passphrase:
   path: /path/to/dumps/directory
+web_server:
 database:
   user: root
   host: 127.0.0.1

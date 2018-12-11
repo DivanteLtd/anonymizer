@@ -75,13 +75,13 @@ class Database
 
     class_name
   end
-  # rubocop:enable Metrics/MethodLength
 
   def self.prepare_select_for_query(type)
     query = if type == 'email'
-              "SELECT REPLACE(fake_user.email, '$uniq$', CONCAT('+', ROUND(RAND() * 1000000000000000))) "
+              "SELECT REPLACE(fake_user.email, '$uniq$', CONCAT('+', FLOOR((NOW() + RAND()) * (RAND() * 119)))) "
             elsif type == 'login'
-              "SELECT REPLACE(fake_user.login, '$uniq$', CONCAT('+', SUBSTRING(ROUND(RAND() * 1000000000000), 0, 50))) "
+              "SELECT REPLACE(fake_user.login, '$uniq$', CONCAT('+', SUBSTRING(" \
+              'FLOOR((NOW() + RAND()) * (RAND() * 119)), 0, 50))) '
             elsif type == 'fullname'
               "SELECT CONCAT_WS(' ', fake_user.firstname, fake_user.lastname) "
             else
@@ -90,4 +90,5 @@ class Database
 
     query
   end
+  # rubocop:enable Metrics/MethodLength
 end

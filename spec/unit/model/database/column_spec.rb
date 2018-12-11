@@ -21,8 +21,8 @@ RSpec.describe Database::Column, '#eav' do
       expect(Database::Column.query(table_name, column_name, info)).to eq(
         [
           "UPDATE #{table_name} SET #{column_name} = (" \
-        "SELECT REPLACE(fake_user.email, '$uniq$', CONCAT('+', ROUND(RAND() * 1000000000000000))) FROM fake_user " \
-        "ORDER BY RAND() LIMIT 1) WHERE #{table_name}.#{column_name} IS NOT NULL"
+        "SELECT REPLACE(fake_user.email, '$uniq$', CONCAT('+', FLOOR((NOW() + RAND()) * (RAND() * 119)))) " \
+        "FROM fake_user ORDER BY RAND() LIMIT 1) WHERE #{table_name}.#{column_name} IS NOT NULL"
         ]
       )
     end
@@ -94,7 +94,7 @@ RSpec.describe Database::Column, '#eav' do
         [
           "UPDATE #{table_name} SET #{column_name} = (" \
           "SELECT REPLACE(fake_user.#{info['type']}, '$uniq$', CONCAT('+', SUBSTRING(" \
-          'ROUND(RAND() * 1000000000000), 0, 50))) FROM fake_user ' \
+          'FLOOR((NOW() + RAND()) * (RAND() * 119)), 0, 50))) FROM fake_user ' \
           "ORDER BY RAND() LIMIT 1) WHERE #{table_name}.#{column_name} IS NOT NULL"
         ]
       )

@@ -26,4 +26,4 @@ RUN chown -R anonymizer:anonymizer .
 
 USER anonymizer
 
-RUN bundle install --deployment
+RUN bundle install --deployment --force
