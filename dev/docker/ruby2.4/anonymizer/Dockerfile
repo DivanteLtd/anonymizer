@@ -13,6 +13,7 @@ RUN apt-get update \
     && apt-get install -y \
         mysql-client \
         rsync \
+        build-essential \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -26,4 +27,4 @@ RUN chown -R anonymizer:anonymizer .
 
 USER anonymizer
 
-RUN bundle install --deployment
+RUN bundle install --deployment --force
