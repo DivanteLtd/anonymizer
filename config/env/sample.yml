@@ -1,5 +1,5 @@
 logger:
-  enabled: true
+  enabled: false
 dump_server:
   host: example.com
   user: anonymizer

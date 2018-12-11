@@ -7,6 +7,7 @@ LoggerHelper.file('rake')
 task :default do
   puts ''
 end
+
 namespace 'project' do
   desc 'Anonymize project'
   task :anonymize, [:project_name] do |_t, args|
