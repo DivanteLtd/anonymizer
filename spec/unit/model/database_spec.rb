@@ -81,7 +81,8 @@ RSpec.describe Database, '#database' do
       expect(db.column_query(@table_name, @config['tables'][@table_name])).to eq(
         [
           "UPDATE #{@table_name} SET #{@column_name} = (" \
-          "SELECT REPLACE(fake_user.email, '$uniq$', CONCAT('+', FLOOR((NOW() + RAND()) * (RAND() * 119)))) FROM fake_user " \
+          "SELECT REPLACE(fake_user.email, '$uniq$', CONCAT('+', " \
+          'FLOOR((NOW() + RAND()) * (RAND() * 119)))) FROM fake_user ' \
           "ORDER BY RAND() LIMIT 1) WHERE #{@table_name}.#{@column_name} IS NOT NULL"
         ]
       )
