@@ -81,8 +81,7 @@ class Database
     query = if type == 'email'
               "SELECT REPLACE(fake_user.email, '$uniq$', CONCAT('+', ROUND(RAND() * 1000000000000000))) "
             elsif type == 'login'
-              "SELECT REPLACE(fake_user.login, '$uniq$', CONCAT('+', SUBSTRING(" \
-              "ROUND(RAND() * 1000000000000000), 0, 50))) "
+              "SELECT REPLACE(fake_user.login, '$uniq$', CONCAT('+', SUBSTRING(ROUND(RAND() * 1000000000000), 0, 50))) "
             elsif type == 'fullname'
               "SELECT CONCAT_WS(' ', fake_user.firstname, fake_user.lastname) "
             else

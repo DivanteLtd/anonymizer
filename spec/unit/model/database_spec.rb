@@ -274,7 +274,7 @@ RSpec.describe Database, '#database' do
         [
           "UPDATE #{@table_name} SET #{@column_name} = (" \
           "SELECT REPLACE(fake_user.#{@column_type}, '$uniq$', CONCAT('+', SUBSTRING(" \
-          "ROUND(RAND() * 1000000000000000), 0, 50))) FROM fake_user " \
+          'ROUND(RAND() * 1000000000000), 0, 50))) FROM fake_user ' \
           "ORDER BY RAND() LIMIT 1) WHERE #{@table_name}.#{@column_name} IS NOT NULL"
         ]
       )
