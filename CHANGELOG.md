@@ -10,3 +10,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Logging to files disabled by default
 - Fix typos in test description
 - Fix again isses with duplicate entry, more info https://github.com/DivanteLtd/anonymizer/issues/9
+- Disabled task upload_to_web
