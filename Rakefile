@@ -20,7 +20,7 @@ namespace 'project' do
     Rake.application.invoke_task("project:restore_database[#{project_name}]")
     Rake.application.invoke_task("project:anonymize_database[#{project_name}]")
     Rake.application.invoke_task("project:dump_database[#{project_name}]")
-    #Rake.application.invoke_task("project:upload_to_web[#{project_name}]")
+    # Rake.application.invoke_task("project:upload_to_web[#{project_name}]")
     Rake.application.invoke_task("project:remove_database[#{project_name}]")
     Rake.application.invoke_task("project:remove_dump_from_tmp[#{project_name}]")
   end
