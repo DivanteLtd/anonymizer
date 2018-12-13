@@ -131,7 +131,7 @@ namespace 'project' do
           path: CONFIG['web_server']['path']
         },
         CONFIG['tmp_path'],
-        anonymizer.config['web_server']['rsync_options']
+        CONFIG['web_server']['rsync_options']
       )
     )
   end
