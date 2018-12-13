@@ -125,10 +125,10 @@ namespace 'project' do
         project_name,
         database,
         {
-          host: anonymizer.config['web_server']['host'],
-          port: anonymizer.config['web_server']['port'],
-          user: anonymizer.config['web_server']['user'],
-          path: anonymizer.config['web_server']['path']
+          host: CONFIG['web_server']['host'],
+          port: CONFIG['web_server']['port'],
+          user: CONFIG['web_server']['user'],
+          path: CONFIG['web_server']['path']
         },
         CONFIG['tmp_path'],
         anonymizer.config['web_server']['rsync_options']
