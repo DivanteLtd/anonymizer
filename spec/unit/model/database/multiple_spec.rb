@@ -32,7 +32,7 @@ RSpec.describe Database::Multiple, '#multiple' do
       expect(Database::Multiple.query(table_name, column_name, info)).to eq(
         [
           "UPDATE #{table_name} SET #{column_name} = (" \
-          "SELECT REPLACE(fake_user.email, '$uniq$', CONCAT('+', UUID_SHORT())) FROM fake_user " \
+          "SELECT REPLACE(fake_user.email, '$uniq$', CONCAT('+', UUID())) FROM fake_user " \
           "ORDER BY RAND() LIMIT 1) WHERE #{table_name}.#{column_name} IS NOT NULL",
           "UPDATE #{join_table_name} as t1 INNER JOIN #{table_name} as t2 ON t1.#{join_table_column} " \
           "SET t1.#{column_name} = t2.#{column_name} WHERE t1.#{column_name} IS NOT NULL"
@@ -52,7 +52,7 @@ RSpec.describe Database::Multiple, '#multiple' do
     type = 'email'
     it 'should get proper value for non-id type' do
       expect(Database::Multiple.manage_type(type)).to eq(
-        "SELECT REPLACE(fake_user.email, '$uniq$', CONCAT('+', UUID_SHORT())) FROM fake_user ORDER BY RAND() LIMIT 1) "
+        "SELECT REPLACE(fake_user.email, '$uniq$', CONCAT('+', UUID())) FROM fake_user ORDER BY RAND() LIMIT 1) "
       )
     end
   end
