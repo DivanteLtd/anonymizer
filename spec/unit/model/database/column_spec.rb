@@ -10,6 +10,81 @@ RSpec.describe Database::Column, '#eav' do
     expect(Object.const_defined?('Database::Column')).to be true
   end
 
+  context '#Proper additional where clause (single)' do
+    info = {}
+    info['where'] = JSON.parse('
+        [
+            {
+                "logical_operator": "AND",
+                "column": "name",
+                "operator": "!=",
+                "value": "system"
+            }
+        ]
+    ')
+
+    it 'should add where clause' do
+      expect(Database::Column.fill_where_clause(info, 'users')).to eq(' AND users.name != \'system\'')
+    end
+  end
+
+  context '#Proper additional where clause (multiple)' do
+    info = {}
+    info['where'] = JSON.parse('
+        [
+            {
+                "logical_operator": "AND",
+                "column": "name",
+                "operator": "!=",
+                "value": "system"
+            },
+            {
+                "logical_operator": "AND",
+                "column": "type",
+                "operator": "=",
+                "value": "user"
+            }
+        ]
+    ')
+
+    it 'should add where clause' do
+      expect(Database::Column.fill_where_clause(info, 'users')).to eq(
+                                                                       ' AND users.name != \'system\' AND users.type = \'user\''
+                                                                   )
+    end
+  end
+
+  context '#No where clause' do
+    info = {}
+    it 'should not add where clause' do
+      expect(Database::Column.fill_where_clause(info, 'users')).to eq('')
+    end
+  end
+
+  context '#Empty where clause' do
+    info = {}
+    info['where'] = ''
+    it 'should raise error on empty where clause' do
+      expect { Database::Column.fill_where_clause(info, 'users') }.to raise_error(ArgumentError)
+    end
+  end
+
+  context '#Incorrect where clause' do
+    info = {}
+    info['where'] = JSON.parse('
+        [
+            {
+                "column": "name",
+                "operator": "!=",
+                "value": "system"
+            }
+        ]
+    ')
+    it 'should raise error on incorrect where clause' do
+      expect { Database::Column.fill_where_clause(info, 'users') }.to raise_error(ArgumentError)
+    end
+  end
+
   context 'work with email type' do
     info = {}
     table_name = 'sales_flat_order_address'
