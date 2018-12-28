@@ -49,8 +49,8 @@ RSpec.describe Database::Column, '#eav' do
 
     it 'should add where clause' do
       expect(Database::Column.fill_where_clause(info, 'users')).to eq(
-                                                                       ' AND users.name != \'system\' AND users.type = \'user\''
-                                                                   )
+        ' AND users.name != \'system\' AND users.type = \'user\''
+      )
     end
   end
 
