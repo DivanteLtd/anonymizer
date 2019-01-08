@@ -3,7 +3,7 @@
     "tables": {
         "customer_entity": {
             "email": {
-                "type": "email",
+                "type": "uniq_email",
                 "action": "update"
             }
         },

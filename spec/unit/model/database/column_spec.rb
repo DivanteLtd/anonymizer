@@ -21,8 +21,27 @@ RSpec.describe Database::Column, '#eav' do
       expect(Database::Column.query(table_name, column_name, info)).to eq(
         [
           "UPDATE #{table_name} SET #{column_name} = (" \
-        "SELECT REPLACE(fake_user.email, '$uniq$', CONCAT('+', FLOOR((NOW() + RAND()) * (RAND() * 119)))) " \
+        'SELECT fake_user.email ' \
         "FROM fake_user ORDER BY RAND() LIMIT 1) WHERE #{table_name}.#{column_name} IS NOT NULL"
+        ]
+      )
+    end
+  end
+
+  context 'work with uniq_email type' do
+    info = {}
+    table_name = 'sales_flat_order_address'
+    column_name = 'email'
+    info['type'] = 'uniq_email'
+
+    it 'should be a sql returned by anonymize_column_query' do
+      expect(Database::Column.query(table_name, column_name, info).is_a?(Array)).to be true
+      expect(Database::Column.query(table_name, column_name, info)).to eq(
+        [
+          "UPDATE #{table_name} SET #{column_name} = (" \
+          'SELECT CONCAT(MD5(FLOOR((NOW() + RAND()) * (RAND() * RAND() / RAND()) + ' \
+          'RAND())), "@", MD5(FLOOR((NOW() + RAND()) * (RAND() * RAND() / RAND()) + RAND())), ".pl")) ' \
+          "WHERE #{table_name}.#{column_name} IS NOT NULL"
         ]
       )
     end
@@ -82,7 +101,7 @@ RSpec.describe Database::Column, '#eav' do
     end
   end
 
-  context 'work with uniq login type' do
+  context 'work with login type' do
     info = {}
     table_name = 'sales_flat_order_address'
     column_name = 'name'
@@ -93,9 +112,26 @@ RSpec.describe Database::Column, '#eav' do
       expect(Database::Column.query(table_name, column_name, info)).to eq(
         [
           "UPDATE #{table_name} SET #{column_name} = (" \
-          "SELECT REPLACE(fake_user.#{info['type']}, '$uniq$', CONCAT('+', SUBSTRING(" \
-          'FLOOR((NOW() + RAND()) * (RAND() * 119)), 0, 50))) FROM fake_user ' \
+          "SELECT fake_user.#{info['type']} FROM fake_user " \
           "ORDER BY RAND() LIMIT 1) WHERE #{table_name}.#{column_name} IS NOT NULL"
+        ]
+      )
+    end
+  end
+
+  context 'work with uniq login type' do
+    info = {}
+    table_name = 'sales_flat_order_address'
+    column_name = 'name'
+    info['type'] = 'uniq_login'
+
+    it 'should be a sql returned by anonymize_column' do
+      expect(Database::Column.query(table_name, column_name, info).is_a?(Array)).to be true
+      expect(Database::Column.query(table_name, column_name, info)).to eq(
+        [
+          "UPDATE #{table_name} SET #{column_name} = (" \
+          'SELECT CONCAT(MD5(FLOOR((NOW() + RAND()) * (RAND() * RAND() / RAND()) + RAND())))) ' \
+          "WHERE #{table_name}.#{column_name} IS NOT NULL"
         ]
       )
     end

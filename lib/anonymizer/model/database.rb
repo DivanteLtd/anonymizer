@@ -77,12 +77,7 @@ class Database
   end
 
   def self.prepare_select_for_query(type)
-    query = if type == 'email'
-              "SELECT REPLACE(fake_user.email, '$uniq$', CONCAT('+', FLOOR((NOW() + RAND()) * (RAND() * 119)))) "
-            elsif type == 'login'
-              "SELECT REPLACE(fake_user.login, '$uniq$', CONCAT('+', SUBSTRING(" \
-              'FLOOR((NOW() + RAND()) * (RAND() * 119)), 0, 50))) '
-            elsif type == 'fullname'
+    query = if type == 'fullname'
               "SELECT CONCAT_WS(' ', fake_user.firstname, fake_user.lastname) "
             else
               "SELECT fake_user.#{type} "

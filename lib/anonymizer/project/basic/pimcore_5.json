@@ -3,11 +3,11 @@
     "tables": {
         "users": {
             "email": {
-                "type": "email",
+                "type": "uniq_email",
                 "action": "update"
             },
             "name": {
-                "type": "login",
+                "type": "uniq_login",
                 "action": "update"
             },
             "firstname": {

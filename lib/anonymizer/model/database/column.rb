@@ -19,16 +19,29 @@ class Database
     end
 
     def self.manage_type(type)
-      query = ''
-
-      if type == 'id'
-        query += 'SELECT FLOOR((NOW() + RAND()) * (RAND() * 119))) '
+      if respond_to?(:"manage_type_#{type}")
+        query = send("manage_type_#{type}")
       else
-        query += prepare_select_for_query(type)
+        query = prepare_select_for_query(type)
         query += 'FROM fake_user ORDER BY RAND() LIMIT 1) '
       end
 
       query
+    end
+
+    private_class_method
+
+    def self.manage_type_id
+      'SELECT FLOOR((NOW() + RAND()) * (RAND() * 119))) '
+    end
+
+    def self.manage_type_uniq_email
+      'SELECT CONCAT(MD5(FLOOR((NOW() + RAND()) * (RAND() * RAND() / RAND()) + ' \
+      'RAND())), "@", MD5(FLOOR((NOW() + RAND()) * (RAND() * RAND() / RAND()) + RAND())), ".pl")) '
+    end
+
+    def self.manage_type_uniq_login
+      'SELECT CONCAT(MD5(FLOOR((NOW() + RAND()) * (RAND() * RAND() / RAND()) + RAND())))) '
     end
   end
 end

@@ -33,16 +33,6 @@ RSpec.describe Fake, '#fake' do
       expect(Fake.user[:json].is_a?(String)).to be true
     end
 
-    it 'should exists string "$uniq$" in email address' do
-      expect(Fake.user[:email].is_a?(String)).to be true
-      expect(Fake.user[:email].include?('$uniq$')).to be true
-    end
-
-    it 'should exists string "$uniq$" in login' do
-      expect(Fake.user[:login].is_a?(String)).to be true
-      expect(Fake.user[:login].include?('$uniq$')).to be true
-    end
-
     it 'should be a json' do
       expect(JSONHelper.valid_json?(Fake.user[:json])).to be true
     end

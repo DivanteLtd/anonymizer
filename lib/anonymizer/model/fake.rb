@@ -39,8 +39,8 @@ class Fake
     {
       firstname: firstname,
       lastname: lastname,
-      email: add_uniq_to_email(Faker::Internet.email("#{firstname} #{lastname}")),
-      login: add_uniq_to_end_of(Faker::Internet.user_name("#{firstname} #{lastname}", %w[. _ -])),
+      email: Faker::Internet.email("#{firstname} #{lastname}"),
+      login: Faker::Internet.user_name("#{firstname} #{lastname}", %w[. _ -]),
       telephone: Faker::PhoneNumber.phone_number,
       company: Faker::Company.name,
       street: Faker::Address.street_name,
@@ -59,14 +59,6 @@ class Fake
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
-
-  def self.add_uniq_to_email(email)
-    email.sub! '@', '$uniq$@'
-  end
-
-  def self.add_uniq_to_end_of(string)
-    string + '$uniq$'
-  end
 
   def self.generate_regon
     regon = district_number

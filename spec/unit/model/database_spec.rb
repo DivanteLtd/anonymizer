@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 require './lib/anonymizer/model/database.rb'
-
+# rubocop:disable Metrics/BlockLength
 RSpec.describe Database, '#database' do
   it 'should exists class Database' do
     expect(Object.const_defined?('Database')).to be true
@@ -81,9 +81,57 @@ RSpec.describe Database, '#database' do
       expect(db.column_query(@table_name, @config['tables'][@table_name])).to eq(
         [
           "UPDATE #{@table_name} SET #{@column_name} = (" \
-          "SELECT REPLACE(fake_user.email, '$uniq$', CONCAT('+', " \
-          'FLOOR((NOW() + RAND()) * (RAND() * 119)))) FROM fake_user ' \
+          'SELECT fake_user.email FROM fake_user ' \
           "ORDER BY RAND() LIMIT 1) WHERE #{@table_name}.#{@column_name} IS NOT NULL"
+        ]
+      )
+    end
+  end
+
+  context 'work with uniq email type' do
+    before do
+      @name = 'magento_1_9'
+      @table_name = 'sales_flat_order_address'
+      @column_name = 'email'
+      @column_type = 'uniq_email'
+      @config = JSON.parse(
+        '{
+          "type": "basic",
+          "database": {
+            "name": "' + @name + '"
+          },
+          "tables": {
+            "' + @table_name + '": {
+              "' + @column_name + '": {
+                "type": "' + @column_type + '",
+                "action": "update"
+              }
+            }
+          }
+        }'
+      )
+    end
+
+    it 'anonymizer should create new istance of Sequel::Mysql2, insert and remove fake data' do
+      db = Database.new @config
+
+      expect(db).to receive(:insert_fake_data)
+      expect(db).to receive(:remove_fake_data)
+
+      expect_any_instance_of(Sequel::Mysql2::Database).to receive(:run)
+
+      db.anonymize
+    end
+
+    it 'should be a sql returned by anonymize_column_query' do
+      db = Database.new @config
+
+      expect(db.column_query(@table_name, @config['tables'][@table_name])).to eq(
+        [
+          "UPDATE #{@table_name} SET #{@column_name} = (" \
+          'SELECT CONCAT(MD5(FLOOR((NOW() + RAND()) * (RAND() * RAND() / RAND()) + ' \
+          'RAND())), "@", MD5(FLOOR((NOW() + RAND()) * (RAND() * RAND() / RAND()) + RAND())), ".pl")) ' \
+          "WHERE #{@table_name}.#{@column_name} IS NOT NULL"
         ]
       )
     end
@@ -233,7 +281,7 @@ RSpec.describe Database, '#database' do
     end
   end
 
-  context 'work with uniq login type' do
+  context 'work with login type' do
     before do
       @name = 'magento_1_9'
       @table_name = 'sales_flat_order_address'
@@ -274,9 +322,56 @@ RSpec.describe Database, '#database' do
       expect(db.column_query(@table_name, @config['tables'][@table_name])).to eq(
         [
           "UPDATE #{@table_name} SET #{@column_name} = (" \
-          "SELECT REPLACE(fake_user.#{@column_type}, '$uniq$', CONCAT('+', SUBSTRING(" \
-          'FLOOR((NOW() + RAND()) * (RAND() * 119)), 0, 50))) FROM fake_user ' \
+          "SELECT fake_user.#{@column_type} FROM fake_user " \
           "ORDER BY RAND() LIMIT 1) WHERE #{@table_name}.#{@column_name} IS NOT NULL"
+        ]
+      )
+    end
+  end
+
+  context 'work with uniq login type' do
+    before do
+      @name = 'magento_1_9'
+      @table_name = 'sales_flat_order_address'
+      @column_name = 'name'
+      @column_type = 'uniq_login'
+      @config = JSON.parse(
+        '{
+          "type": "basic",
+          "database": {
+            "name": "' + @name + '"
+          },
+          "tables": {
+            "' + @table_name + '": {
+              "' + @column_name + '": {
+                "type": "' + @column_type + '",
+                "action": "update"
+              }
+            }
+          }
+        }'
+      )
+    end
+
+    it 'anonymizer should create new istance of Sequel::Mysql2, insert and remove fake data' do
+      db = Database.new @config
+
+      expect(db).to receive(:insert_fake_data)
+      expect(db).to receive(:remove_fake_data)
+
+      expect_any_instance_of(Sequel::Mysql2::Database).to receive(:run)
+
+      db.anonymize
+    end
+
+    it 'should be a sql returned by anonymize_column' do
+      db = Database.new @config
+
+      expect(db.column_query(@table_name, @config['tables'][@table_name])).to eq(
+        [
+          "UPDATE #{@table_name} SET #{@column_name} = (" \
+          'SELECT CONCAT(MD5(FLOOR((NOW() + RAND()) * (RAND() * RAND() / RAND()) + RAND())))) ' \
+          "WHERE #{@table_name}.#{@column_name} IS NOT NULL"
         ]
       )
     end
@@ -558,3 +653,4 @@ RSpec.describe Database, '#database' do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength
