@@ -12,7 +12,7 @@ Anonymizer replaces all data in your database by anonymized random data. The mos
 
 ![Anonymized data example](https://user-images.githubusercontent.com/17312052/32728212-be7e07bc-c87f-11e7-9c83-5e6018819f50.png)
 
-## Requritements
+## Requirements
 
 - ruby >= 2.2
 - mysql >= 5.6
@@ -34,7 +34,7 @@ The file name reflects the anonymized database's name. For example, if you need 
 
 ### Basic configuration
 #### Project type
-Project configuration files always have an `extended` type. In the project configuration file, you have to set the `type` and `basic_type` which is connected with the supported framowork. Only framework configuration files use the `basic`type.
+Project configuration files always have an `extended` type. In the project configuration file, you have to set the `type` and `basic_type` which is connected with the supported framework. Only framework configuration files use the `basic`type.
 
 #### Available basic types
 * `custom`
@@ -62,19 +62,19 @@ The anonymized dump is given the same name as the original database dump file. I
 Anonymizer can work with both locally and remotely stored database dumps. Database dumps from remote servers are downloaded by rsync.
 
 #### Working with local database dump
-In the example below, the database dump file is in the `/path/to/databse/dump/` directory.
+In the example below, the database dump file is in the `/path/to/database/dump/` directory.
 
 ```
 "dump_server": {
     "host": "",
     "port": "",
     "user": "",
-    "path": "/path/to/databse/dump/"
+    "path": "/path/to/database/dump/"
 }
 ```
 
 #### Working with remote database dump
-In the example below, the database dump file is stored on a remote server with an IP address of `1.2.3.4` and ssh port of `5022`. The ssh user's name is `anonymizer`, the directory on remote host with the database dump is `/path/to/databse/dump/`.  In this case, let's assume that we need to add `--rsync-path=\"sudo rsync\"` option to our rsync dump download command.
+In the example below, the database dump file is stored on a remote server with an IP address of `1.2.3.4` and ssh port of `5022`. The ssh user's name is `anonymizer`, the directory on remote host with the database dump is `/path/to/database/dump/`.  In this case, let's assume that we need to add `--rsync-path=\"sudo rsync\"` option to our rsync dump download command.
 
 ```
 "dump_server": {
@@ -87,7 +87,7 @@ In the example below, the database dump file is stored on a remote server with a
 }
 ```
 
-### Tables to anonimization
+### Tables to anonymization
 
 Anonymizer can replace the original data by anonymized entries or truncate the data in the destination table.
 
@@ -225,7 +225,7 @@ You should familiarize with MySQL JSON path expressions.
 }
 ```
 
-### Example configuration file 
+### Example configuration file
 ```
 {
     "type": "extended",
