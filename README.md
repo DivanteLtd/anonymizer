@@ -74,7 +74,7 @@ In the example below, the database dump file is in the `/path/to/database/dump/`
 ```
 
 #### Working with remote database dump
-In the example below, the database dump file is stored on a remote server with an IP address of `1.2.3.4` and ssh port of `5022`. The ssh user's name is `anonymizer`, the directory on remote host with the database dump is `/path/to/database/dump/`.  In this case, let's assume that we need to add `--rsync-path=\"sudo rsync\"` option to our rsync dump download command.
+In the example below, the database dump file is stored on a remote server with an IP address of `1.2.3.4` and ssh port of `5022`. The ssh user's name is `anonymizer`, the directory on remote host with the database dump is `/path/to/database/dump/`. In this case, let's assume that we need to add `--rsync-path=\"sudo rsync\"` option to our rsync dump download command.
 
 ```
 "dump_server": {
@@ -90,6 +90,32 @@ In the example below, the database dump file is stored on a remote server with a
 ### Tables to anonymization
 
 Anonymizer can replace the original data by anonymized entries or truncate the data in the destination table.
+
+#### Available types of data
+
+##### Simple types
+- firstname
+- lastname
+- login
+- email
+- telephone
+- company
+- street
+- postcode
+- city
+- full_address
+- vat_id
+- ip
+- quote
+- website
+- iban
+- json
+
+##### Special types
+- uniq_email - unique email address, because of [bug in mysql](https://bugs.mysql.com/bug.php?id=89474), anonymizer can't generate uniq email address based on email and some uniqeu value form UUID mysql methiod
+- uniq_login - unique login
+- regon - Polish REGON number with validation
+- pesel - Polish PESEL number with validation
 
 #### How to replace data in a table?
 In the example below, data in the `user_address` table  will be replaced by new, anonymized data. The example database contains a `user_address` table with the following columns - `firstname`, `lastname`, `postcode`, `address`, `city`, `email`, `phone`,  `company`, `vat_id`. We will replace all columns' contents with some valid data, consistent with its previous type.
