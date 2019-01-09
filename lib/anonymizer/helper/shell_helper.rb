@@ -92,7 +92,7 @@ module ShellHelper
   end
 
   def self.ssh_option(port)
-    (" -e \"ssh -p #{port} -o 'StrictHostKeyChecking no'\" " unless port.empty?) || ''
+    (" -e \"ssh -p #{port} -o 'StrictHostKeyChecking no'\" " unless port.to_s.empty?) || ''
   end
 
   def self.host_and_user(host, user)

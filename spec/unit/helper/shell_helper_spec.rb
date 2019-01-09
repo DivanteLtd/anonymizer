@@ -231,6 +231,24 @@ RSpec.describe '#shell_helper' do
       ).to eq(
         "rsync -a #{@tmp_dir}/#{@project_name}_#{@random_string}.sql.gz #{@web_data_path}/"
       )
+
+      web_server = {
+        host: nil,
+        port: nil,
+        user: nil,
+        path: @web_data_path
+      }
+
+      expect(
+        ShellHelper.upload_to_web(
+          @project_name,
+          @database,
+          web_server,
+          @tmp_dir
+        )
+      ).to eq(
+        "rsync -a #{@tmp_dir}/#{@project_name}_#{@random_string}.sql.gz #{@web_data_path}/"
+      )
     end
 
     it 'should return rsync command with host and user and ssh port' do
