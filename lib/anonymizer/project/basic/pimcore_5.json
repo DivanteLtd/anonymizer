@@ -8,7 +8,21 @@
             },
             "name": {
                 "type": "uniq_login",
-                "action": "update"
+                "action": "update",
+                "where": [
+                    {
+                        "logical_operator": "AND",
+                        "column": "name",
+                        "operator": "!=",
+                        "value": "system"    
+                    },
+                    {
+                        "logical_operator": "AND",
+                        "column": "type",
+                        "operator": "=",
+                        "value": "user"    
+                    }
+                ]
             },
             "firstname": {
                 "type": "firstname",
@@ -16,6 +30,10 @@
             },
             "lastname": {
                 "type": "lastname",
+                "action": "update"
+            },
+            "email": {
+                "type": "email",
                 "action": "update"
             }
         }

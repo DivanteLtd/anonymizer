@@ -69,6 +69,8 @@ class Database
       class_name = 'Eav'
     when 'json_update'
       class_name = 'Json'
+    when 'multiple_update'
+      class_name = 'Multiple'
     else
       class_name = 'Column'
     end
