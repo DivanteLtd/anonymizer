@@ -41,7 +41,7 @@ class Fake
       lastname: lastname,
       email: Faker::Internet.email("#{firstname} #{lastname}"),
       login: Faker::Internet.user_name("#{firstname} #{lastname}", %w[. _ -]),
-      telephone: Faker::PhoneNumber.phone_number,
+      telephone: Faker::PhoneNumber.cell_phone,
       company: Faker::Company.name,
       street: Faker::Address.street_name,
       postcode: Faker::Address.postcode,
