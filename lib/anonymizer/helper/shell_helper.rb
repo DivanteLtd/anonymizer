@@ -17,7 +17,9 @@ module ShellHelper
   end
 
   def self.restore_database(project_name, database, dir)
-    command = "gunzip -c #{dir}/#{project_name}.sql.gz | sed -e 's/DEFINER=[^*]*\\*/\\*/' | " \
+    command = "gunzip -c #{dir}/#{project_name}.sql.gz | " \
+      "sed -e 's/DEFINER=[^*]*\\*/\\*/' | " \
+      "sed -e 's/ROW_FORMAT=FIXED//g' | " \
       "mysql#{mysql_options(database)} #{project_name}"
 
     remove_white_space(command)
