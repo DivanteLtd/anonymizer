@@ -99,7 +99,9 @@ RSpec.describe '#shell_helper' do
 
     it 'should return command with host, user and pass' do
       expect(ShellHelper.restore_database(@project_name, @database, @dump_dir)).to eq(
-        "gunzip -c #{@dump_dir}/#{@project_name}.sql.gz | sed -e 's/DEFINER=[^*]*\\*/\\*/' | " \
+        "gunzip -c #{@dump_dir}/#{@project_name}.sql.gz | " \
+        "sed -e 's/DEFINER=[^*]*\\*/\\*/' | " \
+        "sed -e 's/ROW_FORMAT=FIXED//g' | " \
         "mysql -h #{@host} -u #{@user} -p#{@pass} #{@project_name}"
       )
     end
