@@ -1,4 +1,4 @@
-FROM ruby:2.2
+FROM ruby:2.5
 
 MAINTAINER Mateusz Koszutowski <mkoszutowski@divante.pl>
 
@@ -13,6 +13,7 @@ RUN apt-get update \
     && apt-get install -y \
         mysql-client \
         rsync \
+        build-essential \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

@@ -9,6 +9,7 @@ rvm:
 - 2.2
 - 2.3
 - 2.4
+- 2.5
 
 services:
   - docker
@@ -29,6 +30,7 @@ script:
   - cp config/env/sample.yml config/env/development.yml
   - bundle exec rubocop
   - bundle exec rspec spec
+  - chown -R 1000:1000 .
   - docker build -t divante/anonymizer:${RUBY_VERSION}_${COMMIT} -f dev/docker/ruby$RUBY_VERSION/anonymizer/Dockerfile .
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
   - docker push divante/anonymizer:${RUBY_VERSION}_${COMMIT};

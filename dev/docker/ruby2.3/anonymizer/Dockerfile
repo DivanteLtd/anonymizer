@@ -22,8 +22,6 @@ RUN if [ ! `id -g anonymizer &> /dev/null` ]; then groupadd -f -g ${GID} anonymi
 
 COPY . .
 
-RUN chown -R anonymizer:anonymizer .
-
 USER anonymizer
 
 RUN bundle install --deployment --force
