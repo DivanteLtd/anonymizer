@@ -20,7 +20,7 @@ RUN apt-get update \
 RUN if [ ! `id -g anonymizer &> /dev/null` ]; then groupadd -f -g ${GID} anonymizer; fi \
     && if [ ! `id -u anonymizer &> /dev/null` ]; then useradd --shell /bin/bash -u ${UID} -g ${GID} -m anonymizer; fi
 
-COPY . .
+COPY --chown=${UID}:${GID} . .
 
 USER anonymizer
 
