@@ -21,11 +21,15 @@ RUN apt-get update \
 RUN if [ ! `id -g anonymizer &> /dev/null` ]; then groupadd -f -g ${GID} anonymizer; fi \
     && if [ ! `id -u anonymizer &> /dev/null` ]; then useradd --shell /bin/bash -u ${UID} -g ${GID} -m anonymizer; fi
 
-COPY . .
-
-RUN ls -al
+RUN ls -aln
 
 USER anonymizer
+
+RUN ls -aln
+
+COPY . .
+
+RUN ls -aln
 
 RUN id
 
