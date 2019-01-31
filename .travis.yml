@@ -30,6 +30,7 @@ script:
   - cp config/env/sample.yml config/env/development.yml
   - bundle exec rubocop
   - bundle exec rspec spec
+  - ls -al
   - sudo chown -R 1000:1000 .
   - docker build -t divante/anonymizer:${RUBY_VERSION}_${COMMIT} -f dev/docker/ruby$RUBY_VERSION/anonymizer/Dockerfile .
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
