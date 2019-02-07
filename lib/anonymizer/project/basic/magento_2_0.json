@@ -392,11 +392,6 @@
                 "type": "email",
                 "action": "update"
             }
-        },
-        "password_request_reset_event": {
-            "only_truncate": {
-                "action": "truncate"
-            }
         }
     }
 }
