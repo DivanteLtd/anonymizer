@@ -157,6 +157,22 @@
              "shipping_name" : {
                 "type": "fullname",
                 "action": "update"
+            },
+             "billing_address" : {
+                "type": "full_address",
+                "action": "update"
+            },
+             "shipping_address" : {
+                "type": "full_address",
+                "action": "update"
+            },
+             "customer_email" : {
+                "type": "email",
+                "action": "update"
+            },
+             "customer_name" : {
+                "type": "fullname",
+                "action": "update"
             }
         },
         "quote": {
@@ -375,6 +391,11 @@
             "customer_email": {
                 "type": "email",
                 "action": "update"
+            }
+        },
+        "password_request_reset_event": {
+            "only_truncate": {
+                "action": "truncate"
             }
         }
     }
