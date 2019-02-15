@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/stympy/faker
-  revision: a2c25730f093372bbc5b6afe92e26a8469cf06d0
+  revision: 50960a53730dd039bcdff9e2db6d682162e991c8
   branch: master
   specs:
-    faker (1.9.1)
+    faker (1.9.3)
       i18n (>= 0.7)
 
 GEM
@@ -40,7 +40,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.8.0)
     rspec-support (3.8.0)
-    rubocop (0.63.1)
+    rubocop (0.64.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.5, != 2.5.1.1)
@@ -49,7 +49,7 @@ GEM
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.4.0)
     ruby-progressbar (1.10.0)
-    sequel (5.17.0)
+    sequel (4.49.0)
     simplecov (0.16.1)
       docile (~> 1.1)
       json (>= 1.8, < 3)
@@ -67,7 +67,7 @@ DEPENDENCIES
   rake
   rspec (~> 3.0)
   rubocop
-  sequel
+  sequel (~> 4.0)
   simplecov
 
 RUBY VERSION
