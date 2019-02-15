@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.9.1] - 2019-02-15
 ### Changed
+- End of support for ruby 2.2
 - Capistrano deleted from dependencies
 - Dependencies upgrade
 

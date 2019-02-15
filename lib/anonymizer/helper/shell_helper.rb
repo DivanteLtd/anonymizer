@@ -70,40 +70,42 @@ module ShellHelper
     remove_white_space(command)
   end
 
-  private_class_method
+  class << self
+    private_class_method :new
 
-  def self.escaped_database_name(project_name)
-    database_name = "`#{project_name}`"
-    Shellwords.escape(database_name)
-  end
+    def escaped_database_name(project_name)
+      database_name = "`#{project_name}`"
+      Shellwords.escape(database_name)
+    end
 
-  def self.create_host_string(host)
-    (" -h #{host}" if host.to_s != '') || ''
-  end
+    def create_host_string(host)
+      (" -h #{host}" if host.to_s != '') || ''
+    end
 
-  def self.create_user_string(user)
-    (" -u #{user}" if user.to_s != '') || ''
-  end
+    def create_user_string(user)
+      (" -u #{user}" if user.to_s != '') || ''
+    end
 
-  def self.create_pass_string(pass)
-    (" -p#{pass}" if pass.to_s != '') || ''
-  end
+    def create_pass_string(pass)
+      (" -p#{pass}" if pass.to_s != '') || ''
+    end
 
-  def self.remove_white_space(string)
-    string.tr("\n", ' ').squeeze(' ')
-  end
+    def remove_white_space(string)
+      string.tr("\n", ' ').squeeze(' ')
+    end
 
-  def self.ssh_option(port)
-    (" -e \"ssh -p #{port} -o 'StrictHostKeyChecking no'\" " unless port.to_s.empty?) || ''
-  end
+    def ssh_option(port)
+      (" -e \"ssh -p #{port} -o 'StrictHostKeyChecking no'\" " unless port.to_s.empty?) || ''
+    end
 
-  def self.host_and_user(host, user)
-    user = user.to_s
-    user += '@' if user != ''
+    def host_and_user(host, user)
+      user = user.to_s
+      user += '@' if user != ''
 
-    host = host.to_s
-    host += ':' if host != ''
+      host = host.to_s
+      host += ':' if host != ''
 
-    user + host
+      user + host
+    end
   end
 end

@@ -5,12 +5,14 @@ class Anonymizer
   attr_accessor :config
 
   def initialize(project_name, config = nil)
-    raise 'Invalid project name' unless project_name && project_name.is_a?(String)
+    raise 'Invalid project name' unless project_name&.is_a?(String)
+
     @project_name = project_name
 
     if config.nil?
       project_file_path = project_file_path project_file_name project_name
       raise 'Project not exists' unless project_file_path
+
       config = read_config project_file_path
     end
 
