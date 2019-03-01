@@ -12,8 +12,6 @@ RSpec.describe Anonymizer, '#anonymizer' do
 
   context 'fake project error handling' do
     before do
-      @database = double('Database')
-
       @empty_project_name = nil
       @fake_project_name = 'fake_project_name'
     end
@@ -64,6 +62,15 @@ RSpec.describe Anonymizer, '#anonymizer' do
             }
           }
         }'
+      )
+    end
+
+    it 'should throw exception if extended project doesn\'t exist' do
+      @config['basic_type'] = 'not_existing_basic_type'
+
+      expect { Anonymizer.new @name, @config }.to raise_error(
+        RuntimeError,
+        'Basic type not exists'
       )
     end
 

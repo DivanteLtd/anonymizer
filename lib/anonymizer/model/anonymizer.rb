@@ -26,6 +26,7 @@ class Anonymizer
   def prepare_config(config)
     if config['type'] == 'extended'
       project_file_path = project_file_path project_file_name config['basic_type']
+      raise 'Basic type not exists' unless project_file_path
       basic_config = read_config project_file_path
       config = basic_config.deep_merge config
     end
@@ -70,6 +71,8 @@ class Anonymizer
   end
 
   def project_file_path(project_file_name)
+    project_file = nil
+
     if File.exist?(projects_dir + '/' + project_file_name)
       project_file = projects_dir + '/' + project_file_name
     elsif File.exist?(basic_projects_dir + '/' + project_file_name)
