@@ -13,8 +13,8 @@ RSpec.describe '#anonymize magento 1.9 sample' do
       @random_string = '2949d3e2173b25a55968f45518e4779d'
       @default_action = 'update'
 
-      open('/tmp/' + @project_name + '.sql.gz', 'wb') do |f|
-        f << open('https://github.com/DivanteLtd/anonymizer/files/2135881/' + @project_name + '.sql.gz').read
+      File.open('/tmp/' + @project_name + '.sql.gz', 'wb') do |f|
+        f << URI.open('https://github.com/DivanteLtd/anonymizer/files/2135881/' + @project_name + '.sql.gz').read
       end
 
       config = JSON.parse(

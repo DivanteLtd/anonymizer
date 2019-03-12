@@ -2,12 +2,12 @@
 
 source 'https://rubygems.org'
 
-ruby '>= 2.2.0'
+ruby '>= 2.3.0'
 
 gem 'rubocop', require: false
 
 gem 'mysql2'
-gem 'sequel'
+gem 'sequel', '~>4.0'
 
 gem 'net-scp'
 
@@ -16,7 +16,3 @@ gem 'rspec', '~> 3.0'
 gem 'simplecov', require: false
 
 gem 'rake'
-
-gem 'capistrano', '~> 3.7'
-gem 'capistrano-bundler', '~> 1.2'
-gem 'capistrano-rvm'

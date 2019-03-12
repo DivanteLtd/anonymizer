@@ -1,94 +1,77 @@
 GIT
   remote: https://github.com/stympy/faker
-  revision: 8bf65150477149d0daac741e61e3ff2789f902fb
+  revision: 50960a53730dd039bcdff9e2db6d682162e991c8
   branch: master
   specs:
-    faker (1.6.6)
-      i18n (~> 0.5)
+    faker (1.9.3)
+      i18n (>= 0.7)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    airbrussh (1.1.1)
-      sshkit (>= 1.6.1, != 1.7.0)
     ast (2.4.0)
-    capistrano (3.7.1)
-      airbrussh (>= 1.0.0)
-      capistrano-harrow
-      i18n
-      rake (>= 10.0.0)
-      sshkit (>= 1.9.0)
-    capistrano-bundler (1.2.0)
-      capistrano (~> 3.1)
-      sshkit (~> 1.2)
-    capistrano-harrow (0.5.3)
-    capistrano-rvm (0.1.2)
-      capistrano (~> 3.0)
-      sshkit (~> 1.2)
-    diff-lcs (1.2.5)
-    docile (1.1.5)
-    i18n (0.7.0)
-    json (2.0.2)
+    concurrent-ruby (1.1.4)
+    diff-lcs (1.3)
+    docile (1.3.1)
+    i18n (1.5.3)
+      concurrent-ruby (~> 1.0)
+    jaro_winkler (1.5.2)
+    json (2.1.0)
     mysql2 (0.5.2)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
-    net-ssh (3.2.0)
-    parallel (1.12.1)
-    parser (2.5.0.5)
+    net-ssh (5.1.0)
+    parallel (1.13.0)
+    parser (2.6.0.0)
       ast (~> 2.4.0)
-    powerpack (0.1.1)
+    powerpack (0.1.2)
     rainbow (3.0.0)
-    rake (12.3.1)
-    rspec (3.5.0)
-      rspec-core (~> 3.5.0)
-      rspec-expectations (~> 3.5.0)
-      rspec-mocks (~> 3.5.0)
-    rspec-core (3.5.4)
-      rspec-support (~> 3.5.0)
-    rspec-expectations (3.5.0)
+    rake (12.3.2)
+    rspec (3.8.0)
+      rspec-core (~> 3.8.0)
+      rspec-expectations (~> 3.8.0)
+      rspec-mocks (~> 3.8.0)
+    rspec-core (3.8.0)
+      rspec-support (~> 3.8.0)
+    rspec-expectations (3.8.2)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.5.0)
-    rspec-mocks (3.5.0)
+      rspec-support (~> 3.8.0)
+    rspec-mocks (3.8.0)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.5.0)
-    rspec-support (3.5.0)
-    rubocop (0.54.0)
+      rspec-support (~> 3.8.0)
+    rspec-support (3.8.0)
+    rubocop (0.64.0)
+      jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
-      parser (>= 2.5)
+      parser (>= 2.5, != 2.5.1.1)
       powerpack (~> 0.1)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (~> 1.0, >= 1.0.1)
-    ruby-progressbar (1.9.0)
-    sequel (4.41.0)
-    simplecov (0.12.0)
-      docile (~> 1.1.0)
+      unicode-display_width (~> 1.4.0)
+    ruby-progressbar (1.10.0)
+    sequel (4.49.0)
+    simplecov (0.16.1)
+      docile (~> 1.1)
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
-    simplecov-html (0.10.0)
-    sshkit (1.11.5)
-      net-scp (>= 1.1.2)
-      net-ssh (>= 2.8.0)
-    unicode-display_width (1.3.0)
+    simplecov-html (0.10.2)
+    unicode-display_width (1.4.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  capistrano (~> 3.7)
-  capistrano-bundler (~> 1.2)
-  capistrano-rvm
   faker!
   mysql2
   net-scp
   rake
   rspec (~> 3.0)
   rubocop
-  sequel
+  sequel (~> 4.0)
   simplecov
 
 RUBY VERSION
    ruby 2.2.10p489
 
 BUNDLED WITH
-   1.16.4
+   1.17.2

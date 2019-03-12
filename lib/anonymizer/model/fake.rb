@@ -49,7 +49,7 @@ class Fake
       full_address: Faker::Address.full_address,
       vat_id: Faker::Company.swedish_organisation_number,
       ip: Faker::Internet.private_ip_v4_address,
-      quote: Faker::StarWars.quote,
+      quote: Faker::Movies::StarWars.quote,
       website: Faker::Internet.domain_name,
       iban: Faker::Bank.iban,
       regon: generate_regon,
