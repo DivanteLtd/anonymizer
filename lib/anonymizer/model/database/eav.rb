@@ -7,10 +7,10 @@ class Database
     def self.query(table_name, column_name, info) # rubocop:disable Metrics/MethodLength
       attributes = info['attributes']
 
-      querys = []
+      queries = []
 
       attributes.each do |attribute|
-        querys.push "UPDATE #{table_name} " \
+        queries.push "UPDATE #{table_name} " \
         'SET ' \
           "#{column_name} = (SELECT fake_user.#{attribute['type']} FROM fake_user ORDER BY RAND() LIMIT 1) " \
         'WHERE ' \
@@ -25,7 +25,7 @@ class Database
                     "WHERE entity_type_code = '#{attribute['entity_type']}'));"
       end
 
-      querys
+      queries
     end
   end
 end

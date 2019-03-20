@@ -17,31 +17,57 @@ class Database
   def anonymize
     insert_fake_data
 
-    @config['tables'].each do |table_name, columns|
-      querys = column_query(table_name, columns)
+    before_queries
 
-      querys.each do |query|
+    @config['tables'].each do |table_name, columns|
+      queries = column_query(table_name, columns)
+
+      queries.each do |query|
         @db.run query
       end
     end
+
+    after_queries
 
     remove_fake_data
   end
 
   def column_query(table_name, columns)
-    querys = []
+    queries = []
 
     columns.each do |column_name, info|
       Object.const_get(
         "Database::#{translate_acton_to_class_name(info['action'])}"
       ).query(table_name, column_name, info).each do |query|
-        querys.push query
+        queries.push query
       end
 
       break if info['action'] == 'truncate'
     end
 
-    querys
+    queries
+  end
+
+  def before_queries
+    if @config['custom_queries'] &&
+       @config['custom_queries']['before'] &&
+       @config['custom_queries']['before'].is_a?(Array)
+
+      @config['custom_queries']['before'].each do |query|
+        @db.run query
+      end
+    end
+  end
+
+  def after_queries
+    if @config['custom_queries'] &&
+       @config['custom_queries']['after'] &&
+       @config['custom_queries']['after'].is_a?(Array)
+
+      @config['custom_queries']['after'].each do |query|
+        @db.run query
+      end
+    end
   end
 
   def insert_fake_data
@@ -77,6 +103,7 @@ class Database
 
     class_name
   end
+  # rubocop:enable Metrics/MethodLength
 
   def self.prepare_select_for_query(type)
     query = if type == 'fullname'
@@ -87,5 +114,4 @@ class Database
 
     query
   end
-  # rubocop:enable Metrics/MethodLength
 end

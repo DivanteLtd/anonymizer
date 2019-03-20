@@ -586,6 +586,73 @@ RSpec.describe Database, '#database' do
     end
   end
 
+  context 'work with custom query' do
+    before do
+      @name = 'magento_1_9'
+      @table_name = 'customer_address_entity_varchar'
+      @column_name = 'value'
+      @action = 'eav_update'
+      @attr_code = 'firstname'
+      @entity_type = 'customer_address'
+      @column_type = 'firstname'
+      @config = JSON.parse(
+        '{
+          "type": "basic",
+          "database": {
+            "name": "' + @name + '"
+          },
+          "tables": {
+          },
+          "custom_queries": {
+            "before": [
+              "DELETE FROM some_column WHERE date > \'2019-12-25\'",
+              "INSERT INTO some_column2 SET table = \'value\'"
+            ],
+            "after": [
+              "INSERT INTO some_column SET name = \'admin\', pass = \'1234567890\'",
+              "DELETE FROM some_column2 WHERE id < 10000"
+            ]
+          }
+        }'
+      )
+    end
+
+    it 'anonymizer should create new istance of Sequel::Mysql2, insert and remove fake data, run custome queries' do
+      db = Database.new @config
+
+      expect(db).to receive(:insert_fake_data)
+      expect(db).to receive(:remove_fake_data)
+
+      expect_any_instance_of(Sequel::Mysql2::Database).to receive(:run).exactly(4).times
+
+      db.anonymize
+    end
+
+    it 'should run all custome queries' do
+      db = Database.new @config
+
+      expect(db).to receive(:insert_fake_data)
+      expect(db).to receive(:remove_fake_data)
+
+      expect_any_instance_of(
+        Sequel::Mysql2::Database
+      ).to receive(:run).with('INSERT INTO some_column2 SET table = \'value\'')
+      expect_any_instance_of(
+        Sequel::Mysql2::Database
+      ).to receive(:run).with('DELETE FROM some_column WHERE date > \'2019-12-25\'')
+      expect_any_instance_of(
+        Sequel::Mysql2::Database
+      ).to receive(:run).with('DELETE FROM some_column2 WHERE id < 10000')
+      expect_any_instance_of(
+        Sequel::Mysql2::Database
+      ).to receive(:run).with(
+        'INSERT INTO some_column SET name = \'admin\', pass = \'1234567890\''
+      )
+
+      db.anonymize
+    end
+  end
+
   context 'insert fake data' do
     before do
       @name = 'magento_1_9'
