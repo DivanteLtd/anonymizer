@@ -17,6 +17,7 @@ services:
 sudo: required
 
 before_install:
+  - gem install bundler --pre
   - sudo service mysql stop
   - docker --version
   - docker-compose --version
