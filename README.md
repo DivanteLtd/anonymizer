@@ -251,6 +251,24 @@ You should familiarize with MySQL JSON path expressions.
 }
 ```
 
+#### How to run custom queries
+
+Anonymizer can run custom, row queries before and after anonymization process. In the example below, the anonymizer runs two queries before and one after.
+
+```
+"tables": {
+},
+"custom_queries": {
+    "before": [
+        "DELETE FROM some_column WHERE date > '2019-12-25'",
+        "INSERT INTO some_column2 SET table = 'value'"
+    ],
+    "after": [
+        "INSERT INTO some_column SET name = 'admin', pass = '1234567890'",
+    ]
+}
+```
+
 ### Example configuration file
 ```
 {

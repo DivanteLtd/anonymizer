@@ -7,16 +7,16 @@ class Database
     def self.query(table_name, column_name, info)
       column_type = info['type']
 
-      querys = []
+      queries = []
 
       query = "UPDATE #{table_name} SET #{column_name} = ("
       query += manage_type(column_type)
       query += "WHERE #{table_name}.#{column_name} IS NOT NULL"
       query += fill_where_clause(info, table_name)
 
-      querys.push query
+      queries.push query
 
-      querys
+      queries
     end
 
     def self.manage_type(type)

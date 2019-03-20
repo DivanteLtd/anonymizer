@@ -5,16 +5,16 @@ class Database
     def self.query(table_name, column_name, info)
       column_type = info['type']
 
-      querys = []
+      queries = []
 
       query = "UPDATE #{table_name} SET #{column_name} = ("
       query += manage_type(column_type)
       query += "WHERE #{table_name}.#{column_name} IS NOT NULL"
 
-      querys.push query
-      querys = manage_linked_tables(info['linked_tables'], table_name, column_name, querys)
+      queries.push query
+      queries = manage_linked_tables(info['linked_tables'], table_name, column_name, queries)
 
-      querys
+      queries
     end
 
     def self.manage_type(type)
@@ -30,16 +30,16 @@ class Database
       query
     end
 
-    def self.manage_linked_tables(linked_tables, table_name, column_name, querys)
+    def self.manage_linked_tables(linked_tables, table_name, column_name, queries)
       linked_tables.each do |linked_table, linked_data|
         query = "UPDATE #{linked_table} as t1"
         query += " INNER JOIN #{table_name} as t2 ON t1.#{linked_data['column']}"
         query += " SET t1.#{column_name} = t2.#{column_name}"
         query += " WHERE t1.#{column_name} IS NOT NULL"
-        querys.push query
+        queries.push query
       end
 
-      querys
+      queries
     end
   end
 end
