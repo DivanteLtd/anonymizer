@@ -23,7 +23,7 @@ namespace 'project' do
     Rake.application.invoke_task("project:upload_to_web[#{project_name}]")
     Rake.application.invoke_task("project:remove_database[#{project_name}]")
     Rake.application.invoke_task("project:remove_dump_from_tmp[#{project_name}]")
-    Rake.application.invoke_task("project:anonymize_database_with_scenerio[#{project_name}, default]")
+    Rake.application.invoke_task("project:anonymize_database_with_scenerio[#{project_name},default,'']")
 
   end
 
@@ -58,11 +58,12 @@ namespace 'project' do
     db.anonymize
   end
 
-  task :anonymize_database_with_scenerio, [:project_name, :scenerio] do |_t, args|
+  task :anonymize_database_with_scenerio, [:project_name, :scenerio, :params] do |_t, args|
     project_name = args[:project_name]
     scenerio = args[:scenerio]
+    params = args[:params]
 
-    anonymizer = Anonymizer.new project_name, nil, scenerio
+    anonymizer = Anonymizer.new project_name, nil, scenerio, params
 
     db = Database.new anonymizer.config
     db.anonymize
@@ -84,7 +85,7 @@ namespace 'project' do
 
        !anonymizer.config['dump_action'][scenerio]['tables'].each do |table, condition|
           if !condition['where'].nil? && !condition['where'].empty?
-            where = condition['where']
+            where = db.merge_query_with_params(condition['where'])
           else
             where = nil
           end

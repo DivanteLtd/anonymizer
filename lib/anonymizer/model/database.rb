@@ -65,6 +65,15 @@ class Database
     queries
   end
 
+  def merge_query_with_params(query)
+    params = @config['params'].split(';')
+    params.each do |param, value|
+        param = param.split(':')
+        query = query.gsub('%' + param[0] + '%', param[1])
+    end
+    query
+  end
+
   def before_queries
     if @config['custom_queries'] &&
        @config['custom_queries']['before'] &&

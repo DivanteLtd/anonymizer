@@ -4,7 +4,7 @@
 class Anonymizer
   attr_accessor :config
 
-  def initialize(project_name, config = nil, scenerio = 'default')
+  def initialize(project_name, config = nil, scenerio = 'default', params = [])
     raise 'Invalid project name' unless project_name && project_name.is_a?(String)
     @project_name = project_name
 
@@ -15,6 +15,7 @@ class Anonymizer
     end
 
     config['scenerio'] = scenerio
+    config['params'] = params
     @config = prepare_config config
   end
 
