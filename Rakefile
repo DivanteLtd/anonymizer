@@ -88,8 +88,7 @@ namespace 'project' do
           else
             where = nil
           end
-          puts table
-          puts condition
+
           system(
             ShellHelper.output_query_result(
               project_name,
