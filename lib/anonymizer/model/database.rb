@@ -23,6 +23,7 @@ class Database
       queries = column_query(table_name, columns)
 
       queries.each do |query|
+        query = merge_query_with_params(query)
         @db.run query
       end
     end
