@@ -34,6 +34,15 @@ module ShellHelper
     remove_white_space(command)
   end
 
+  def self.output_query_result(project_name, table, where, database, outputfile)
+    if !where.nil?
+        command = "mysqldump #{mysql_options(database)} #{project_name} #{table} --where='#{where}' --skip-opt --no-create-info --compact  >> #{outputfile}"
+    else
+        command = "mysqldump #{mysql_options(database)} #{project_name} #{table} --skip-opt --no-create-info --compact  >> #{outputfile}"
+    end
+    remove_white_space(command)
+  end
+
   def self.upload_to_web(project_name, database, web_server, tmp_dir, options = '')
     random_string = "_#{database[:random_string]}" if database[:random_string]
     command = "rsync -a #{ssh_option(web_server[:port])} #{options} " \

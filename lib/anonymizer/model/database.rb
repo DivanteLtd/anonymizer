@@ -36,13 +36,30 @@ class Database
     queries = []
 
     columns.each do |column_name, info|
+
+      if @config['scenerio'].nil? || info[@config['scenerio']].nil?
+        scenerio = 'default'
+      elsif @config['scenerio'] &&
+            !info[@config['scenerio']]['extended'].nil? &&
+            info[info[@config['scenerio']]['extended']].nil?
+        scenerio = 'default'
+      elsif @config['scenerio'] &&
+            !info[@config['scenerio']]['extended'].nil? &&
+            !info[info[@config['scenerio']]['extended']].nil?
+        scenerio = info[@config['scenerio']]['extended']
+      else
+        scenerio = @config['scenerio']
+      end
+
+      action = info[scenerio]['action']
+
       Object.const_get(
-        "Database::#{translate_acton_to_class_name(info['action'])}"
-      ).query(table_name, column_name, info).each do |query|
+        "Database::#{translate_acton_to_class_name(action)}"
+      ).query(table_name, column_name, info[scenerio]).each do |query|
         queries.push query
       end
 
-      break if info['action'] == 'truncate'
+      break if info[scenerio]['action'] == 'truncate'
     end
 
     queries
@@ -89,6 +106,8 @@ class Database
     case action
     when 'truncate'
       class_name = 'Truncate'
+    when 'delete'
+      class_name = 'Delete'
     when 'empty', 'set_static'
       class_name = 'Static'
     when 'eav_update'

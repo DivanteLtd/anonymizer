@@ -4,7 +4,7 @@
 class Anonymizer
   attr_accessor :config
 
-  def initialize(project_name, config = nil)
+  def initialize(project_name, config = nil, scenerio = 'default')
     raise 'Invalid project name' unless project_name && project_name.is_a?(String)
     @project_name = project_name
 
@@ -14,6 +14,7 @@ class Anonymizer
       config = read_config project_file_path
     end
 
+    config['scenerio'] = scenerio
     @config = prepare_config config
   end
 
@@ -47,7 +48,9 @@ class Anonymizer
 
     config['tables'].each do |_table_name, columns|
       columns.each do |column_name, info|
-        validate_column(column_name, info)
+        info.each do |scenerio, scenerio_body|
+            validate_column(column_name, scenerio, scenerio_body)
+        end
       end
     end
   end
@@ -58,8 +61,8 @@ class Anonymizer
     end
   end
 
-  def validate_column(_column_name, info)
-    raise 'In project config file founded column without defined action' unless info['action']
+  def validate_column(_column_name, scenerio, scenerio_body)
+    raise 'In project config file founded column without defined action' unless scenerio_body['action']
   end
 
   def read_config(project_file_path)

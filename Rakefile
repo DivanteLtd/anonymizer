@@ -23,6 +23,8 @@ namespace 'project' do
     Rake.application.invoke_task("project:upload_to_web[#{project_name}]")
     Rake.application.invoke_task("project:remove_database[#{project_name}]")
     Rake.application.invoke_task("project:remove_dump_from_tmp[#{project_name}]")
+    Rake.application.invoke_task("project:anonymize_database_with_scenerio[#{project_name}, default]")
+
   end
 
   task :restore_database, [:project_name] do |_t, args|
@@ -30,7 +32,7 @@ namespace 'project' do
     database = {
       host: CONFIG['database']['host'],
       user: CONFIG['database']['user'],
-      pass: CONFIG['database']['pass']
+      password: CONFIG['database']['pass']
     }
 
     system(
@@ -43,7 +45,7 @@ namespace 'project' do
       ShellHelper.restore_database(
         project_name,
         database,
-        CONFIG['tmp_path']
+        CONFIG['dump_server']['path']
       )
     )
   end
@@ -54,6 +56,51 @@ namespace 'project' do
 
     db = Database.new anonymizer.config
     db.anonymize
+  end
+
+  task :anonymize_database_with_scenerio, [:project_name, :scenerio] do |_t, args|
+    project_name = args[:project_name]
+    scenerio = args[:scenerio]
+
+    anonymizer = Anonymizer.new project_name, nil, scenerio
+
+    db = Database.new anonymizer.config
+    db.anonymize
+
+    if !anonymizer.config['dump_action'].nil? &&
+       !anonymizer.config['dump_action']['path'].nil? &&
+       !anonymizer.config['dump_action'][scenerio].nil? &&
+       !anonymizer.config['dump_action'][scenerio]['file'].nil?
+       !anonymizer.config['dump_action'][scenerio]['tables'].nil?
+
+       database = {
+          host: CONFIG['database']['host'],
+          user: CONFIG['database']['user'],
+          password: CONFIG['database']['pass']
+       }
+
+       dump_file = anonymizer.config['dump_action']['path'] + anonymizer.config['dump_action'][scenerio]['file']
+       File.delete(dump_file) if File.exist?(dump_file)
+
+       !anonymizer.config['dump_action'][scenerio]['tables'].each do |table, condition|
+          if !condition['where'].nil? && !condition['where'].empty?
+            where = condition['where']
+          else
+            where = nil
+          end
+          puts table
+          puts condition
+          system(
+            ShellHelper.output_query_result(
+              project_name,
+              table,
+              where,
+              database,
+              dump_file
+            )
+          )
+       end
+    end
   end
 
   task :dump_database, [:project_name] do |_t, args|
