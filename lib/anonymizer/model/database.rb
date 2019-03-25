@@ -70,7 +70,7 @@ class Database
     params = @config['params'].split(';')
     params.each do |param, value|
         param = param.split(':')
-        query = query.gsub('%' + param[0] + '%', param[1])
+        query = query.gsub('%' + param[0] + '%', param[1].gsub('|',','))
     end
     query
   end
