@@ -16,6 +16,7 @@ class Anonymizer
 
     config['scenerio'] = scenerio
     config['params'] = params
+
     @config = prepare_config config
   end
 
@@ -49,8 +50,12 @@ class Anonymizer
 
     config['tables'].each do |_table_name, columns|
       columns.each do |column_name, info|
-        info.each do |scenerio, scenerio_body|
-            validate_column(column_name, scenerio, scenerio_body)
+        if (config['version'].nil? || config['version'].nil < 2)
+            validate_column(column_name, info)
+        else
+            info.each do |scenerio, scenerio_body|
+                validate_column(column_name, scenerio_body, scenerio)
+            end
         end
       end
     end
@@ -62,8 +67,8 @@ class Anonymizer
     end
   end
 
-  def validate_column(_column_name, scenerio, scenerio_body)
-    raise 'In project config file founded column without defined action' unless scenerio_body['action']
+  def validate_column(_column_name, info, scenerio='')
+    raise 'In project config file founded column (' + _column_name + ', ' + scenerio + ') without defined action' unless info['action']
   end
 
   def read_config(project_file_path)

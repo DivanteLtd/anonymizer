@@ -33,34 +33,45 @@ class Database
     remove_fake_data
   end
 
+  def get_scenerio(info)
+    if @config['scenerio'].nil? || info[@config['scenerio']].nil?
+      scenerio = 'default'
+    elsif @config['scenerio'] &&
+          !info[@config['scenerio']]['extended'].nil? &&
+          info[info[@config['scenerio']]['extended']].nil?
+      scenerio = 'default'
+    elsif @config['scenerio'] &&
+          !info[@config['scenerio']]['extended'].nil? &&
+          !info[info[@config['scenerio']]['extended']].nil?
+      scenerio = info[@config['scenerio']]['extended']
+    else
+      scenerio = @config['scenerio']
+    end
+
+    scenerio
+  end
+
   def column_query(table_name, columns)
     queries = []
 
     columns.each do |column_name, info|
 
-      if @config['scenerio'].nil? || info[@config['scenerio']].nil?
-        scenerio = 'default'
-      elsif @config['scenerio'] &&
-            !info[@config['scenerio']]['extended'].nil? &&
-            info[info[@config['scenerio']]['extended']].nil?
-        scenerio = 'default'
-      elsif @config['scenerio'] &&
-            !info[@config['scenerio']]['extended'].nil? &&
-            !info[info[@config['scenerio']]['extended']].nil?
-        scenerio = info[@config['scenerio']]['extended']
+      if (config['version'].nil? || config['version'].nil < 2)
+        column = info
+        action = info['action']
       else
-        scenerio = @config['scenerio']
+        scenerio = get_scenerio(info)
+        column   info[scenerio]
+        action = info[scenerio]['action']
       end
-
-      action = info[scenerio]['action']
 
       Object.const_get(
         "Database::#{translate_acton_to_class_name(action)}"
-      ).query(table_name, column_name, info[scenerio]).each do |query|
+      ).query(table_name, column_name, column).each do |query|
         queries.push query
       end
 
-      break if info[scenerio]['action'] == 'truncate'
+      break if action == 'truncate'
     end
 
     queries
