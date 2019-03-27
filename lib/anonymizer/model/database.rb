@@ -23,7 +23,9 @@ class Database
       queries = column_query(table_name, columns)
 
       queries.each do |query|
-        query = merge_query_with_params(query)
+        if (!@config['params'].nil? && !@config['params'].empty?)
+          query = merge_query_with_params(query)
+        end
         @db.run query
       end
     end
@@ -56,12 +58,12 @@ class Database
 
     columns.each do |column_name, info|
 
-      if (config['version'].nil? || config['version'].nil < 2)
+      if (config['version'].nil? || config['version'] < 2)
         column = info
         action = info['action']
       else
         scenerio = get_scenerio(info)
-        column   info[scenerio]
+        column = info[scenerio]
         action = info[scenerio]['action']
       end
 

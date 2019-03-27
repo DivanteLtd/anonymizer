@@ -24,6 +24,7 @@ namespace 'project' do
     Rake.application.invoke_task("project:remove_database[#{project_name}]")
     Rake.application.invoke_task("project:remove_dump_from_tmp[#{project_name}]")
     Rake.application.invoke_task("project:anonymize_database_with_scenerio[#{project_name},default,'']")
+    Rake.application.invoke_task("project:dump_database_with_scenerio[#{project_name},default,'']")
 
   end
 
@@ -58,51 +59,6 @@ namespace 'project' do
     db.anonymize
   end
 
-  task :anonymize_database_with_scenerio, [:project_name, :scenerio, :params] do |_t, args|
-    project_name = args[:project_name]
-    scenerio = args[:scenerio]
-    params = args[:params]
-
-    anonymizer = Anonymizer.new project_name, nil, scenerio, params
-
-    db = Database.new anonymizer.config
-    db.anonymize
-
-    if !anonymizer.config['dump_action'].nil? &&
-       !anonymizer.config['dump_action']['path'].nil? &&
-       !anonymizer.config['dump_action'][scenerio].nil? &&
-       !anonymizer.config['dump_action'][scenerio]['file'].nil?
-       !anonymizer.config['dump_action'][scenerio]['tables'].nil?
-
-       database = {
-          host: CONFIG['database']['host'],
-          user: CONFIG['database']['user'],
-          password: CONFIG['database']['pass']
-       }
-
-       dump_file = anonymizer.config['dump_action']['path'] + anonymizer.config['dump_action'][scenerio]['file']
-       File.delete(dump_file) if File.exist?(dump_file)
-
-       !anonymizer.config['dump_action'][scenerio]['tables'].each do |table, condition|
-          if !condition['where'].nil? && !condition['where'].empty?
-            where = db.merge_query_with_params(condition['where'])
-          else
-            where = nil
-          end
-
-          system(
-            ShellHelper.output_query_result(
-              project_name,
-              table,
-              where,
-              database,
-              dump_file
-            )
-          )
-       end
-    end
-  end
-
   task :dump_database, [:project_name] do |_t, args|
     project_name = args[:project_name]
     anonymizer = Anonymizer.new project_name
@@ -120,6 +76,70 @@ namespace 'project' do
         CONFIG['tmp_path']
       )
     )
+  end
+
+  task :anonymize_database_with_scenerio, [:project_name, :scenerio, :params] do |_t, args|
+    project_name = args[:project_name]
+    scenerio = args[:scenerio]
+    params = args[:params]
+
+    anonymizer = Anonymizer.new project_name, nil, scenerio, params
+
+    db = Database.new anonymizer.config
+    db.anonymize
+  end
+
+  task :dump_database_with_scenerio, [:project_name, :scenerio, :params] do |_t, args|
+    project_name = args[:project_name]
+    scenerio = args[:scenerio]
+    params = args[:params]
+
+    anonymizer = Anonymizer.new project_name, nil, scenerio, params
+
+    db = Database.new anonymizer.config
+
+    if !anonymizer.config['dump_actions'].nil?
+
+       database = {
+          host: CONFIG['database']['host'],
+          user: CONFIG['database']['user'],
+          password: CONFIG['database']['pass']
+       }
+
+       file_name = anonymizer.config['dump_actions']['scenerios'][anonymizer.config['scenerio']]['file']
+       dump_file = anonymizer.config['dump_actions']['path'] + file_name
+       File.delete(dump_file) if File.exist?(dump_file)
+
+       if anonymizer.config['dump_actions']['scenerios'][scenerio]['tables'] == "*"
+         system(
+           ShellHelper.output_query_result(
+             project_name,
+             nil,
+             nil,
+             database,
+             dump_file
+           )
+         )
+       else
+         !anonymizer.config['dump_actions']['scenerios'][scenerio]['tables'].each do |table, condition|
+           if !condition['where'].nil? && !condition['where'].empty?
+             where = db.merge_query_with_params(condition['where'])
+           else
+             where = nil
+           end
+
+           system(
+             ShellHelper.output_query_result(
+               project_name,
+               table,
+               where,
+               database,
+               dump_file
+             )
+           )
+         end
+       end
+    end
   end
 
   task :remove_database, [:project_name] do |_t, args|
