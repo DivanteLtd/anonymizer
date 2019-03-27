@@ -31,9 +31,7 @@ class Anonymizer
       project_file_path = project_file_path project_file_name config['basic_type']
       raise 'Basic type not exists' unless project_file_path
       basic_config = read_config project_file_path
-      if config['merge_protect'].nil?
-        config = basic_config.deep_merge config
-      end
+      config = basic_config.deep_merge config if config['merge_protect'].nil?
     end
 
     validate_config config
@@ -52,29 +50,27 @@ class Anonymizer
 
     config['tables'].each do |_table_name, columns|
       columns.each do |column_name, info|
-        if (config['version'].nil? || config['version'] < 2)
-            validate_column(column_name, info, 'default-v1')
+        if config['version'].nil? || config['version'] < 2
+          validate_column(column_name, info, 'default-v1')
         else
-            info.each do |scenerio, scenerio_body|
-                validate_column(column_name, scenerio_body, scenerio)
-            end
+          info.each do |scenerio, scenerio_body|
+            validate_column(column_name, scenerio_body, scenerio)
+          end
         end
       end
     end
 
-    if (!config['version'].nil? || config['version'].to_i > 1)
-        validate_dump_actions(config)
-    end
+    validate_dump_actions(config) if !config['version'].nil? || config['version'].to_i > 1
   end
 
   def validate_dump_actions(cfg)
-    if !cfg['dump_actions'].nil?
-        raise 'In project config file dump_actions path is not valid' unless cfg['dump_actions']['path']
-        raise 'Project config in dump_actions section doesn\'t have scenerios' unless cfg['dump_actions']['scenerios'].any?
-        cfg['dump_actions']['scenerios'].each do |scenerio, scenerio_config|
-          raise 'Project config in dump_actions section doesn\'t have file path in one of scenerios' unless scenerio_config['file']
-          raise 'Project config in dump_actions section doesn\'t have tables in one of scenerios' unless scenerio_config['tables']
-        end
+    unless cfg['dump_actions'].nil?
+      raise 'In project config file dump_actions path is not valid' unless cfg['dump_actions']['path']
+      raise 'Project config in dump_actions section doesn\'t have scenerios' unless cfg['dump_actions']['scenerios'].any?
+      cfg['dump_actions']['scenerios'].each do |_scenerio, scenerio_config|
+        raise 'Project config in dump_actions section doesn\'t have file path in one of scenerios' unless scenerio_config['file']
+        raise 'Project config in dump_actions section doesn\'t have tables in one of scenerios' unless scenerio_config['tables']
+      end
     end
   end
 
@@ -84,7 +80,7 @@ class Anonymizer
     end
   end
 
-  def validate_column(_column_name, info, scenerio)
+  def validate_column(_column_name, info, _scenerio)
     raise 'In project config file founded column without defined action' unless info['action']
   end
 

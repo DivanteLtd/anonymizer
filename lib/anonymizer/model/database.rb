@@ -23,9 +23,7 @@ class Database
       queries = column_query(table_name, columns)
 
       queries.each do |query|
-        if (!@config['params'].nil? && !@config['params'].empty?)
-          query = merge_query_with_params(query)
-        end
+        query = merge_query_with_params(query) if !@config['params'].nil? && !@config['params'].empty?
         @db.run query
       end
     end
@@ -36,19 +34,19 @@ class Database
   end
 
   def get_scenerio(info)
-    if @config['scenerio'].nil? || info[@config['scenerio']].nil?
-      scenerio = 'default'
-    elsif @config['scenerio'] &&
-          !info[@config['scenerio']]['extended'].nil? &&
-          info[info[@config['scenerio']]['extended']].nil?
-      scenerio = 'default'
-    elsif @config['scenerio'] &&
-          !info[@config['scenerio']]['extended'].nil? &&
-          !info[info[@config['scenerio']]['extended']].nil?
-      scenerio = info[@config['scenerio']]['extended']
-    else
-      scenerio = @config['scenerio']
-    end
+    scenerio = if @config['scenerio'].nil? || info[@config['scenerio']].nil?
+                 'default'
+               elsif @config['scenerio'] &&
+                     !info[@config['scenerio']]['extended'].nil? &&
+                     info[info[@config['scenerio']]['extended']].nil?
+                 'default'
+               elsif @config['scenerio'] &&
+                     !info[@config['scenerio']]['extended'].nil? &&
+                     !info[info[@config['scenerio']]['extended']].nil?
+                 info[@config['scenerio']]['extended']
+               else
+                 @config['scenerio']
+               end
 
     scenerio
   end
@@ -57,8 +55,7 @@ class Database
     queries = []
 
     columns.each do |column_name, info|
-
-      if (config['version'].nil? || config['version'] < 2)
+      if config['version'].nil? || config['version'] < 2
         column = info
         action = info['action']
       else
@@ -81,9 +78,9 @@ class Database
 
   def merge_query_with_params(query)
     params = @config['params'].split(';')
-    params.each do |param, value|
-        param = param.split(':')
-        query = query.gsub('%' + param[0] + '%', param[1].gsub('|',','))
+    params.each do |param, _value|
+      param = param.split(':')
+      query = query.gsub('%' + param[0] + '%', param[1].tr('|', ','))
     end
     query
   end

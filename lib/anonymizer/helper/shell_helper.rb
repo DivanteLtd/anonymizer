@@ -36,11 +36,11 @@ module ShellHelper
 
   def self.output_query_result(project_name, table, where, database, outputfile)
     if table.nil?
-        command = "mysqldump #{mysql_options(database)} #{project_name} --skip-opt --no-create-info --compact  >> #{outputfile}"
+      command = "mysqldump #{mysql_options(database)} #{project_name} --skip-opt --no-create-info --compact  >> #{outputfile}"
     elsif !where.nil?
-        command = "mysqldump #{mysql_options(database)} #{project_name} #{table} --where='#{where}' --skip-opt --no-create-info --compact --single-transaction >> #{outputfile}"
+      command = "mysqldump #{mysql_options(database)} #{project_name} #{table} --where='#{where}' --skip-opt --no-create-info --compact --single-transaction >> #{outputfile}"
     else
-        command = "mysqldump #{mysql_options(database)} #{project_name} #{table} --skip-opt --no-create-info --compact  >> #{outputfile}"
+      command = "mysqldump #{mysql_options(database)} #{project_name} #{table} --skip-opt --no-create-info --compact  >> #{outputfile}"
     end
     remove_white_space(command)
   end
