@@ -5,19 +5,16 @@ class Anonymizer
   attr_accessor :config
 
   def initialize(project_name, config = nil, scenerio = 'default', params = [])
-    raise 'Invalid project name' unless project_name && project_name.is_a?(String)
     @project_name = project_name
-
+    @config = config
+    @validator = Validator.new project_name, config, scenerio, params
+    @validator.validate_project_name
     if config.nil?
       project_file_path = project_file_path project_file_name project_name
-      raise 'Project not exists' unless project_file_path
+      @validator.validate_project_file project_file_path
       config = read_config project_file_path
     end
-
-    config['scenerio'] = scenerio
-    config['params'] = params
-
-    @config = prepare_config config
+    @config = prepare_config(config, scenerio, params)
   end
 
   def work(database)
@@ -26,62 +23,29 @@ class Anonymizer
 
   private
 
-  def prepare_config(config)
+  # rubocop:disable Style/IfUnlessModifier
+  def prepare_config(config, scenerio, params)
     if config['type'] == 'extended'
-      project_file_path = project_file_path project_file_name config['basic_type']
-      raise 'Basic type not exists' unless project_file_path
-      basic_config = read_config project_file_path
-      config = basic_config.deep_merge config if config['merge_protect'].nil?
+      config = prepare_config_extended(config, scenerio, params)
     end
 
-    validate_config config
-
+    @validator.validate_config config
     config['database'] = { 'name' => @project_name }
+    @validator.config_overwrite config
 
     config
   end
+  # rubocop:enable Style/IfUnlessModifier
 
-  def validate_config(config)
-    if !config.key?('dump_server') || config['dump_server'].empty?
-      raise 'In project config file dump_server is not valid'
-    end
+  def prepare_config_extended(config, scenerio, params)
+    project_file_path = project_file_path project_file_name config['basic_type']
+    @validator.validate_type(project_file_path)
+    basic_config = read_config project_file_path
+    config = basic_config.deep_merge config if config['merge_protect'].nil?
+    config['scenerio'] = scenerio
+    config['params'] = params
 
-    validate_dump_server config['dump_server']
-
-    config['tables'].each do |_table_name, columns|
-      columns.each do |column_name, info|
-        if config['version'].nil? || config['version'] < 2
-          validate_column(column_name, info, 'default-v1')
-        else
-          info.each do |scenerio, scenerio_body|
-            validate_column(column_name, scenerio_body, scenerio)
-          end
-        end
-      end
-    end
-
-    validate_dump_actions(config) if !config['version'].nil? || config['version'].to_i > 1
-  end
-
-  def validate_dump_actions(cfg)
-    unless cfg['dump_actions'].nil?
-      raise 'In project config file dump_actions path is not valid' unless cfg['dump_actions']['path']
-      raise 'Project config in dump_actions section doesn\'t have scenerios' unless cfg['dump_actions']['scenerios'].any?
-      cfg['dump_actions']['scenerios'].each do |_scenerio, scenerio_config|
-        raise 'Project config in dump_actions section doesn\'t have file path in one of scenerios' unless scenerio_config['file']
-        raise 'Project config in dump_actions section doesn\'t have tables in one of scenerios' unless scenerio_config['tables']
-      end
-    end
-  end
-
-  def validate_dump_server(dump_server)
-    %w[host user port path].each do |variable|
-      raise "In project config file dump_server #{variable} is not valid" unless dump_server.key?(variable)
-    end
-  end
-
-  def validate_column(_column_name, info, _scenerio)
-    raise 'In project config file founded column without defined action' unless info['action']
+    config
   end
 
   def read_config(project_file_path)

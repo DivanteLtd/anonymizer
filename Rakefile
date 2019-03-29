@@ -25,7 +25,6 @@ namespace 'project' do
     Rake.application.invoke_task("project:remove_dump_from_tmp[#{project_name}]")
     Rake.application.invoke_task("project:anonymize_database_with_scenerio[#{project_name},default,'']")
     Rake.application.invoke_task("project:dump_database_with_scenerio[#{project_name},default,'']")
-
   end
 
   task :restore_database, [:project_name] do |_t, args|
@@ -98,47 +97,45 @@ namespace 'project' do
 
     db = Database.new anonymizer.config
 
-    if !anonymizer.config['dump_actions'].nil?
+    unless anonymizer.config['dump_actions'].nil?
 
-       database = {
-          host: CONFIG['database']['host'],
-          user: CONFIG['database']['user'],
-          password: CONFIG['database']['pass']
-       }
+      database = {
+        host: CONFIG['database']['host'],
+        user: CONFIG['database']['user'],
+        password: CONFIG['database']['pass']
+      }
 
-       file_name = anonymizer.config['dump_actions']['scenerios'][anonymizer.config['scenerio']]['file']
-       dump_file = anonymizer.config['dump_actions']['path'] + file_name
-       File.delete(dump_file) if File.exist?(dump_file)
+      file_name = anonymizer.config['dump_actions']['scenerios'][anonymizer.config['scenerio']]['file']
+      dump_file = anonymizer.config['dump_actions']['path'] + file_name
+      File.delete(dump_file) if File.exist?(dump_file)
 
-       if anonymizer.config['dump_actions']['scenerios'][scenerio]['tables'] == "*"
-         system(
-           ShellHelper.output_query_result(
-             project_name,
-             nil,
-             nil,
-             database,
-             dump_file
-           )
-         )
-       else
-         !anonymizer.config['dump_actions']['scenerios'][scenerio]['tables'].each do |table, condition|
-           if !condition['where'].nil? && !condition['where'].empty?
-             where = db.merge_query_with_params(condition['where'])
-           else
-             where = nil
-           end
+      if anonymizer.config['dump_actions']['scenerios'][scenerio]['tables'] == '*'
+        system(
+          ShellHelper.output_query_result(
+            project_name,
+            nil,
+            nil,
+            database,
+            dump_file
+          )
+        )
+      else
+        !anonymizer.config['dump_actions']['scenerios'][scenerio]['tables'].each do |table, condition|
+          where = if !condition['where'].nil? && !condition['where'].empty?
+                    db.merge_query_with_params(condition['where'])
+                  end
 
-           system(
-             ShellHelper.output_query_result(
-               project_name,
-               table,
-               where,
-               database,
-               dump_file
-             )
-           )
-         end
-       end
+          system(
+            ShellHelper.output_query_result(
+              project_name,
+              table,
+              where,
+              database,
+              dump_file
+            )
+          )
+        end
+      end
     end
   end
 

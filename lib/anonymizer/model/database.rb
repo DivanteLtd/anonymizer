@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/ClassLength
+
 # Basic class to communication with databese
 class Database
   attr_accessor :config, :name
+
+  # rubocop:enable Metrics/ClassLength
 
   def initialize(config)
     @config = config
@@ -14,6 +18,10 @@ class Database
     )
   end
 
+  # rubocop:disable Metrics/PerceivedComplexity
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/AbcSize
   def anonymize
     insert_fake_data
 
@@ -33,7 +41,7 @@ class Database
     remove_fake_data
   end
 
-  def get_scenerio(info)
+  def scenerio_determine(info)
     scenerio = if @config['scenerio'].nil? || info[@config['scenerio']].nil?
                  'default'
                elsif @config['scenerio'] &&
@@ -50,30 +58,47 @@ class Database
 
     scenerio
   end
+  # rubocop:enable Metrics/PerceivedComplexity
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/AbcSize
 
   def column_query(table_name, columns)
     queries = []
 
     columns.each do |column_name, info|
-      if config['version'].nil? || config['version'] < 2
-        column = info
-        action = info['action']
-      else
-        scenerio = get_scenerio(info)
-        column = info[scenerio]
-        action = info[scenerio]['action']
-      end
-
-      Object.const_get(
-        "Database::#{translate_acton_to_class_name(action)}"
-      ).query(table_name, column_name, column).each do |query|
-        queries.push query
-      end
+      column, action = get_column_and_action(info)
+      arr = column_queries(table_name, column_name, column, action)
+      queries.concat arr
 
       break if action == 'truncate'
     end
 
     queries
+  end
+
+  def column_queries(table_name, column_name, column, action)
+    queries = []
+
+    Object.const_get(
+      "Database::#{translate_acton_to_class_name(action)}"
+    ).query(table_name, column_name, column).each do |query|
+      queries.push query
+    end
+
+    queries
+  end
+
+  def get_column_and_action(info)
+    if config['version'].nil? || config['version'] < 2
+      column = info
+      action = info['action']
+    else
+      scenerio = scenerio_determine(info)
+      column = info[scenerio]
+      action = info[scenerio]['action']
+    end
+    [column, action]
   end
 
   def merge_query_with_params(query)
@@ -121,28 +146,12 @@ class Database
     @db.drop_table :fake_user
   end
 
-  # rubocop:disable Metrics/MethodLength
   def translate_acton_to_class_name(action)
-    case action
-    when 'truncate'
-      class_name = 'Truncate'
-    when 'delete'
-      class_name = 'Delete'
-    when 'empty', 'set_static'
-      class_name = 'Static'
-    when 'eav_update'
-      class_name = 'Eav'
-    when 'json_update'
-      class_name = 'Json'
-    when 'multiple_update'
-      class_name = 'Multiple'
-    else
-      class_name = 'Column'
-    end
+    model = Model.new action
+    class_name = model.action_class
 
     class_name
   end
-  # rubocop:enable Metrics/MethodLength
 
   def self.prepare_select_for_query(type)
     query = if type == 'fullname'
