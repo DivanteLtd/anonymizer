@@ -24,6 +24,7 @@ class Fake
       String :postcode
       String :city
       String :full_address
+      String :full_name
       String :vat_id
       String :ip
       String :quote
@@ -39,9 +40,10 @@ class Fake
     {
       firstname: firstname,
       lastname: lastname,
-      email: Faker::Internet.email("#{firstname} #{lastname}"),
-      login: Faker::Internet.user_name("#{firstname} #{lastname}", %w[. _ -]),
+      email: Faker::Internet.email(name:"#{firstname} #{lastname}"),
+      login: Faker::Internet.user_name(specifier:"#{firstname} #{lastname}",separators: %w[. _ -]),
       telephone: Faker::PhoneNumber.cell_phone,
+      full_name: Faker::Name.name,
       company: Faker::Company.name,
       street: Faker::Address.street_name,
       postcode: Faker::Address.postcode,
@@ -49,7 +51,7 @@ class Fake
       full_address: Faker::Address.full_address,
       vat_id: Faker::Company.swedish_organisation_number,
       ip: Faker::Internet.private_ip_v4_address,
-      quote: Faker::StarWars.quote,
+      quote: Faker::Movies::StarWars.quote,
       website: Faker::Internet.domain_name,
       iban: Faker::Bank.iban,
       regon: generate_regon,

@@ -1,0 +1,54 @@
+{
+    "type": "extended",
+    "basic_type": "custom",
+    "random_string": "ba74a64a152b84ec004d03caba15ba95",
+    "dump_server": {
+        "host": "",
+        "port": "",
+        "user": "",
+        "path": "/dump/dmp_company/"
+    },
+    "tables": {
+        "sf_guard_user": {
+            "email_address": {
+                "type": "email",
+                "action": "update"
+            },
+            "username":{
+                "type": "uniq_login",
+                "action": "update"
+            },
+            "first_name": {
+                "type": "firstname",
+                "action": "update"
+            },
+            "last_name": {
+                "type": "lastname",
+                "action": "update"
+            }
+        },
+	"applicant":{
+            "first_name": {
+                "type": "firstname",
+                "action": "update"
+            },
+            "last_name": {
+                "type": "lastname",
+                "action": "update"
+            },
+            "phone": {
+                "type": "telephone",
+                "action": "update"
+            },
+            "email": {
+                "type": "email",
+                "action": "update"
+            },
+	    "predecessor":{
+		"type":"full_name",
+		"action":"update"
+	    }
+        }
+    }
+}
+

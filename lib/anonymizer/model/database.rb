@@ -75,7 +75,7 @@ class Database
 
     fake_user = @db[:fake_user]
 
-    100.times do
+    20000.times do
       fake_user.insert(Fake.user)
     end
   end

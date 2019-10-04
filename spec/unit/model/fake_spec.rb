@@ -23,6 +23,7 @@ RSpec.describe Fake, '#fake' do
       expect(Fake.user[:postcode].is_a?(String)).to be true
       expect(Fake.user[:city].is_a?(String)).to be true
       expect(Fake.user[:full_address].is_a?(String)).to be true
+      expect(Fake.user[:full_name].is_a?(String)).to be true
       expect(Fake.user[:vat_id].is_a?(String)).to be true
       expect(Fake.user[:ip].is_a?(String)).to be true
       expect(Fake.user[:quote].is_a?(String)).to be true
