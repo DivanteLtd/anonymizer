@@ -6,10 +6,13 @@ class Database
 
   def initialize(config)
     @config = config
-    @db = Sequel.mysql2(
-      @config['database']['name'],
+    @db = Sequel.connect(
+      adapter: :mysql2,
+      database: @config['database']['name'],
       user: CONFIG['database']['user'],
       host: CONFIG['database']['host'],
+      port: 3306,
+      max_connections: 70,
       password: CONFIG['database']['pass']
     )
   end
