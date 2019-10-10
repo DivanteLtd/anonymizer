@@ -75,13 +75,31 @@ class Database
 
   def insert_fake_data
     Fake.create_fake_user_table @db
-
     fake_user = @db[:fake_user]
-
-    20000.times do
-      fake_user.insert(Fake.user)
-    end
+    Parallel.map(1..200000,in_processes: 24) { fake_user.insert(Fake.user) }
+    
   end
+#  def insert_fake_data
+#    Fake.create_fake_user_table @db
+#    pool_size=30
+#    jobs = Queue.new
+#    fake_user = @db[:fake_user]
+#    5000.times {|i| jobs.push i}
+#    workers = (pool_size).times.map do
+#      Thread.new do 
+#	begin
+#	  while x = jobs.pop(true)
+#            fake_user.insert(Fake.user)
+#            fake_user.insert(Fake.user)
+#            fake_user.insert(Fake.user)
+#            fake_user.insert(Fake.user)
+#	  end
+#        end
+#      rescue ThreadError
+#      end
+#    end
+#    workers.map(&:join)
+#  end
 
   def remove_fake_data
     @db.drop_table :fake_user

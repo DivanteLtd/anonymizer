@@ -80,6 +80,7 @@ DEPENDENCIES
   faker!
   mysql2
   net-scp
+  parallel
   rake
   rspec (~> 3.0)
   rubocop
