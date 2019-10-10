@@ -8,6 +8,7 @@ gem 'rubocop', require: false
 
 gem 'mysql2'
 gem 'sequel'
+gem 'parallel'
 
 gem 'net-scp'
 
