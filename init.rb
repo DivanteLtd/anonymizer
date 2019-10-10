@@ -8,6 +8,8 @@ require 'faker'
 require 'net/scp'
 require 'shellwords'
 require 'parallel'
+require 'concurrent'
+
 # Root directory
 ROOT_DIR = File.dirname File.expand_path __FILE__
 LOG_DIR = ROOT_DIR + '/log'

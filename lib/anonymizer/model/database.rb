@@ -6,13 +6,14 @@ class Database
 
   def initialize(config)
     @config = config
+    @fake_len=CONFIG['fake_datas']
     @db = Sequel.connect(
       adapter: :mysql2,
       database: @config['database']['name'],
       user: CONFIG['database']['user'],
       host: CONFIG['database']['host'],
-      port: 3306,
-      max_connections: 70,
+      port: CONFIG['database']['port'],
+      max_connections: CONFIG['database']['max_connections'],
       password: CONFIG['database']['pass']
     )
   end
@@ -76,7 +77,9 @@ class Database
   def insert_fake_data
     Fake.create_fake_user_table @db
     fake_user = @db[:fake_user]
-    Parallel.map(1..200000,in_processes: 24) { fake_user.insert(Fake.user) }
+    Parallel.map(1..@fake_len,in_processes: (Concurrent.processor_count*2),progress: "Making fake data table") { 
+	fake_user.insert(Fake.user) 
+    }
     
   end
 #  def insert_fake_data

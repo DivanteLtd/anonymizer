@@ -9,7 +9,8 @@ gem 'rubocop', require: false
 gem 'mysql2'
 gem 'sequel'
 gem 'parallel'
-
+gem 'concurrent-ruby'
+gem 'ruby-progressbar'
 gem 'net-scp'
 
 #gem 'faker', git: 'https://github.com/stympy/faker', branch: 'master'
