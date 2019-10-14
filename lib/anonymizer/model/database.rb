@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+#frozen_string_literal: true
 
 # Basic class to communication with databese
 class Database
@@ -14,18 +14,23 @@ class Database
       host: CONFIG['database']['host'],
       port: CONFIG['database']['port'],
       max_connections: CONFIG['database']['max_connections'],
+      #single_threaded: :single_threaded,
+      timeout: 300,
+      write_timeout: 300,
+      read_timeout: 300,
+      connect_timeout: 300,
+      pool_timeout: 300,
       password: CONFIG['database']['pass']
     )
+    @db.extension(:connection_validator)
   end
 
   def anonymize
     insert_fake_data
 
     before_queries
-
     @config['tables'].each do |table_name, columns|
       queries = column_query(table_name, columns)
-
       queries.each do |query|
         @db.run query
       end
@@ -34,6 +39,7 @@ class Database
     after_queries
 
     remove_fake_data
+     @db.disconnect
   end
 
   def column_query(table_name, columns)
@@ -74,36 +80,24 @@ class Database
     end
   end
 
-  def insert_fake_data
-    Fake.create_fake_user_table @db
-    fake_user = @db[:fake_user]
-    Parallel.map(1..@fake_len,in_processes: (Concurrent.processor_count*2),progress: "Making fake data table") { 
-	fake_user.insert(Fake.user) 
-    }
-    
-  end
 #  def insert_fake_data
-#    Fake.create_fake_user_table @db
-#    pool_size=30
-#    jobs = Queue.new
-#    fake_user = @db[:fake_user]
-#    5000.times {|i| jobs.push i}
-#    workers = (pool_size).times.map do
-#      Thread.new do 
-#	begin
-#	  while x = jobs.pop(true)
-#            fake_user.insert(Fake.user)
-#            fake_user.insert(Fake.user)
-#            fake_user.insert(Fake.user)
-#            fake_user.insert(Fake.user)
-#	  end
-#        end
-#      rescue ThreadError
-#      end
-#    end
-#    workers.map(&:join)
+#        Fake.create_fake_user_table @db
+#        fake_user = @db[:fake_user]
+#	@db.pool.connection_validation_timeout = -1
+#	Parallel.map(1..@fake_len,in_processes: (Concurrent.processor_count*2),progress: "Making fake data table") {
+#		fake_user.insert(Fake.user) 
+#	}
 #  end
 
+  def insert_fake_data
+    Fake.create_fake_user_table @db
+
+    fake_user = @db[:fake_user]
+
+    1000.times do
+      fake_user.insert(Fake.user)
+    end
+  end
   def remove_fake_data
     @db.drop_table :fake_user
   end

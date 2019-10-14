@@ -10,4 +10,6 @@ database:
   user: root
   host: 127.0.0.1
   pass: roooot
+  max_connections: 20
+fake_datas: 20000
 tmp_path: /tmp
