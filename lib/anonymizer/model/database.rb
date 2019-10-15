@@ -15,11 +15,11 @@ class Database
       port: CONFIG['database']['port'],
       max_connections: CONFIG['database']['max_connections'],
       #single_threaded: :single_threaded,
-      timeout: 300,
-      write_timeout: 300,
-      read_timeout: 300,
-      connect_timeout: 300,
-      pool_timeout: 300,
+      timeout: 30,
+      write_timeout: 30,
+      read_timeout: 30,
+      connect_timeout: 30,
+      pool_timeout: 30,
       password: CONFIG['database']['pass']
     )
     @db.extension(:connection_validator)
@@ -27,19 +27,25 @@ class Database
 
   def anonymize
     insert_fake_data
-
     before_queries
+
     @config['tables'].each do |table_name, columns|
       queries = column_query(table_name, columns)
-      queries.each do |query|
-        @db.run query
+      #Parallel.each(queries,in_thread: (Concurrent.processor_count),progress: "Update table to inject fake data") do |query|
+        #@db.run query
+      #end
+      @db.run "set autocommit=0;"
+      @db.transaction do 
+        queries.each do |query|
+          @db.run query
+        end
       end
+      @db.run "set autocommit=1;"
     end
 
     after_queries
 
     remove_fake_data
-     @db.disconnect
   end
 
   def column_query(table_name, columns)
@@ -80,24 +86,17 @@ class Database
     end
   end
 
-#  def insert_fake_data
-#        Fake.create_fake_user_table @db
-#        fake_user = @db[:fake_user]
-#	@db.pool.connection_validation_timeout = -1
-#	Parallel.map(1..@fake_len,in_processes: (Concurrent.processor_count*2),progress: "Making fake data table") {
-#		fake_user.insert(Fake.user) 
-#	}
-#  end
-
   def insert_fake_data
-    Fake.create_fake_user_table @db
-
-    fake_user = @db[:fake_user]
-
-    1000.times do
-      fake_user.insert(Fake.user)
-    end
+        Fake.create_fake_user_table @db
+        fake_user = @db[:fake_user]
+	@db.pool.connection_validation_timeout = -1
+  @db.disconnect ## Disconnection to make a specific connection for MT Process
+	Parallel.map(1..@fake_len,in_processes: (Concurrent.processor_count*2),progress: "Making fake data table") {
+  	fake_user.insert(Fake.user) 
+	}
+  @db.disconnect ## Disconnection to make a specific connection for MT Process
   end
+
   def remove_fake_data
     @db.drop_table :fake_user
   end

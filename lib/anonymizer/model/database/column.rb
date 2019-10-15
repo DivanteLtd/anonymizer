@@ -9,7 +9,7 @@ class Database
 
       queries = []
 
-      query = "UPDATE #{table_name} SET #{column_name} = ("
+      query = "UPDATE LOW_priority #{table_name} SET #{column_name} = ("
       query += manage_type(column_type)
       query += "WHERE #{table_name}.#{column_name} IS NOT NULL"
       query += fill_where_clause(info, table_name)
