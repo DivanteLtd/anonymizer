@@ -44,11 +44,11 @@ class Database
       else
         i=1
         @db.pool.connection_validation_timeout = -1
-           Parallel.map(1..ctr_keys_list,in_thread: (Concurrent.processor_count*2),progress: "Update table to inject fake data") do |key_in_list|
+           Parallel.map(1..ctr_keys_list,in_thread: (Concurrent.processor_count*2),progress: "Update table to inject fake data") do |i|
+            key_in_list=keys_list[i]
             @db.disconnect ## Disconnection to make a specific connection for MT Process
             @db.transaction do
               @db[table_name].for_update.where(Sequel.lit("#{key_name[table_name]}=#{key_in_list}"))
-              puts i
               @db.run column_query_if_key(table_name, columns,key_name,key_in_list,i)[0]
               @db.disconnect ## Disconnection to make a specific connection for MT Process
               i=i+1
