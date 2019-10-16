@@ -28,23 +28,19 @@ class Database
   def anonymize
     insert_fake_data
     before_queries
-    if @config['keys'] == "1"
+    if @config['keys']
       @config['tables'].each do |table_name, columns|
         key_name = get_key_name(table_name,columns)
         counter   = @db.fetch(prepare_query(table_name, columns)).collect{|nb_entries| nb_entries[:sql_nb_entries]}[0]
         keys_list = @db.fetch(prepare_key_list(table_name, columns)).collect{|cle| cle[:sql_key_list]}
         ctr_keys_list=keys_list.length
         queries = column_query(table_name, columns)
-
-      #Parallel.each(queries,in_thread: (Concurrent.processor_count),progress: "Update table to inject fake data") do |query|
-        #@db.run query
-      #end
-      if counter!= ctr_keys_list
-        puts "The key column dont have the same rows number than all row in the table"
-      else
-        i=1
-        @db.pool.connection_validation_timeout = -1
-           Parallel.map(1..ctr_keys_list,in_thread: (Concurrent.processor_count*2),progress: "Update table to inject fake data") do |i|
+        if counter > ctr_keys_list
+          puts "[OMG]The key column count is less than all rows count in the table"
+        else
+          i=1
+          @db.pool.connection_validation_timeout = -1
+          Parallel.map(1..ctr_keys_list,in_thread: (Concurrent.processor_count*2),progress: "Update table to inject fake data") do |i|
             key_in_list=keys_list[i]
             @db.disconnect ## Disconnection to make a specific connection for MT Process
             @db.transaction do
@@ -54,21 +50,19 @@ class Database
               i=i+1
             end
           end
-          #keys_list.each do |key_in_list|
-          #  puts key_in_list
-          #  @db[table_name].for_update.where(Sequel.lit("#{key_name[table_name]}=#{key_in_list}"))
-          #  #@db.run column_query_if_key(table_name, columns,key_name,key_in_list,i)
-          #  @db.run column_query(table_name,columns)[0]
-          #  i=i+1
-          #end
         end
       end
-  end
-
+    else
+      @config['tables'].each do |table_name, columns|
+        queries = column_query(table_name, columns)
+        queries.each do |query|
+          @db.run query
+        end
+      end 
+    end
     after_queries
-
-    #remove_fake_data
-end
+    remove_fake_data
+  end
 
 
   def prepare_query(table_name,columns)
@@ -77,6 +71,7 @@ end
       if info['key'] == '1'
         key_column=column_name;
         count_entries = "SELECT count(#{column_name}) as sql_nb_entries from #{table_name};"
+        puts count_entries
         break
       end
     end
@@ -100,6 +95,7 @@ end
       if info['key'] == '1'
         key_column=column_name;
         key_list = "SELECT #{column_name} as sql_key_list from #{table_name};"
+        puts key_list
         break
       end
     end

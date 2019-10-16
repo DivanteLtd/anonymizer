@@ -129,7 +129,7 @@ In the example below, data in the `user_address` table  will be replaced by new,
         "firstname": {
             "type": "firstname",
             "action": "update",
-	    "key":"1"
+	    "key":"1"       <= The key column must be the first of column after table declaration in json file.
         },
         "lastname": {
             "type": "lastname",
