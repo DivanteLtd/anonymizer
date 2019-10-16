@@ -9,7 +9,7 @@ class Database
 
       queries = []
 
-      query = "UPDATE LOW_priority #{table_name} SET #{column_name} = ("
+      query = "UPDATE  #{table_name} SET #{column_name} = ("
       query += manage_type(column_type)
       query += "WHERE #{table_name}.#{column_name} IS NOT NULL"
       query += fill_where_clause(info, table_name)
@@ -18,7 +18,25 @@ class Database
 
       queries
     end
+    
+    def self.select_for_update(table_name, column_name, info,key_name, keys_for_where,id)
+      column_type = info['type']
+      queries = []
+      #query += "SELECT * FROM #{table_name} WHERE #{key_name[table_name]}='#{keys_for_where}' FOR UPDATE;"   
+      query = "UPDATE  #{table_name} SET #{column_name} = ("
+      query += manage_type_if_key(column_type,id)
+      query += "WHERE #{key_name[table_name]} = '#{keys_for_where}'"
+      query += fill_where_clause(info, table_name)
+      queries.push query
+      
+      queries
+    end
 
+
+    def prepare_select_for_update(table_name,column_name,count_entries)
+      
+      
+    end
     def self.manage_type(type)
       if respond_to?(:"manage_type_#{type}")
         query = send("manage_type_#{type}")
@@ -29,6 +47,18 @@ class Database
 
       query
     end
+
+    def self.manage_type_if_key(type,id)
+      if respond_to?(:"manage_type_#{type}")
+        query = send("manage_type_#{type}")
+      else
+        query = prepare_select_for_query(type)
+        query += "FROM fake_user WHERE id = #{id}) "
+      end
+
+      query
+    end
+
 
     private_class_method
 

@@ -28,36 +28,105 @@ class Database
   def anonymize
     insert_fake_data
     before_queries
+    if @config['keys'] == "1"
+      @config['tables'].each do |table_name, columns|
+        key_name = get_key_name(table_name,columns)
+        counter   = @db.fetch(prepare_query(table_name, columns)).collect{|nb_entries| nb_entries[:sql_nb_entries]}[0]
+        keys_list = @db.fetch(prepare_key_list(table_name, columns)).collect{|cle| cle[:sql_key_list]}
+        ctr_keys_list=keys_list.length
+        queries = column_query(table_name, columns)
 
-    @config['tables'].each do |table_name, columns|
-      queries = column_query(table_name, columns)
       #Parallel.each(queries,in_thread: (Concurrent.processor_count),progress: "Update table to inject fake data") do |query|
         #@db.run query
       #end
-      @db.run "set autocommit=0;"
-      @db.transaction do 
-        queries.each do |query|
-          @db.run query
+      if counter!= ctr_keys_list
+        puts "The key column dont have the same rows number than all row in the table"
+      else
+        i=1
+        @db.pool.connection_validation_timeout = -1
+           Parallel.map(1..ctr_keys_list,in_thread: (Concurrent.processor_count*2),progress: "Update table to inject fake data") do |key_in_list|
+            @db.disconnect ## Disconnection to make a specific connection for MT Process
+            @db.transaction do
+              @db[table_name].for_update.where(Sequel.lit("#{key_name[table_name]}=#{key_in_list}"))
+              puts i
+              @db.run column_query_if_key(table_name, columns,key_name,key_in_list,i)[0]
+              @db.disconnect ## Disconnection to make a specific connection for MT Process
+              i=i+1
+            end
+          end
+          #keys_list.each do |key_in_list|
+          #  puts key_in_list
+          #  @db[table_name].for_update.where(Sequel.lit("#{key_name[table_name]}=#{key_in_list}"))
+          #  #@db.run column_query_if_key(table_name, columns,key_name,key_in_list,i)
+          #  @db.run column_query(table_name,columns)[0]
+          #  i=i+1
+          #end
         end
       end
-      @db.run "set autocommit=1;"
-    end
+  end
 
     after_queries
 
-    remove_fake_data
+    #remove_fake_data
+end
+
+
+  def prepare_query(table_name,columns)
+    count_entries=""
+    columns.each do |column_name, info|
+      if info['key'] == '1'
+        key_column=column_name;
+        count_entries = "SELECT count(#{column_name}) as sql_nb_entries from #{table_name};"
+        break
+      end
+    end
+    count_entries
   end
+  def get_key_name(table_name,columns)
+    key_name=Hash.new()
+    @config['tables'].each do |table_name, columns|
+      columns.each do |column_name, info|
+        if info['key'] == '1'
+          key_name[table_name.to_s] = column_name.to_s
+          break
+        end
+      end
+    end
+    key_name
+  end
+  def prepare_key_list(table_name,columns)
+    key_list=""
+    columns.each do |column_name, info|
+      if info['key'] == '1'
+        key_column=column_name;
+        key_list = "SELECT #{column_name} as sql_key_list from #{table_name};"
+        break
+      end
+    end
+    key_list
+  end
+  def column_query_if_key(table_name, columns,key_name,keys_for_where,id)
+    queries = []
+
+    columns.each do |column_name, info|
+      Object.const_get("Database::#{translate_acton_to_class_name(info['action'])}").select_for_update(table_name, column_name, info,key_name,keys_for_where,id).each do |query|
+        queries.push query
+      end
+      break if info['action'] == 'truncate'
+    end
+
+    queries
+  end
+
+
 
   def column_query(table_name, columns)
     queries = []
 
     columns.each do |column_name, info|
-      Object.const_get(
-        "Database::#{translate_acton_to_class_name(info['action'])}"
-      ).query(table_name, column_name, info).each do |query|
+      Object.const_get("Database::#{translate_acton_to_class_name(info['action'])}").query(table_name, column_name, info).each do |query|
         queries.push query
       end
-
       break if info['action'] == 'truncate'
     end
 
@@ -66,8 +135,8 @@ class Database
 
   def before_queries
     if @config['custom_queries'] &&
-       @config['custom_queries']['before'] &&
-       @config['custom_queries']['before'].is_a?(Array)
+        @config['custom_queries']['before'] &&
+        @config['custom_queries']['before'].is_a?(Array)
 
       @config['custom_queries']['before'].each do |query|
         @db.run query
@@ -77,8 +146,8 @@ class Database
 
   def after_queries
     if @config['custom_queries'] &&
-       @config['custom_queries']['after'] &&
-       @config['custom_queries']['after'].is_a?(Array)
+        @config['custom_queries']['after'] &&
+        @config['custom_queries']['after'].is_a?(Array)
 
       @config['custom_queries']['after'].each do |query|
         @db.run query
@@ -87,14 +156,14 @@ class Database
   end
 
   def insert_fake_data
-        Fake.create_fake_user_table @db
-        fake_user = @db[:fake_user]
-	@db.pool.connection_validation_timeout = -1
-  @db.disconnect ## Disconnection to make a specific connection for MT Process
-	Parallel.map(1..@fake_len,in_processes: (Concurrent.processor_count*2),progress: "Making fake data table") {
-  	fake_user.insert(Fake.user) 
-	}
-  @db.disconnect ## Disconnection to make a specific connection for MT Process
+    Fake.create_fake_user_table @db
+    fake_user = @db[:fake_user]
+    @db.pool.connection_validation_timeout = -1
+    @db.disconnect ## Disconnection to make a specific connection for MT Process
+    Parallel.map(1..@fake_len,in_processes: (Concurrent.processor_count*2),progress: "Making fake data table") {
+      fake_user.insert(Fake.user)
+    }
+    @db.disconnect ## Disconnection to make a specific connection for MT Process
   end
 
   def remove_fake_data
@@ -124,10 +193,10 @@ class Database
 
   def self.prepare_select_for_query(type)
     query = if type == 'fullname'
-              "SELECT CONCAT_WS(' ', fake_user.firstname, fake_user.lastname) "
-            else
-              "SELECT fake_user.#{type} "
-            end
+      "SELECT CONCAT_WS(' ', fake_user.firstname, fake_user.lastname) "
+    else
+      "SELECT fake_user.#{type} "
+    end
 
     query
   end

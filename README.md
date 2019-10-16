@@ -45,7 +45,7 @@ Project configuration files always have an `extended` type. In the project confi
 * `sylius`
 
 #### Change anonymized file's name
-The anonymized dump is given the same name as the original database dump file. If you want to change this name, you can set the key `random_string` in configuration file - the value of this key will be added to end of the filename. In the example below, the output file will be named `example_ba74a64a152b84ec004d03caba15ba95.sql.gz`.
+The anonymized dump is given the same name as the original database dump file. If you want to change this name, you can set the key `random_string` in configuration file - the value of this key will be added to end of the filename. In the example below, the output file will be named `example_ba74a64a152b84ec004d03caba15ba95.sql.gz`. 
 
 #### Example
 
@@ -53,7 +53,7 @@ The anonymized dump is given the same name as the original database dump file. I
 {
     "type": "extended",
     "basic_type": "magento_1_9",
-    "random_string": "ba74a64a152b84ec004d03caba15ba95",
+    "random_string": "ba74a64a152b84ec004d03caba15ba95"
 
 ```
 
@@ -96,6 +96,7 @@ Anonymizer can replace the original data by anonymized entries or truncate the d
 ##### Simple types
 - firstname
 - lastname
+- full_name
 - login
 - email
 - telephone
@@ -118,14 +119,17 @@ Anonymizer can replace the original data by anonymized entries or truncate the d
 - pesel - Polish PESEL number with validation
 
 #### How to replace data in a table?
-In the example below, data in the `user_address` table  will be replaced by new, anonymized data. The example database contains a `user_address` table with the following columns - `firstname`, `lastname`, `postcode`, `address`, `city`, `email`, `phone`,  `company`, `vat_id`. We will replace all columns' contents with some valid data, consistent with its previous type.
+In the example below, data in the `user_address` table  will be replaced by new, anonymized data. The example database contains a `user_address` table with the following columns - `firstname`, `lastname`, `postcode`, `address`, `city`, `email`, `phone`,  `company`, `vat_id`. We will replace all columns' contents with some valid data, consistent with its previous type.A key must be specified if you want a better performance.To make Update faster you have to specify "Key":"1" to enable "SELECT FOR UPDATE" mode
+
 
 ```
+"key":"1",
 "tables": {
     "user_address": {
         "firstname": {
             "type": "firstname",
-            "action": "update"
+            "action": "update",
+	    "key":"1"
         },
         "lastname": {
             "type": "lastname",
