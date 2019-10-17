@@ -29,7 +29,8 @@ class Database
     insert_fake_data
     before_queries
     if @config['keys']
-      @config['tables'].each do |table_name, columns|
+      @config['tables'].each do |table_name, columns_in_order|
+        columns = columns_in_order.to_a.reverse.to_h
         key_name = get_key_name(table_name,columns)
         counter   = @db.fetch(prepare_query(table_name, columns)).collect{|nb_entries| nb_entries[:sql_nb_entries]}[0]
         keys_list = @db.fetch(prepare_key_list(table_name, columns)).collect{|cle| cle[:sql_key_list]}

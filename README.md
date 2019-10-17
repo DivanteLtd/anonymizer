@@ -126,7 +126,12 @@ In the example below, data in the `user_address` table  will be replaced by new,
 ```
 "key":"1",  <===== This key must be added to make Multithreading Update Enable.
 "tables": {
-    "user_address": {
+        "user_address": {
+            "firstname": {
+            "type": "firstname",
+            "action": "update",
+            "key":"1"       <= The key column must be the FIRST column after table declaration in json file.
+        },
         "lastname": {
             "type": "lastname",
             "action": "update"
@@ -158,13 +163,7 @@ In the example below, data in the `user_address` table  will be replaced by new,
         "vat_id": {
             "type": "vat_id",
             "action": "update"
-        },
-        "firstname": {
-            "type": "firstname",
-            "action": "update",
-            "key":"1"       <= The key column must be the LAST column after table declaration in json file.
-        },
-    }
+        }
 }
 ```
 
