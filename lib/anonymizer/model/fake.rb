@@ -16,6 +16,8 @@ class Fake
       primary_key :id
       String :firstname
       String :lastname
+      String :fullname
+      String :ancestor
       String :login
       String :email
       String :telephone
@@ -24,7 +26,6 @@ class Fake
       String :postcode
       String :city
       String :full_address
-      String :full_name
       String :vat_id
       String :ip
       String :quote
@@ -42,8 +43,9 @@ class Fake
       lastname: lastname,
       email: Faker::Internet.email(name:"#{firstname} #{lastname}"),
       login: Faker::Internet.user_name(specifier:"#{firstname} #{lastname}",separators: %w[. _ -]),
+      fullname: "#{firstname} #{lastname}",
       telephone: Faker::PhoneNumber.cell_phone,
-      full_name: Faker::Name.name,
+      ancestor: Faker::Name.name,
       company: Faker::Company.name,
       street: Faker::Address.street_name,
       postcode: Faker::Address.postcode,

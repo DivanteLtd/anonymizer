@@ -32,23 +32,25 @@ class Database
       @config['tables'].each do |table_name, columns|
         key_name = get_key_name(table_name,columns)
         counter   = @db.fetch(prepare_query(table_name, columns)).collect{|nb_entries| nb_entries[:sql_nb_entries]}[0]
-        quer = prepare_key_list(table_name, columns)
-        keys_list = @db.fetch(quer).collect{|cle| cle[:sql_key_list]}
-        ctr_keys_list=keys_list.length-1
+        keys_list = @db.fetch(prepare_key_list(table_name, columns)).collect{|cle| cle[:sql_key_list]}
+        ctr_keys_list=keys_list.length
         #queries = column_query(table_name, columns)
-        if counter > ctr_keys_list+1
+        if counter > ctr_keys_list
           puts "[OMG]The key column count is less than all rows count in the table"
         else
+          i=1
           @db.pool.connection_validation_timeout = -1
-          Parallel.map(0..ctr_keys_list,in_processes: (Concurrent.processor_count*2),progress: "Update table to inject fake data") do |i|
+          Parallel.map(1..ctr_keys_list,in_processes: (Concurrent.processor_count*2),progress: "Update table to inject fake data") do |i|
             key_in_list=keys_list[i]
-            @db.disconnect ## Disconnection to make a specific connection for MT Process           
-              column_query_if_key(table_name, columns,key_name,key_in_list,i+1).each do |queri|
+            @db.disconnect ## Disconnection to make a specific connection for MT Process
+              column_query_if_key(table_name, columns,key_name,key_in_list,i).each do |queri|
                 @db.transaction do
-                  @db[:"#{table_name}"].for_update.where(Sequel.lit("#{key_name[table_name]}=#{key_in_list}"))
+                  @db[table_name].for_update.where(Sequel.lit("#{key_name[table_name]}=#{key_in_list}"))
                   @db.run queri
                 end
               end
+              @db.disconnect ## Disconnection to make a specific connection for MT Process
+              i=i+1
           end
         end
       end
@@ -93,7 +95,7 @@ class Database
     columns.each do |column_name, info|
       if info['key'] == '1'
         key_column=column_name;
-        key_list = "SELECT #{column_name} as sql_key_list from #{table_name} WHERE #{column_name} IS NOT NULL;"
+        key_list = "SELECT #{column_name} as sql_key_list from #{table_name};"
         break
       end
     end
@@ -186,7 +188,7 @@ class Database
   # rubocop:enable Metrics/MethodLength
 
   def self.prepare_select_for_query(type)
-      query = if type == 'fullname'
+    query = if type == 'fullname'
       "SELECT CONCAT_WS(' ', fake_user.firstname, fake_user.lastname) "
     else
       "SELECT fake_user.#{type} "

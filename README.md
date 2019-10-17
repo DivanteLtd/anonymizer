@@ -96,7 +96,8 @@ Anonymizer can replace the original data by anonymized entries or truncate the d
 ##### Simple types
 - firstname
 - lastname
-- full_name
+- fullname
+- ancestor
 - login
 - email
 - telephone
@@ -113,7 +114,7 @@ Anonymizer can replace the original data by anonymized entries or truncate the d
 - json
 
 ##### Special types
-- uniq_email - unique email address, because of [bug in mysql](https://bugs.mysql.com/bug.php?id=89474), anonymizer can't generate uniq email address based on email and some uniqeu value form UUID mysql methiod
+- uniq_email - unique email address, because of [bug in mysql](https://bugs.mysql.com/bug.php?id=89474), anonymizer can't generate uniq email address based on email and some unique value form UUID mysql methiod
 - uniq_login - unique login
 - regon - Polish REGON number with validation
 - pesel - Polish PESEL number with validation
@@ -123,14 +124,9 @@ In the example below, data in the `user_address` table  will be replaced by new,
 
 
 ```
-"key":"1",
+"key":"1",  <===== This key must be added to make Multithreading Update Enable.
 "tables": {
     "user_address": {
-        "firstname": {
-            "type": "firstname",
-            "action": "update",
-	    "key":"1"       <= The key column must be the first of column after table declaration in json file.
-        },
         "lastname": {
             "type": "lastname",
             "action": "update"
@@ -162,7 +158,12 @@ In the example below, data in the `user_address` table  will be replaced by new,
         "vat_id": {
             "type": "vat_id",
             "action": "update"
-        }
+        },
+        "firstname": {
+            "type": "firstname",
+            "action": "update",
+            "key":"1"       <= The key column must be the LAST column after table declaration in json file.
+        },
     }
 }
 ```

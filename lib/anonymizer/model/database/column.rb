@@ -22,11 +22,12 @@ class Database
     def self.select_for_update(table_name, column_name, info,key_name, keys_for_where,id)
       column_type = info['type']
       queries = []
-      #query += "SELECT * FROM #{table_name} WHERE #{key_name[table_name]}='#{keys_for_where}' FOR UPDATE;"   
+      #query = "SELECT #{column_name} FROM #{table_name} WHERE #{key_name[table_name]}='#{keys_for_where}' FOR UPDATE;"   
       query = "UPDATE  #{table_name} SET #{column_name} = ("
       query += manage_type_if_key(column_type,id)
       query += "WHERE #{key_name[table_name]} = '#{keys_for_where}'"
       query += fill_where_clause(info, table_name)
+      query +=";"
       queries.push query
       
       queries
