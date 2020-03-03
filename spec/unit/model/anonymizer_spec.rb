@@ -26,6 +26,7 @@ RSpec.describe Anonymizer, '#anonymizer' do
   context 'work with extended project type' do
     before do
       @name = 'magento_1_9_sample'
+      @name_v2 = 'magento_1_9_scenerios_sample'
       @random_string = '2949d3e2173b25a55968f45518e4779d'
       @table_name = 'sales_flat_order_address'
       @column_name = 'postcode'
@@ -63,6 +64,51 @@ RSpec.describe Anonymizer, '#anonymizer' do
           }
         }'
       )
+      @config_v2 = JSON.parse(
+        '{
+          "type": "extended",
+          "version": 2,
+          "scenerio": "default",
+          "basic_type": "magento_1_9_scenerios",
+          "random_string": "' + @random_string + '",
+          "merge_protect": 1,
+          "dump_server": {
+            "host": "test.divante.pl",
+            "user": "mkoszutowski",
+            "port": "22",
+            "passphrase": "",
+            "path": "/home/users/mkoszutowski",
+            "rsync_options": ""
+          },
+          "tables": {
+            "' + @table_name + '": {
+              "' + @column_name + '": {
+                "default": {
+                    "type": "' + @column_type + '",
+                    "action": "' + @default_action + '"
+                }
+              }
+            },
+            "' + @new_table_name + '": {
+              "' + @new_column_name + '": {
+                "default": {
+                    "type": "' + @new_column_type + '",
+                    "action": "' + @default_action + '"
+                }
+              }
+            }
+          },
+          "dump_actions": {
+            "path": "/home/users/mkoszutowski",
+            "scenerios": {
+              "default": {
+                 "file": "file.sql",
+                 "tables": "*"
+              }
+            }
+          }
+        }'
+      )
     end
 
     it 'should throw exception if extended project doesn\'t exist' do
@@ -72,12 +118,26 @@ RSpec.describe Anonymizer, '#anonymizer' do
         RuntimeError,
         'Basic type not exists'
       )
+
+      @config_v2['basic_type'] = 'not_existing_basic_type'
+
+      expect { Anonymizer.new @name_v2, @config_v2 }.to raise_error(
+        RuntimeError,
+        'Basic type not exists'
+      )
     end
 
     it 'should throw exception if column hasn\'t setted action' do
       @config['tables'][@new_table_name][@new_column_name].delete('action')
 
       expect { Anonymizer.new @name, @config }.to raise_error(
+        RuntimeError,
+        'In project config file founded column without defined action'
+      )
+
+      @config_v2['tables'][@new_table_name][@new_column_name]['default'].delete('action')
+
+      expect { Anonymizer.new @name_v2, @config_v2 }.to raise_error(
         RuntimeError,
         'In project config file founded column without defined action'
       )
@@ -91,11 +151,54 @@ RSpec.describe Anonymizer, '#anonymizer' do
         'In project config file dump_server is not valid'
       )
 
+      @config_v2['dump_server'] = ''
+
+      expect { Anonymizer.new @name_v2, @config_v2 }.to raise_error(
+        RuntimeError,
+        'In project config file dump_server is not valid'
+      )
+
       @config['dump_server'].delete('action')
 
       expect { Anonymizer.new @name, @config }.to raise_error(
         RuntimeError,
         'In project config file dump_server is not valid'
+      )
+    end
+
+    it 'should throw exception if dump actions doesn\'t have dump path' do
+      @config_v2['dump_actions'].delete('path')
+
+      expect { Anonymizer.new @name_v2, @config_v2 }.to raise_error(
+        RuntimeError,
+        'In project config file dump_actions path is not valid'
+      )
+    end
+
+    it 'should throw exception if dump actions doesn\'t have scenerios' do
+      @config_v2['dump_actions']['scenerios'].delete('default')
+
+      expect { Anonymizer.new @name_v2, @config_v2 }.to raise_error(
+        RuntimeError,
+        'Project config in dump_actions section doesn\'t have scenerios'
+      )
+    end
+
+    it 'should throw exception if dump actions doesn\'t have file path in one of scenerios' do
+      @config_v2['dump_actions']['scenerios']['default'].delete('file')
+
+      expect { Anonymizer.new @name_v2, @config_v2 }.to raise_error(
+        RuntimeError,
+        'Project config in dump_actions section doesn\'t have file path in one of scenerios'
+      )
+    end
+
+    it 'should throw exception if dump actions doesn\'t tables in one of scenerios' do
+      @config_v2['dump_actions']['scenerios']['default'].delete('tables')
+
+      expect { Anonymizer.new @name_v2, @config_v2 }.to raise_error(
+        RuntimeError,
+        'Project config in dump_actions section doesn\'t have tables in one of scenerios'
       )
     end
 

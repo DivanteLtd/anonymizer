@@ -1,0 +1,923 @@
+{
+    "type": "basic",
+    "version": 2,
+    "scenerio": "default",
+    "tables": {
+        "customer_entity": {
+            "entity_id": {
+                "default": {
+                    "action": "delete",
+                    "attributes": {
+                        "where": "entity_id > 0"
+                    }
+                },
+
+                "get_customer_by_id": {
+                    "action": "delete",
+                    "attributes": {
+                        "where": "entity_id <> %customer_id%"
+                    }
+                },
+                "get_customer_orders": {
+                    "action": "extended",
+                    "extended": "get_customer_by_id"
+                },
+                "get_customer_by_id_with_orders": {
+                    "action": "extended",
+                    "extended": "get_customer_by_id"
+                },
+
+                "get_customers_by_ids": {
+                    "action": "delete",
+                    "attributes": {
+                        "where": "entity_id NOT IN (%customers_ids%)"
+                    }
+                },
+                "get_customers_orders": {
+                    "action": "extended",
+                    "extended": "get_customers_by_ids"
+                },
+                "get_customers_by_id_with_orders": {
+                    "action": "extended",
+                    "extended": "get_customers_by_ids"
+                },
+
+                "get_order_by_id": {
+                    "action": "delete",
+                    "attributes": {
+                        "where": "entity_id NOT IN (SELECT customer_id FROM sales_flat_order WHERE entity_id = %order_id%)"
+                    }
+                },
+                "get_orders_by_ids": {
+                    "action": "delete",
+                    "attributes": {
+                        "where": "entity_id NOT IN (SELECT customer_id FROM sales_flat_order WHERE entity_id = %orders_ids%)"
+                    }
+                }
+
+            },
+            "email": {
+                "default": {
+                    "type": "uniq_email",
+                    "action": "update"
+                }
+            }
+        },
+        "newsletter_subscriber": {
+            "subscriber_email": {
+                "default": {
+                    "type": "email",
+                    "action": "update"
+                }
+            }
+        },
+        "sales_flat_creditmemo_grid" : {
+            "billing_name" : {
+                "default": {
+                    "type": "fullname",
+                    "action": "update"
+                }
+            }
+        },
+        "sales_flat_invoice_grid" : {
+            "billing_name" : {
+                "default": {
+                    "type": "fullname",
+                    "action": "update"
+                }
+            }
+        },
+        "sales_flat_order": {
+            "entity_id": {
+                "default": {
+                    "action": "delete",
+                    "attributes": {
+                        "where": "entity_id > 0"
+                    }
+                },
+                "get_customer_orders": {
+                    "action": "delete",
+                    "attributes": {
+                        "where": "customer_id <> %customer_id%"
+                    }
+                },
+                "get_customer_by_id_with_orders": {
+                    "action": "delete",
+                    "attributes": {
+                        "where": "customer_id <> %customer_id%"
+                    }
+                },
+                "get_order_by_id": {
+                    "action": "delete",
+                    "attributes": {
+                        "where": "entity_id <> %order_id%"
+                    }
+                },
+
+                "get_customers_orders": {
+                    "action": "delete",
+                    "attributes": {
+                        "where": "customer_id NOT IN (%customers_ids%)"
+                    }
+                },
+                "get_customers_by_id_with_orders": {
+                    "action": "delete",
+                    "attributes": {
+                        "where": "customer_id NOT IN (%customers_ids%)"
+                    }
+                },
+                "get_orders_by_ids": {
+                    "action": "delete",
+                    "attributes": {
+                        "where": "entity_id NOT IN (%orders_ids%)"
+                    }
+                }
+            },
+            "customer_email": {
+                "default": {
+                    "type": "email",
+                    "action": "update"
+                }
+            },
+            "customer_lastname": {
+                "default": {
+                    "type": "lastname",
+                    "action": "update"
+                }
+            },
+            "customer_firstname": {
+                "default": {
+                    "type": "firstname",
+                    "action": "update"
+                }
+            },
+            "remote_ip": {
+                "default": {
+                    "type": "ip",
+                    "action": "update"
+                }
+            }
+        },
+        "sales_flat_order_address": {
+            "postcode": {
+                "default": {
+                    "type": "postcode",
+                    "action": "update"
+                }
+            },
+            "lastname": {
+                "default": {
+                    "type": "lastname",
+                    "action": "update"
+                }
+            },
+            "street": {
+                "default": {
+                    "type": "street",
+                    "action": "update"
+                }
+            },
+            "city": {
+                "default": {
+                    "type": "city",
+                    "action": "update"
+                }
+            },
+            "email": {
+                "default": {
+                    "type": "email",
+                    "action": "update"
+                }
+            },
+            "telephone": {
+                "default": {
+                    "type": "telephone",
+                    "action": "update"
+                }
+            },
+            "firstname": {
+                "default": {
+                    "type": "firstname",
+                    "action": "update"
+                }
+            },
+            "middlename": {
+                "default": {
+                    "type": "firstname",
+                    "action": "update"
+                }
+            },
+            "company": {
+                "default": {
+                    "type": "company",
+                    "action": "update"
+                }
+            },
+            "vat_id": {
+                "default": {
+                    "type": "vat_id",
+                    "action": "update"
+                }
+            }
+        },
+        "sales_flat_order_grid" : {
+            "billing_name" : {
+                "default": {
+                    "type": "fullname",
+                    "action": "update"
+                }
+            },
+            "shipping_name" : {
+                "default": {
+                    "type": "fullname",
+                    "action": "update"
+                }
+            }
+        },
+        "sales_flat_quote": {
+            "entity_id": {
+                "default": {
+                    "action": "delete",
+                    "attributes": {
+                        "where": "entity_id > 0"
+                    }
+                }
+            },
+            "customer_email": {
+                "default": {
+                    "type": "email",
+                    "action": "update"
+                }
+            },
+            "customer_lastname": {
+                "default": {
+                    "type": "lastname",
+                    "action": "update"
+                }
+            },
+            "customer_firstname": {
+                "default": {
+                    "type": "firstname",
+                    "action": "update"
+                }
+            },
+            "customer_middlename": {
+                "default": {
+                    "type": "firstname",
+                    "action": "update"
+                }
+            },
+            "remote_ip": {
+                "default": {
+                    "type": "ip",
+                    "action": "update"
+                }
+            }
+        },
+        "sales_flat_quote_address": {
+            "postcode": {
+                "default": {
+                    "type": "postcode",
+                    "action": "update"
+                }
+            },
+            "lastname": {
+                "default": {
+                    "type": "lastname",
+                    "action": "update"
+                }
+            },
+            "street": {
+                "default": {
+                    "type": "street",
+                    "action": "update"
+                }
+            },
+            "city": {
+                "default": {
+                    "type": "city",
+                    "action": "update"
+                }
+            },
+            "email": {
+                "default": {
+                    "type": "email",
+                    "action": "update"
+                }
+            },
+            "telephone": {
+                "default": {
+                    "type": "telephone",
+                    "action": "update"
+                }
+            },
+            "firstname": {
+                "default": {
+                    "type": "firstname",
+                    "action": "update"
+                }
+            },
+            "middlename": {
+                "default": {
+                    "type": "firstname",
+                    "action": "update"
+                }
+            },
+            "company": {
+                "default": {
+                    "type": "company",
+                    "action": "update"
+                }
+            },
+            "vat_id": {
+                "default": {
+                    "type": "vat_id",
+                    "action": "update"
+                }
+            }
+        },
+        "sales_flat_quote_payment": {
+            "cc_owner": {
+                "default": {
+                    "type": "company",
+                    "action": "update"
+                }
+            }
+        },
+        "sales_flat_shipment_comment": {
+            "comment": {
+                "default": {
+                    "action": "update",
+                    "type": "quote"
+                }
+            }
+        },
+        "log_url": {
+            "only_truncate": {
+                "default": {
+                    "action": "truncate"
+                }
+            }
+        },
+        "log_url_info": {
+            "only_truncate": {
+                "default": {
+                    "action": "truncate"
+                }
+            }
+        },
+        "log_visitor": {
+            "only_truncate": {
+                "default": {
+                    "action": "truncate"
+                }
+            }
+        },
+        "log_visitor_info": {
+            "only_truncate": {
+                "default": {
+                    "action": "truncate"
+                }
+            }
+        },
+        "report_event": {
+            "only_truncate": {
+                "default": {
+                    "action": "truncate"
+                }
+            }
+        },
+        "customer_entity_varchar": {
+            "value": {
+                "default": {
+                    "action": "eav_update",
+                    "attributes": [
+                        {
+                            "code": "firstname",
+                            "type": "firstname",
+                            "entity_type": "customer"
+                        },
+                        {
+                            "code": "lastname",
+                            "type": "lastname",
+                            "entity_type": "customer"
+                        },
+                        {
+                            "code": "taxvat",
+                            "type": "vat_id",
+                            "entity_type": "customer"
+                        }
+                    ]
+
+                }
+            }
+        },
+        "customer_address_entity_varchar": {
+            "value": {
+                "default": {
+                    "action": "eav_update",
+                    "attributes": [
+                        {
+                            "code": "firstname",
+                            "type": "firstname",
+                            "entity_type": "customer_address"
+                        },
+                        {
+                            "code": "lastname",
+                            "type": "lastname",
+                            "entity_type": "customer_address"
+                        },
+                        {
+                            "code": "telephone",
+                            "type": "telephone",
+                            "entity_type": "customer_address"
+                        },
+                        {
+                            "code": "vat_id",
+                            "type": "vat_id",
+                            "entity_type": "customer_address"
+                        },
+                        {
+                            "code": "postcode",
+                            "type": "postcode",
+                            "entity_type": "customer_address"
+                        },
+                        {
+                            "code": "company",
+                            "type": "company",
+                            "entity_type": "customer_address"
+                        },
+                        {
+                            "code": "city",
+                            "type": "city",
+                            "entity_type": "customer_address"
+                        },
+                        {
+                            "code": "firstname",
+                            "type": "firstname",
+                            "entity_type": "customer"
+                        },
+                        {
+                            "code": "lastname",
+                            "type": "lastname",
+                            "entity_type": "customer"
+                        },
+                        {
+                            "code": "taxvat",
+                            "type": "vat_id",
+                            "entity_type": "customer"
+                        }
+                    ]
+
+                }
+            }
+        },
+        "gift_message": {
+            "sender": {
+                "default": {
+                    "action": "update",
+                    "type": "fullname"
+                }
+            },
+            "recipient": {
+                "default": {
+                    "action": "update",
+                    "type": "fullname"
+                }
+            },
+            "message": {
+                "default": {
+                    "action": "update",
+                    "type": "quote"
+                }
+            }
+        },
+        "customer_address_entity_text": {
+            "value": {
+                "default": {
+                    "action": "eav_update",
+                    "attributes": [
+                        {
+                            "code": "street",
+                            "type": "street",
+                            "entity_type": "customer_address"
+                        }
+                    ]
+                }
+            }
+        },
+        "sales_flat_shipment_grid": {
+            "shipping_name": {
+                "default": {
+                    "type": "fullname",
+                    "action": "update"
+                }
+            }
+        }
+    },
+    "dump_actions": {
+        "path": "/home/iwona/public/anonymizer/",
+        "scenerios": {
+            "get_customer_by_id": {
+                "file": "customer.sql",
+                "tables": {
+                    "customer_entity": {
+                        "where": "entity_id = %customer_id%"
+                    },
+                    "customer_entity_datetime": {
+                        "where": "entity_id = %customer_id%"
+                    },
+                    "customer_entity_decimal": {
+                        "where": "entity_id = %customer_id%"
+                    },
+                    "customer_entity_int": {
+                        "where": "entity_id = %customer_id%"
+                    },
+                    "customer_entity_text": {
+                        "where": "entity_id = %customer_id%"
+                    },
+                    "customer_entity_varchar": {
+                        "where": "entity_id = %customer_id%"
+                    },
+                    "customer_address_entity": {
+                        "where": "parent_id = %customer_id%"
+                    },
+                    "customer_address_entity_datetime": {
+                        "where": "entity_id = (SELECT entity_id FROM customer_address_entity WHERE parent_id = %customer_id%)"
+                    },
+                    "customer_address_entity_decimal": {
+                        "where": "entity_id = (SELECT entity_id FROM customer_address_entity WHERE parent_id = %customer_id%)"
+                    },
+                    "customer_address_entity_int": {
+                        "where": "entity_id = (SELECT entity_id FROM customer_address_entity WHERE parent_id = %customer_id%)"
+                    },
+                    "customer_address_entity_text": {
+                        "where": "entity_id = (SELECT entity_id FROM customer_address_entity WHERE parent_id = %customer_id%)"
+                    },
+                    "customer_address_entity_varchar": {
+                        "where": "entity_id = (SELECT entity_id FROM customer_address_entity WHERE parent_id = %customer_id%)"
+                    }
+                }
+            },
+            "get_customers_by_ids": {
+                "file": "customers.sql",
+                "tables": {
+                    "customer_entity": {
+                        "where": "entity_id IN (%customers_ids%)"
+                    },
+                    "customer_entity_datetime": {
+                        "where": "entity_id IN (%customers_ids%)"
+                    },
+                    "customer_entity_decimal": {
+                        "where": "entity_id IN (%customers_ids%)"
+                    },
+                    "customer_entity_int": {
+                        "where": "entity_id IN (%customers_ids%)"
+                    },
+                    "customer_entity_text": {
+                        "where": "entity_id IN (%customers_ids%)"
+                    },
+                    "customer_entity_varchar": {
+                        "where": "entity_id IN (%customers_ids%)"
+                    },
+                    "customer_address_entity": {
+                        "where": "parent_id IN (%customers_ids%)"
+                    },
+                    "customer_address_entity_datetime": {
+                        "where": "entity_id = (SELECT entity_id FROM customer_address_entity WHERE parent_id IN (%customers_ids%))"
+                    },
+                    "customer_address_entity_decimal": {
+                        "where": "entity_id = (SELECT entity_id FROM customer_address_entity WHERE parent_id IN (%customers_ids%))"
+                    },
+                    "customer_address_entity_int": {
+                        "where": "entity_id = (SELECT entity_id FROM customer_address_entity WHERE parent_id IN (%customers_ids%))"
+                    },
+                    "customer_address_entity_text": {
+                        "where": "entity_id = (SELECT entity_id FROM customer_address_entity WHERE parent_id IN (%customers_ids%))"
+                    },
+                    "customer_address_entity_varchar": {
+                        "where": "entity_id = (SELECT entity_id FROM customer_address_entity WHERE parent_id IN (%customers_ids%))"
+                    }
+                }
+            },
+            "get_customer_orders": {
+                "file": "customer_orders.sql",
+                "tables": {
+                    "sales_flat_order": {
+                        "where": "customer_id = %customer_id%"
+                    },
+                    "sales_flat_order_address": {
+                        "where": "customer_id = %customer_id%"
+                    },
+                    "sales_flat_order_grid": {
+                        "where": "customer_id = %customer_id%"
+                    },
+                    "sales_flat_order_item": {
+                        "where": "order_id IN (SELECT entity_id FROM sales_flat_order WHERE customer_id = %customer_id%)"
+                    },
+                    "sales_flat_order_payment": {
+                        "where": "parent_id IN (SELECT entity_id FROM sales_flat_order WHERE customer_id = %customer_id%)"
+                    },
+                    "sales_flat_order_status_history": {
+                        "where": "parent_id in (SELECT entity_id FROM sales_flat_order WHERE customer_id = %customer_id%)"
+                    },
+                    "sales_flat_invoice": {
+                        "where": "order_id IN (SELECT entity_id FROM sales_flat_order WHERE customer_id = %customer_id%)"
+                    },
+                    "sales_flat_invoice_comment": {
+                        "where": "entity_id IN (SELECT sfic.entity_id FROM sales_flat_invoice_comment sfic JOIN sales_flat_invoice sfi ON sfic.parent_id = sfi.entity_id JOIN sales_flat_order sfo ON sfi.order_id = sfo.entity_id WHERE sfo.customer_id = %customer_id%)"
+                    },
+                    "sales_flat_invoice_grid": {
+                        "where": "parent_id IN (SELECT entity_id FROM sales_flat_order WHERE customer_id = %customer_id%)"
+                    },
+                    "sales_flat_invoice_item": {
+                        "where": "entity_id IN (SELECT sfii.entity_id FROM sales_flat_invoice_item sfii JOIN sales_flat_invoice sfi ON sfii.parent_id = sfi.entity_id JOIN sales_flat_order sfo ON sfi.order_id = sfo.entity_id WHERE sfo.customer_id = %customer_id%)"
+                    },
+                    "sales_order_tax": {
+                        "where": "order_id IN (SELECT entity_id FROM sales_flat_order WHERE customer_id = %customer_id%)"
+                    },
+                    "sales_order_tax_item": {
+                        "where": "tax_item_id IN (SELECT soti.tax_item_id FROM sales_order_tax_item soti JOIN sales_flat_order_item sfoi ON sfoi.item_id = soti.item_id JOIN sales_flat_order sfo ON sfoi.order_id = sfo.entity_id WHERE sfo.customer_id = %customer_id%)"
+                    }
+                }
+            },
+            "get_customers_orders": {
+                "file": "customers_orders.sql",
+                "tables": {
+                    "sales_flat_order": {
+                        "where": "customer_id IN (%customers_ids%)"
+                    },
+                    "sales_flat_order_address": {
+                        "where": "customer_id IN (%customers_ids%)"
+                    },
+                    "sales_flat_order_grid": {
+                        "where": "customer_id = IN (%customers_ids%)"
+                    },
+                    "sales_flat_order_item": {
+                        "where": "order_id IN (SELECT entity_id FROM sales_flat_order WHERE customer_id IN (%customers_ids%))"
+                    },
+                    "sales_flat_order_payment": {
+                        "where": "parent_id IN (SELECT entity_id FROM sales_flat_order WHERE customer_id IN (%customers_ids%))"
+                    },
+                    "sales_flat_order_status_history": {
+                        "where": "parent_id in (SELECT entity_id FROM sales_flat_order WHERE customer_id IN (%customers_ids%))"
+                    },
+                    "sales_flat_invoice": {
+                        "where": "order_id IN (SELECT entity_id FROM sales_flat_order WHERE customer_id IN (%customers_ids%))"
+                    },
+                    "sales_flat_invoice_comment": {
+                        "where": "entity_id IN (SELECT sfic.entity_id FROM sales_flat_invoice_comment sfic JOIN sales_flat_invoice sfi ON sfic.parent_id = sfi.entity_id JOIN sales_flat_order sfo ON sfi.order_id = sfo.entity_id WHERE sfo.customer_id IN (%customers_ids%))"
+                    },
+                    "sales_flat_invoice_grid": {
+                        "where": "parent_id IN (SELECT entity_id FROM sales_flat_order WHERE customer_id IN (%customers_ids%))"
+                    },
+                    "sales_flat_invoice_item": {
+                        "where": "entity_id IN (SELECT sfii.entity_id FROM sales_flat_invoice_item sfii JOIN sales_flat_invoice sfi ON sfii.parent_id = sfi.entity_id JOIN sales_flat_order sfo ON sfi.order_id = sfo.entity_id WHERE sfo.customer_id IN (%customers_ids%))"
+                    },
+                    "sales_order_tax": {
+                        "where": "order_id IN (SELECT entity_id FROM sales_flat_order WHERE customer_id IN (%customers_ids%))"
+                    },
+                    "sales_order_tax_item": {
+                        "where": "tax_item_id IN (SELECT soti.tax_item_id FROM sales_order_tax_item soti JOIN sales_flat_order_item sfoi ON sfoi.item_id = soti.item_id JOIN sales_flat_order sfo ON sfoi.order_id = sfo.entity_id WHERE sfo.customer_id IN (%customers_ids%))"
+                    }
+                }
+            },
+            "get_customer_by_id_with_orders": {
+                "file": "customer_with_orders.sql",
+                "tables": {
+                    "customer_entity": {
+                        "where": "entity_id = %customer_id%"
+                    },
+                    "customer_entity_datetime": {
+                        "where": "entity_id = %customer_id%"
+                    },
+                    "customer_entity_decimal": {
+                        "where": "entity_id = %customer_id%"
+                    },
+                    "customer_entity_int": {
+                        "where": "entity_id = %customer_id%"
+                    },
+                    "customer_entity_text": {
+                        "where": "entity_id = %customer_id%"
+                    },
+                    "customer_entity_varchar": {
+                        "where": "entity_id = %customer_id%"
+                    },
+                    "customer_address_entity": {
+                        "where": "parent_id = %customer_id%"
+                    },
+                    "customer_address_entity_datetime": {
+                        "where": "entity_id = (SELECT entity_id FROM customer_address_entity WHERE parent_id = %customer_id%)"
+                    },
+                    "customer_address_entity_decimal": {
+                        "where": "entity_id = (SELECT entity_id FROM customer_address_entity WHERE parent_id = %customer_id%)"
+                    },
+                    "customer_address_entity_int": {
+                        "where": "entity_id = (SELECT entity_id FROM customer_address_entity WHERE parent_id = %customer_id%)"
+                    },
+                    "customer_address_entity_text": {
+                        "where": "entity_id = (SELECT entity_id FROM customer_address_entity WHERE parent_id = %customer_id%)"
+                    },
+                    "customer_address_entity_varchar": {
+                        "where": "entity_id = (SELECT entity_id FROM customer_address_entity WHERE parent_id = %customer_id%)"
+                    },
+                    "sales_flat_order": {
+                        "where": "customer_id = %customer_id%"
+                    },
+                    "sales_flat_order_address": {
+                        "where": "customer_id = %customer_id%"
+                    },
+                    "sales_flat_order_grid": {
+                        "where": "customer_id = %customer_id%"
+                    },
+                    "sales_flat_order_item": {
+                        "where": "order_id IN (SELECT entity_id FROM sales_flat_order WHERE customer_id = %customer_id%)"
+                    },
+                    "sales_flat_order_payment": {
+                        "where": "parent_id IN (SELECT entity_id FROM sales_flat_order WHERE customer_id = %customer_id%)"
+                    },
+                    "sales_flat_order_status_history": {
+                        "where": "parent_id in (SELECT entity_id FROM sales_flat_order WHERE customer_id = %customer_id%)"
+                    },
+                    "sales_flat_invoice": {
+                        "where": "order_id IN (SELECT entity_id FROM sales_flat_order WHERE customer_id = %customer_id%)"
+                    },
+                    "sales_flat_invoice_comment": {
+                        "where": "entity_id IN (SELECT sfic.entity_id FROM sales_flat_invoice_comment sfic JOIN sales_flat_invoice sfi ON sfic.parent_id = sfi.entity_id JOIN sales_flat_order sfo ON sfi.order_id = sfo.entity_id WHERE sfo.customer_id = %customer_id%)"
+                    },
+                    "sales_flat_invoice_grid": {
+                        "where": "parent_id IN (SELECT entity_id FROM sales_flat_order WHERE customer_id = %customer_id%)"
+                    },
+                    "sales_flat_invoice_item": {
+                        "where": "entity_id IN (SELECT sfii.entity_id FROM sales_flat_invoice_item sfii JOIN sales_flat_invoice sfi ON sfii.parent_id = sfi.entity_id JOIN sales_flat_order sfo ON sfi.order_id = sfo.entity_id WHERE sfo.customer_id = %customer_id%)"
+                    },
+                    "sales_order_tax": {
+                        "where": "order_id IN (SELECT entity_id FROM sales_flat_order WHERE customer_id = %customer_id%)"
+                    },
+                    "sales_order_tax_item": {
+                        "where": "tax_item_id IN (SELECT soti.tax_item_id FROM sales_order_tax_item soti JOIN sales_flat_order_item sfoi ON sfoi.item_id = soti.item_id JOIN sales_flat_order sfo ON sfoi.order_id = sfo.entity_id WHERE sfo.customer_id = %customer_id%)"
+                    }
+                }
+            },
+            "get_customers_by_id_with_orders": {
+                "file": "customers_with_orders.sql",
+                "tables": {
+                    "customer_entity": {
+                        "where": "entity_id IN (%customers_ids%)"
+                    },
+                    "customer_entity_datetime": {
+                        "where": "entity_id IN (%customers_ids%)"
+                    },
+                    "customer_entity_decimal": {
+                        "where": "entity_id IN (%customers_ids%)"
+                    },
+                    "customer_entity_int": {
+                        "where": "entity_id IN (%customers_ids%)"
+                    },
+                    "customer_entity_text": {
+                        "where": "entity_id IN (%customers_ids%)"
+                    },
+                    "customer_entity_varchar": {
+                        "where": "entity_id IN (%customers_ids%)"
+                    },
+                    "customer_address_entity": {
+                        "where": "parent_id IN (%customers_ids%)"
+                    },
+                    "customer_address_entity_datetime": {
+                        "where": "entity_id = (SELECT entity_id FROM customer_address_entity WHERE parent_id IN (%customers_ids%))"
+                    },
+                    "customer_address_entity_decimal": {
+                        "where": "entity_id = (SELECT entity_id FROM customer_address_entity WHERE parent_id IN (%customers_ids%))"
+                    },
+                    "customer_address_entity_int": {
+                        "where": "entity_id = (SELECT entity_id FROM customer_address_entity WHERE parent_id IN (%customers_ids%))"
+                    },
+                    "customer_address_entity_text": {
+                        "where": "entity_id = (SELECT entity_id FROM customer_address_entity WHERE parent_id IN (%customers_ids%))"
+                    },
+                    "customer_address_entity_varchar": {
+                        "where": "entity_id = (SELECT entity_id FROM customer_address_entity WHERE parent_id IN (%customers_ids%))"
+                    },
+                    "sales_flat_order": {
+                        "where": "customer_id IN (%customers_ids%)"
+                    },
+                    "sales_flat_order_address": {
+                        "where": "customer_id IN (%customers_ids%)"
+                    },
+                    "sales_flat_order_grid": {
+                        "where": "customer_id IN (%customers_ids%)"
+                    },
+                    "sales_flat_order_item": {
+                        "where": "order_id IN (SELECT entity_id FROM sales_flat_order WHERE customer_id IN (%customers_ids%))"
+                    },
+                    "sales_flat_order_payment": {
+                        "where": "parent_id IN (SELECT entity_id FROM sales_flat_order WHERE customer_id IN (%customers_ids%))"
+                    },
+                    "sales_flat_order_status_history": {
+                        "where": "parent_id in (SELECT entity_id FROM sales_flat_order WHERE customer_id IN (%customers_ids%))"
+                    },
+                    "sales_flat_invoice": {
+                        "where": "order_id IN (SELECT entity_id FROM sales_flat_order WHERE customer_id IN (%customers_ids%))"
+                    },
+                    "sales_flat_invoice_comment": {
+                        "where": "entity_id IN (SELECT sfic.entity_id FROM sales_flat_invoice_comment sfic JOIN sales_flat_invoice sfi ON sfic.parent_id = sfi.entity_id JOIN sales_flat_order sfo ON sfi.order_id = sfo.entity_id WHERE sfo.customer_id IN (%customers_ids%))"
+                    },
+                    "sales_flat_invoice_grid": {
+                        "where": "parent_id IN (SELECT entity_id FROM sales_flat_order WHERE customer_id IN (%customers_ids%))"
+                    },
+                    "sales_flat_invoice_item": {
+                        "where": "entity_id IN (SELECT sfii.entity_id FROM sales_flat_invoice_item sfii JOIN sales_flat_invoice sfi ON sfii.parent_id = sfi.entity_id JOIN sales_flat_order sfo ON sfi.order_id = sfo.entity_id WHERE sfo.customer_id IN (%customers_ids%))"
+                    },
+                    "sales_order_tax": {
+                        "where": "order_id IN (SELECT entity_id FROM sales_flat_order WHERE customer_id IN (%customers_ids%))"
+                    },
+                    "sales_order_tax_item": {
+                        "where": "tax_item_id IN (SELECT soti.tax_item_id FROM sales_order_tax_item soti JOIN sales_flat_order_item sfoi ON sfoi.item_id = soti.item_id JOIN sales_flat_order sfo ON sfoi.order_id = sfo.entity_id WHERE sfo.customer_id IN (%customers_ids%))"
+                    }
+                }
+            },
+            "get_order_by_id": {
+                "file": "order.sql",
+                "tables": {
+                    "sales_flat_order": {
+                        "where": "entity_id = %order_id%"
+                    },
+                    "sales_flat_order_address": {
+                        "where": "parent_id = %order_id%"
+                    },
+                    "sales_flat_order_grid": {
+                        "where": "entity_id = %order_id%"
+                    },
+                    "sales_flat_order_item": {
+                        "where": "order_id = %order_id%"
+                    },
+                    "sales_flat_order_payment": {
+                        "where": "parent_id = %order_id%"
+                    },
+                    "sales_flat_order_status_history": {
+                        "where": "parent_id = %order_id%"
+                    },
+                    "sales_flat_invoice": {
+                        "where": "order_id = %order_id%"
+                    },
+                    "sales_flat_invoice_comment": {
+                        "where": "entity_id IN (SELECT sfic.entity_id FROM sales_flat_invoice_comment sfic JOIN sales_flat_invoice sfi ON sfic.parent_id = sfi.entity_id JOIN sales_flat_order sfo ON sfi.order_id = sfo.entity_id WHERE sfo.entity_id = %order_id%)"
+                    },
+                    "sales_flat_invoice_grid": {
+                        "where": "parent_id = %order_id%"
+                    },
+                    "sales_flat_invoice_item": {
+                        "where": "entity_id IN (SELECT sfii.entity_id FROM sales_flat_invoice_item sfii JOIN sales_flat_invoice sfi ON sfii.parent_id = sfi.entity_id JOIN sales_flat_order sfo ON sfi.order_id = sfo.entity_id WHERE sfo.entity_id = %order_id%)"
+                    },
+                    "sales_order_tax": {
+                        "where": "order_id = %order_id%"
+                    },
+                    "sales_order_tax_item": {
+                        "where": "tax_item_id IN (SELECT soti.tax_item_id FROM sales_order_tax_item soti JOIN sales_flat_order_item sfoi ON sfoi.item_id = soti.item_id JOIN sales_flat_order sfo ON sfoi.order_id = sfo.entity_id WHERE sfo.entity_id = %order_id%)"
+                    }
+                }
+            },
+            "get_orders_by_ids": {
+                "file": "orders.sql",
+                "tables": {
+                    "sales_flat_order": {
+                        "where": "entity_id IN (%orders_ids%)"
+                    },
+                    "sales_flat_order_address": {
+                        "where": "parent_id IN (%orders_ids%)"
+                    },
+                    "sales_flat_order_grid": {
+                        "where": "entity_id IN (%orders_ids%)"
+                    },
+                    "sales_flat_order_item": {
+                        "where": "order_id IN (%orders_ids%)"
+                    },
+                    "sales_flat_order_payment": {
+                        "where": "parent_id IN (%orders_ids%)"
+                    },
+                    "sales_flat_order_status_history": {
+                        "where": "parent_id IN (%orders_ids%)"
+                    },
+                    "sales_flat_invoice": {
+                        "where": "order_id IN (%orders_ids%)"
+                    },
+                    "sales_flat_invoice_comment": {
+                        "where": "entity_id IN (SELECT sfic.entity_id FROM sales_flat_invoice_comment sfic JOIN sales_flat_invoice sfi ON sfic.parent_id = sfi.entity_id JOIN sales_flat_order sfo ON sfi.order_id = sfo.entity_id WHERE sfo.entity_id IN (%orders_ids%))"
+                    },
+                    "sales_flat_invoice_grid": {
+                        "where": "parent_id IN (%orders_ids%)"
+                    },
+                    "sales_flat_invoice_item": {
+                        "where": "entity_id IN (SELECT sfii.entity_id FROM sales_flat_invoice_item sfii JOIN sales_flat_invoice sfi ON sfii.parent_id = sfi.entity_id JOIN sales_flat_order sfo ON sfi.order_id = sfo.entity_id WHERE sfo.entity_id IN (%orders_ids%))"
+                    },
+                    "sales_order_tax": {
+                        "where": "order_id IN (%orders_ids%)"
+                    },
+                    "sales_order_tax_item": {
+                        "where": "tax_item_id IN (SELECT soti.tax_item_id FROM sales_order_tax_item soti JOIN sales_flat_order_item sfoi ON sfoi.item_id = soti.item_id JOIN sales_flat_order sfo ON sfoi.order_id = sfo.entity_id WHERE sfo.entity_id IN (%orders_ids%))"
+                    }
+                }
+            }
+        }
+    }
+}
