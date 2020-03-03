@@ -5,20 +5,22 @@ class Database
   # Class to anonymize json data type
   class Json < Database
     def self.query(table_name, column_name, info)
-      field = info['field']
+      fields = info['fields']
 
       querys = []
 
-      query = "UPDATE #{table_name} " \
-       'SET ' \
-        "#{column_name} = JSON_REPLACE( #{column_name}, " \
-          "\"#{field['path']}\", ("
+      fields.each do |field|
+        query = "UPDATE #{table_name} " \
+         'SET ' \
+          "#{column_name} = JSON_REPLACE( #{column_name}, " \
+            "\"#{field['path']}\", ("
 
-      query += manage_type(field['type'])
+        query += manage_type(field['type'])
 
-      query += ')'
+        query += ')'
 
-      querys.push query
+        querys.push query
+      end
 
       querys
     end
