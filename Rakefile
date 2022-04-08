@@ -43,7 +43,8 @@ namespace 'project' do
       ShellHelper.restore_database(
         project_name,
         database,
-        CONFIG['tmp_path']
+        CONFIG['tmp_path'],
+        anonymizer.config['apply_before_db_import']
       )
     )
   end

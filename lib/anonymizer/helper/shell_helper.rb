@@ -16,11 +16,19 @@ module ShellHelper
     remove_white_space(command)
   end
 
-  def self.restore_database(project_name, database, dir)
-    command = "gunzip -c #{dir}/#{project_name}.sql.gz | " \
-      "sed -e 's/DEFINER=[^*]*\\*/\\*/' | " \
-      "sed -e 's/ROW_FORMAT=FIXED//g' | " \
-      "mysql#{mysql_options(database)} #{project_name}"
+  def self.restore_database(project_name, database, dir, options = '')
+    if options == ''
+        command = "gunzip -c #{dir}/#{project_name}.sql.gz | " \
+              "sed -e 's/DEFINER=[^*]*\\*/\\*/' | " \
+              "sed -e 's/ROW_FORMAT=FIXED//g' | " \
+              "mysql#{mysql_options(database)} #{project_name}"
+    else
+        command = "gunzip -c #{dir}/#{project_name}.sql.gz | " \
+              "sed -e 's/DEFINER=[^*]*\\*/\\*/' | " \
+              "sed -e 's/ROW_FORMAT=FIXED//g' | " \
+              "#{options} | " \
+              "mysql#{mysql_options(database)} #{project_name}"
+    end
 
     remove_white_space(command)
   end
